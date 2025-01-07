@@ -30,7 +30,9 @@ const Social = lazy(() => import("./pages/Social/Social"));
 const Team = lazy(() => import("./pages/Team/Team"));
 const Alumni = lazy(() => import("./pages/Alumni/Alumni"));
 const Profile = lazy(() => import("./pages/Profile/Profile"));
-const Omega = lazy(() => import("./pages/Omega/Omega"));
+const Blog = lazy(() => import("./pages/Blog/Blog"));
+// const Omega = lazy(() => import("./pages/Omega/Omega"));
+const Gsoc = lazy(() => import("./pages/LiveEvents/Gsoc/Gsoc"));
 
 const Signup = lazy(() => import("./pages/Authentication/Signup/Signup"));
 const ForgotPassword = lazy(() =>
@@ -51,10 +53,10 @@ const OTPInput = lazy(() =>
 
 const MainLayout = () => {
   const location = useLocation();
-  const isOmegaPage = location.pathname === "/Omega";
+  const isGsocPage = /\/gsoc|\/GSOC|\/GSoC|\/gsoc/i.test(location.pathname);
 
   useEffect(() => {
-    if (isOmegaPage) {
+    if (isGsocPage) {
       document.body.style.backgroundColor = "black";
     } else {
       document.body.style.backgroundColor = "";
@@ -63,7 +65,7 @@ const MainLayout = () => {
     return () => {
       document.body.style.backgroundColor = "";
     };
-  }, [isOmegaPage]);
+  }, [isGsocPage]);
 
   return (
     <div>
@@ -95,9 +97,10 @@ function App() {
             <Route path="/Events/pastEvents" element={<PastEvent />} />
             <Route path="/Social" element={<Social />} />
             <Route path="/Team" element={<Team />} />
+            <Route path="/Blog" element={<Blog />} />
             <Route path="/Alumni" element={<Alumni />} />
             {/* <Route path="/Omega" element={<Omega />} /> */}
-
+            <Route path="/Gsoc" element={<Gsoc />} />
             {/* Route After Login */}
             {authCtx.isLoggedIn && (
               <Route path="/profile" element={<Profile />}>
@@ -164,9 +167,9 @@ function App() {
 
           {/* Routes for Authentication witout Navbar and footer */}
           <Route element={<AuthLayout />}>
-         {!authCtx.isLoggedIn && (
-            <Route path="/profile/*" element={<Navigate to="/Login" />} />
-          )}
+            {!authCtx.isLoggedIn && (
+              <Route path="/profile/*" element={<Navigate to="/Login" />} />
+            )}
             <Route
               path="/Login"
               element={
