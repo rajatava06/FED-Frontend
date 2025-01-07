@@ -1,0 +1,59 @@
+$font-family: 'Poppins', sans-serif;
+$primary-color: #000;
+$secondary-color: #555;
+$icon-color: #f39c12;
+
+.frame{
+    height: 35vh;
+    width: 50vw;
+    background-color: white;
+    display: flex;
+    align-items: center;
+}
+
+.leftFrame{
+    position: relative;
+    height: 100%;
+    width: 65%;
+}
+
+.heading{
+    font-weight: 1000;
+    color: #000;
+   margin: 3vh 3vh 3vh 3.5vh;
+
+}
+
+.startLine{
+    color: #212121;
+    margin: 1vh 1vh 1vh 3.5vh;
+}
+
+.interaction{
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    height: 7vh;
+    width: 100%;
+    background-color: white;
+    position: absolute;
+    bottom: 0px;
+    color: #000;
+    
+}
+
+
+.rightFrame{
+    height: 100%;
+    width: 35% ;
+    background-color: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.image{
+    background-color: white;
+    height: 70%;
+    width: 70%;
+}
