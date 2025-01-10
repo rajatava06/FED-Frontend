@@ -1,22 +1,3 @@
-// import React from 'react'
-// import styles from '../LeftSidebar/styles/LeftSidebar.module.scss'
-
-// function LeftSidebar() {
-//   return (
-//     <div className={styles.Sidebar}>
-//       <a href="">Technical</a>
-//       <a href="">Creative</a>
-//       <a href="">Marketing</a>
-//       <a href="">Operations</a>
-//       <a href="">PR And Finance</a>
-//       <a href="">Human Resource</a>
-//     </div>
-//   )
-// }
-
-// export default LeftSidebar
-
-
 import React from 'react';
 import styles from '../LeftSidebar/styles/LeftSidebar.module.scss';
 
@@ -32,12 +13,15 @@ function LeftSidebar({ selectedDepartment, onSelectDepartment }) {
   ];
 
   return (
-    <div className={styles.Sidebar}>
+    <div className={styles.sidebar}>
+      <h2 className={styles.title}>Departments</h2>
       {departments.map((department) => (
         <a
           key={department}
           href="#"
-          className={selectedDepartment === department ? styles.active : ''}
+          className={`${styles.link} ${
+            selectedDepartment === department ? styles.active : ''
+          }`}
           onClick={(e) => {
             e.preventDefault();
             onSelectDepartment(department === "All Departments" ? null : department);
@@ -51,5 +35,3 @@ function LeftSidebar({ selectedDepartment, onSelectDepartment }) {
 }
 
 export default LeftSidebar;
-
-
