@@ -8,33 +8,52 @@ import RightSidebar from '../../layouts/Blog/RightSidebar/RightSidebar';
 
 const Blog = () => {
   const [selectedDepartment, setSelectedDepartment] = useState(null);
+  const [sortOrder, setSortOrder] = useState('latest');
+  const [searchQuery, setSearchQuery] = useState('');
 
-  // Filter blogs based on selected department
-  const filteredData = selectedDepartment
-    ? data.filter((blog) => blog.authorDepartment === selectedDepartment)
-    : data;
+  // Filter blogs by department and search query in the heading
+  const filteredData = data
+    .filter((blog) => 
+      selectedDepartment ? blog.authorDepartment === selectedDepartment : true
+    )
+    .filter((blog) => 
+      blog.blogHeading.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+  // Sort blogs by date (latest or oldest)
+  const sortedData = filteredData.sort((a, b) => {
+    const dateA = new Date(a.dateOfPosting);
+    const dateB = new Date(b.dateOfPosting);
+    return sortOrder === 'latest' ? dateB - dateA : dateA - dateB;
+  });
 
   return (
     <div className={styles.feed}>
-      {/* Left Sidebar */}
+      {/* Left Sidebar for department filter, search, and sort */}
       <LeftSidebar
         selectedDepartment={selectedDepartment}
         onSelectDepartment={setSelectedDepartment}
+        sortOrder={sortOrder}
+        onSortOrderChange={setSortOrder}
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
       />
 
-      {/* Blog Cards Display */}
+      {/* Main Content Area */}
       <div className={styles.displayFeed}>
-        {filteredData.map((blog) => (
-          <BlogCard key={blog.id} data={blog} />
-        ))}
+        {sortedData.length > 0 ? (
+          sortedData.map((blog) => <BlogCard key={blog.id} data={blog} />)
+        ) : (
+          <p>No blogs match your search criteria.</p>
+        )}
       </div>
 
       {/* Right Sidebar */}
       <div className={styles.rightSidebar}>
-        <RightSidebar blogs={data} /> {/* Pass original blog data */}
+        <RightSidebar blogs={sortedData} />
       </div>
 
-      {/* ChatBot */}
+      {/* ChatBot Component */}
       <ChatBot />
     </div>
   );
