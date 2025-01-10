@@ -1,7 +1,7 @@
 [
     { "id": 1,
       "authorName": "Alice Johnson",
-      "authorDepartment": "Marketing",
+      "authorDepartment": "Technical",
       "blogImage": "https://example.com/seo-tips.jpg",
       "blogHeading": "Top 5 SEO Strategies for 2025",
       "blogContent": "<div><p>SEO is the backbone of online visibility. Here are the top strategies you need to implement in 2025:</p><ol><li>Focus on user intent.</li><li>Optimize for mobile-first indexing.</li><li>Leverage long-tail keywords.</li><li>Use schema markup for better search appearance.</li><li>Invest in high-quality backlinks.</li></ol></div>",
@@ -31,7 +31,7 @@
     {
       "id": 2,
       "authorName": "Rahul Verma",
-      "authorDepartment": "Development",
+      "authorDepartment": "Technical",
       "blogImage": "https://example.com/javascript-essentials.jpg",
       "blogHeading": "Mastering JavaScript: Essentials for Beginners",
       "blogContent": "<div><p>JavaScript is a must-learn programming language. Here are some essentials:</p><ul><li>Variables and Data Types</li><li>Functions and Scope</li><li>DOM Manipulation</li><li>Event Handling</li></ul><p>Start with small projects like a to-do list app to build your skills.</p></div>",
@@ -61,7 +61,7 @@
     {
       "id": 3,
       "authorName": "Sophia Lee",
-      "authorDepartment": "Design",
+      "authorDepartment": "Creative",
       "blogImage": "https://example.com/ui-ux-trends.jpg",
       "blogHeading": "UI/UX Trends to Watch in 2025",
       "blogContent": "<div><p>The world of UI/UX is evolving rapidly. Key trends for 2025 include:</p><ul><li>Dark Mode and High Contrast Interfaces</li><li>Voice and Gesture-Driven Interactions</li><li>Augmented Reality (AR) Integration</li><li>Personalized User Experiences</li></ul><p>Stay ahead of the curve by implementing these in your designs.</p></div>",
@@ -84,7 +84,7 @@
     {
       "id": 4,
       "authorName": "Michael Brown",
-      "authorDepartment": "Finance",
+      "authorDepartment": "PR And Finance",
       "blogImage": "https://example.com/financial-tips.jpg",
       "blogHeading": "10 Tips for Personal Financial Management",
       "blogContent": "<div><p>Managing personal finances is crucial...</p></div>",
@@ -108,7 +108,7 @@
     {
       "id": 5,
       "authorName": "Emily Carter",
-      "authorDepartment": "Health & Wellness",
+      "authorDepartment": "Human Resource",
       "blogImage": "https://example.com/fitness-goals.jpg",
       "blogHeading": "Achieving Your Fitness Goals in 2025",
       "blogContent": "<div><p>Start the new year with a focus on health...</p></div>",
@@ -132,7 +132,7 @@
     {
       "id": 6,
       "authorName": "David Thompson",
-      "authorDepartment": "Technology",
+      "authorDepartment": "Technical",
       "blogImage": "https://example.com/ai-trends.jpg",
       "blogHeading": "AI Trends to Watch Out for in 2025",
       "blogContent": "<div><p>Artificial Intelligence is transforming industries...</p></div>",
@@ -148,7 +148,7 @@
     },{
       "id": 7,
       "authorName": "Natalie Cooper",
-      "authorDepartment": "Travel",
+      "authorDepartment": "Creative",
       "blogImage": "https://example.com/budget-travel.jpg",
       "blogHeading": "How to Travel the World on a Budget",
       "blogContent": "<div><p>Traveling doesn't have to break the bank...</p></div>",
@@ -172,7 +172,7 @@
     {
       "id": 8,
       "authorName": "Chris Martin",
-      "authorDepartment": "Education",
+      "authorDepartment": "Operations",
       "blogImage": "https://example.com/learning-trends.jpg",
       "blogHeading": "Top Learning Trends for 2025",
       "blogContent": "<div><p>Education is evolving with technology...</p></div>",
@@ -189,7 +189,7 @@
     {
       "id": 9,
       "authorName": "Olivia Smith",
-      "authorDepartment": "Culinary",
+      "authorDepartment": "Operations",
       "blogImage": "https://example.com/healthy-recipes.jpg",
       "blogHeading": "10 Healthy Recipes for Busy Professionals",
       "blogContent": "<div><p>Quick and nutritious meals...</p></div>",
@@ -213,7 +213,7 @@
     {
       "id": 10,
       "authorName": "Liam Davis",
-      "authorDepartment": "Sports",
+      "authorDepartment": "Marketing",
       "blogImage": "https://example.com/home-workouts.jpg",
       "blogHeading": "Best Home Workouts for 2025",
       "blogContent": "<div><p>Stay fit without leaving your home...</p></div>",
@@ -230,7 +230,7 @@
     {
       "id": 11,
       "authorName": "Hannah Green",
-      "authorDepartment": "Environment",
+      "authorDepartment": "Human Resource",
       "blogImage": "https://example.com/sustainability.jpg",
       "blogHeading": "Sustainable Living Tips for 2025",
       "blogContent": "<div><p>Go green and reduce your footprint...</p></div>",
@@ -247,7 +247,7 @@
     {
       "id": 12,
       "authorName": "Ethan Carter",
-      "authorDepartment": "Gaming",
+      "authorDepartment": "Operations",
       "blogImage": "https://example.com/gaming-trends.jpg",
       "blogHeading": "Gaming Trends to Watch in 2025",
       "blogContent": "<div><p>The future of gaming is here...</p></div>",
@@ -271,7 +271,7 @@
     {
       "id": 13,
       "authorName": "Sophia Wilson",
-      "authorDepartment": "Fashion",
+      "authorDepartment": "Creative",
       "blogImage": "https://example.com/fashion-trends.jpg",
       "blogHeading": "Top Fashion Trends for 2025",
       "blogContent": "<div><p>Stay stylish with the latest trends...</p></div>",
@@ -288,7 +288,7 @@
     {
       "id": 14,
       "authorName": "Jack White",
-      "authorDepartment": "Automotive",
+      "authorDepartment": "Marketing",
       "blogImage": "https://example.com/electric-cars.jpg",
       "blogHeading": "Electric Cars: The Future of Driving",
       "blogContent": "<div><p>Electric vehicles are revolutionizing...</p></div>",
@@ -305,7 +305,7 @@
     {
       "id": 15,
       "authorName": "Emma Brown",
-      "authorDepartment": "Art & Culture",
+      "authorDepartment": "Creative",
       "blogImage": "https://example.com/art-trends.jpg",
       "blogHeading": "Exploring Art Trends in 2025",
       "blogContent": "<div><p>The art world is always evolving...</p></div>",
@@ -322,7 +322,7 @@
     {
       "id": 16,
       "authorName": "Lucas Taylor",
-      "authorDepartment": "Finance",
+      "authorDepartment": "PR And Finance",
       "blogImage": "https://example.com/investing-2025.jpg",
       "blogHeading": "Investment Strategies for 2025",
       "blogContent": "<div><p>Secure your financial future...</p></div>",
