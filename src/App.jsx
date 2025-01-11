@@ -10,6 +10,9 @@ import { Loading } from "./microInteraction";
 // modals
 import { EventModal } from "./features";
 
+//blog
+import FullBlog from "./pages/Blog/FullBlog";
+
 // state
 import AuthContext from "./context/AuthContext";
 import EventStats from "./features/Modals/Event/EventStats/EventStats";
@@ -32,7 +35,7 @@ const Alumni = lazy(() => import("./pages/Alumni/Alumni"));
 const Profile = lazy(() => import("./pages/Profile/Profile"));
 const Blog = lazy(() => import("./pages/Blog/Blog"));
 // const Omega = lazy(() => import("./pages/Omega/Omega"));
-const Gsoc = lazy(() => import("./pages/LiveEvents/Gsoc/Gsoc"));
+// const Gsoc = lazy(() => import("./pages/LiveEvents/Gsoc/Gsoc"));
 
 const Signup = lazy(() => import("./pages/Authentication/Signup/Signup"));
 const ForgotPassword = lazy(() =>
@@ -98,9 +101,10 @@ function App() {
             <Route path="/Social" element={<Social />} />
             <Route path="/Team" element={<Team />} />
             <Route path="/Blog" element={<Blog />} />
+            <Route path="/Blog/:id" element={<FullBlog />} />
             <Route path="/Alumni" element={<Alumni />} />
             {/* <Route path="/Omega" element={<Omega />} /> */}
-            <Route path="/Gsoc" element={<Gsoc />} />
+            {/* <Route path="/Gsoc" element={<Gsoc />} /> */}
             {/* Route After Login */}
             {authCtx.isLoggedIn && (
               <Route path="/profile" element={<Profile />}>

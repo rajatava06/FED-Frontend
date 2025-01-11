@@ -200,7 +200,7 @@ useEffect(() => {
                 Event
               </NavLink>
             </li>
-            <li>
+            {/* <li>
               <NavLink
                 to="/Gsoc"
                 className={`${styles.linkGsoc} ${
@@ -210,7 +210,7 @@ useEffect(() => {
               >
                 GSoC
               </NavLink>
-            </li>
+            </li> */}
             <li>
               <NavLink
                 to="/Social"

@@ -1,0 +1,58 @@
+.fullPage{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.fullBlog {
+    padding: 2rem;
+    // max-width: 800px;
+    // margin: 0 2rem;
+    // width: 100%;
+  
+    .heading {
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
+  
+    .meta {
+      font-size: 0.9rem;
+      color: #777;
+      margin-bottom: 20px;
+    }
+  
+    .image {
+    //   text-align: center;
+      margin: 20px 0;
+  
+      img {
+        max-width: 100%;
+        border-radius: 8px;
+      }
+    }
+  
+    .content {
+      line-height: 1.6;
+      font-size: 1rem;
+  
+      p, li {
+        margin-bottom: 10px;
+      }
+    }
+  
+    .reactions {
+      margin-top: 20px;
+      font-size: 1rem;
+  
+      p {
+        margin: 5px 0;
+      }
+    }
+  
+    .notFound {
+      text-align: center;
+      font-size: 1.5rem;
+      color: #555;
+    }
+  }
+  
