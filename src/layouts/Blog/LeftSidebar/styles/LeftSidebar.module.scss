@@ -5,6 +5,8 @@ $secondary-color: #aaa;
 $highlight-color: #ff9800;
 $active-color: #007bff;
 
+@import '../../../../assets/styles/Global.scss';
+
 .sidebar {
   position: relative;
   left: 0;
@@ -45,7 +47,6 @@ $active-color: #007bff;
 }
 
 .filterSection {
-  margin-bottom: 2rem;
   display: flex;
   flex-direction: column;
 
@@ -64,18 +65,21 @@ $active-color: #007bff;
   text-decoration: none;
   color: $secondary-color;
   font-size: 1rem;
-  padding: 0.8rem 1rem;
+  padding: 0.6rem;
   border-radius: 8px;
   transition: background-color 0.3s ease, color 0.3s ease;
 
   &:hover {
-    background-color: $highlight-color;
-    color: $primary-color;
+    background: var(--primary);
+    -webkit-background-clip: text;
+    color: transparent;
+    
   }
 
   &.active {
-    background-color: $active-color;
-    color: $primary-color;
+    background: var(--primary);
+    -webkit-background-clip: text;
+    color: transparent;
     font-weight: bold;
   }
 }

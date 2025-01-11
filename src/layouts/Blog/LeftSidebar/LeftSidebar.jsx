@@ -38,26 +38,6 @@ function LeftSidebar({
         className={styles.searchInput}
       />
 
-      {/* Department Filter */}
-      <div className={styles.filterSection}>
-        <h3 className={styles.subtitle}>Departments</h3>
-        {departments.map((department) => (
-          <a
-            key={department}
-            href="#"
-            className={`${styles.link} ${
-              selectedDepartment === department ? styles.active : ''
-            }`}
-            onClick={(e) => {
-              e.preventDefault();
-              onSelectDepartment(department === "All Departments" ? null : department);
-            }}
-          >
-            {department}
-          </a>
-        ))}
-      </div>
-
       {/* Sort Options */}
       <div className={styles.filterSection}>
         <h3 className={styles.subtitle}>Sort By</h3>
@@ -86,6 +66,28 @@ function LeftSidebar({
           Oldest
         </a>
       </div>
+
+      {/* Department Filter */}
+      <div className={styles.filterSection}>
+        <h3 className={styles.subtitle}>Departments</h3>
+        {departments.map((department) => (
+          <a
+            key={department}
+            href="#"
+            className={`${styles.link} ${
+              selectedDepartment === department ? styles.active : ''
+            }`}
+            onClick={(e) => {
+              e.preventDefault();
+              onSelectDepartment(department === "All Departments" ? null : department);
+            }}
+          >
+            {department}
+          </a>
+        ))}
+      </div>
+
+      
     </div>
   );
 }

@@ -18,7 +18,11 @@ const Blog = () => {
     )
     .filter((blog) => 
       blog.blogHeading.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+    .filter((blog) => 
+      blog.status === 'Approved'
     );
+
 
   // Sort blogs by date (latest or oldest)
   const sortedData = filteredData.sort((a, b) => {

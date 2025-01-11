@@ -1,33 +1,36 @@
 [
-    { "id": 1,
-      "authorName": "Alice Johnson",
-      "authorDepartment": "Technical",
-      "blogImage": "https://spaces-wp.imgix.net/2016/06/coding-in-the-classroom.png?auto=compress,format&q=50",
-      "blogHeading": "Top 5 SEO Strategies for 2025",
-      "blogContent": "<div><p>SEO is the backbone of online visibility. Here are the top strategies you need to implement in 2025:</p><ol><li>Focus on user intent.</li><li>Optimize for mobile-first indexing.</li><li>Leverage long-tail keywords.</li><li>Use schema markup for better search appearance.</li><li>Invest in high-quality backlinks.</li></ol></div>",
-      "dateOfPosting": "2025-01-03T09:30:00Z",
-      "comments": [
-        {
-          "reviewerName": "Tom Harris",
-          "reviewerRole": "SEO Specialist",
-          "comment": "Can you include recent case studies for these strategies?",
-          "date": "2025-01-04T08:00:00Z"
-        }
-      ],
-      "status": "Pending",
-      "approvedBy": {
-        "name": null,
-        "role": null
-      },
-      "publicReaction": {
-        "likes": 10,
-        "comments": [
-          "This is really insightful! Thanks for sharing.",
-          "Looking forward to implementing these tips!"
-        ],
-        "impressions": 250
+  {
+    "id": 1,
+    "authorName": "Alice Johnson",
+    "authorDepartment": "Technical",
+    "blogImage": "https://spaces-wp.imgix.net/2016/06/coding-in-the-classroom.png?auto=compress,format&q=50",
+    "blogHeading": "Top 5 SEO Strategies for 2025",
+    "blogContent": "<div><p>SEO is the backbone of online visibility in this ever-evolving digital age. As search engines continue to refine their algorithms, it’s critical to stay ahead of the curve by implementing modern strategies. Below, we explore some of the most effective SEO techniques for 2025, with actionable insights and examples to guide you.</p><h2 id='subheading-1'>1. Focus on <b><i>User Intent</i></b></h2><p>The key to successful SEO lies in understanding and addressing <i>user intent</i>. Whether it’s informational, navigational, or transactional, knowing what users want helps you craft content that resonates. Conduct surveys, analyze search trends, and use tools like Google Analytics to dig deeper into user behavior.</p><img src='https://spaces-wp.imgix.net/2016/06/coding-in-the-classroom.png?auto=compress,format&q=50' alt='User Intent Analysis' /><p>For example:</p><ul><li>Focus on answering frequently asked questions (FAQs) in your niche.</li><li>Create compelling and concise meta titles that align with search queries.</li><li>Structure content to match voice search patterns (e.g., ‘How to’ or ‘Best ways to’).</li></ul><h2 id='subheading-2'>2. Optimize for <b><i>Mobile-First Indexing</i></b></h2><p>With mobile users dominating the internet, Google has shifted its priority to mobile-first indexing. This means your website’s mobile version is now the primary basis for indexing and ranking. Ensure your website is <i>responsive</i> and offers a seamless user experience across devices.</p><img src='https://spaces-wp.imgix.net/2016/06/coding-in-the-classroom.png?auto=compress,format&q=50' alt='Mobile Optimization' /><p>Key points to focus on:</p><ul><li>Test your website’s mobile responsiveness using tools like Google’s Mobile-Friendly Test.</li><li>Compress images to improve loading speeds.</li><li>Use larger fonts and tap-friendly buttons for better accessibility.</li></ul><h2 id='subheading-3'>3. Leverage <b><i>Long-Tail Keywords</i></b></h2><p>Long-tail keywords are phrases with lower search volumes but higher intent. They attract more qualified leads and have less competition compared to generic keywords.</p><img src='https://spaces-wp.imgix.net/2016/06/coding-in-the-classroom.png?auto=compress,format&q=50' alt='Long-Tail Keywords Example' /><p>Here’s how you can find and use them:</p><ul><li>Use tools like Ahrefs, SEMrush, or Google Keyword Planner to discover low-competition long-tail keywords.</li><li>Incorporate them naturally into your content, headings, and meta descriptions.</li><li>Focus on local SEO by including location-specific keywords.</li></ul><h2 id='subheading-4'>4. Use <b><i>Schema Markup</i></b> for Better Search Appearance</h2><p>Schema markup is a powerful way to enhance your content’s visibility in search engine results. By adding structured data, you make it easier for search engines to understand your website’s content.</p><img src='https://spaces-wp.imgix.net/2016/06/coding-in-the-classroom.png?auto=compress,format&q=50' alt='Schema Markup Example' /><p>Benefits include:</p><ul><li>Displaying rich snippets like ratings, prices, and FAQs in search results.</li><li>Improving your click-through rate (CTR) by making your listing stand out.</li><li>Boosting voice search optimization.</li></ul><h2 id='subheading-5'>5. Invest in <b><i>High-Quality Backlinks</i></b></h2><p>Backlinks remain one of the top-ranking factors for SEO. However, quality matters more than quantity. Build links from authoritative websites in your niche to boost your domain authority.</p><img src='https://spaces-wp.imgix.net/2016/06/coding-in-the-classroom.png?auto=compress,format&q=50' alt='Backlink Building Strategy' /><p>Strategies to consider:</p><ul><li>Reach out to industry influencers for collaborations and guest posts.</li><li>Create high-value content like infographics and case studies that attract natural backlinks.</li><li>Engage in ethical link-building practices to avoid penalties.</li></ul></div>",
+    "dateOfPosting": "2025-01-03T09:30:00Z",
+    "comments": [
+      {
+        "reviewerName": "Tom Harris",
+        "reviewerRole": "SEO Specialist",
+        "comment": "Can you include recent case studies for these strategies?",
+        "date": "2025-01-04T08:00:00Z"
       }
+    ],
+    "status": "Approved",
+    "approvedBy": {
+      "name": null,
+      "role": null
     },
+    "publicReaction": {
+      "likes": 10,
+      "comments": [
+        "This is really insightful! Thanks for sharing.",
+        "Looking forward to implementing these tips!"
+      ],
+      "impressions": 250
+    }
+  },
+  
+  
     {
       "id": 2,
       "authorName": "Rahul Verma",
@@ -44,7 +47,7 @@
           "date": "2025-01-05T09:00:00Z"
         }
       ],
-      "status": "Under Review",
+      "status": "Approved",
       "approvedBy": {
         "name": "Vikas Gupta",
         "role": "Technical Head"

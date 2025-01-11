@@ -1,6 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styles from './styles/BlogCard.module.scss';
+import { FaRegHeart } from 'react-icons/fa';
+import { FaCommentAlt } from 'react-icons/fa';
 
 function BlogCard(props) {
   const { data } = props;
@@ -37,10 +39,10 @@ function BlogCard(props) {
             <p className={styles.date}>{new Date(dateOfPosting).toDateString()}</p>
             <div className={styles.reactions}>
               <span className={styles.icon}>
-                <i className="fas fa-thumbs-up"></i> {publicReaction.likes}
+                <FaRegHeart /> {publicReaction.likes}
               </span>
               <span className={styles.icon}>
-                <i className="fas fa-comment-alt"></i> {publicReaction.comments.length}
+                <FaCommentAlt /> {publicReaction.comments.length}
               </span>
             </div>
           </div>
