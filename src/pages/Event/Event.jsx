@@ -163,7 +163,7 @@ const Event = () => {
       fontSize: "1.2rem",
     },
     registerbtn: {
-      width: "8rem",
+      // width: "8rem",
       fontSize: ".721rem",
     },
     eventnamep: {
