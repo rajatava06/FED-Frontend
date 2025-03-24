@@ -450,14 +450,14 @@ const EventCard = (props) => {
               //   }
               // }}
             >
-              <div onClick={handleForm} >
+              
               <button
                 className={style.registerbtn}
                 style={{
                   ...customStyles.registerbtn,
                   cursor: btnTxt === "Register Now" ? "pointer" : "not-allowed",
                 }}
-                // onClick={handleForm}
+                onClick={handleForm}
                 // disabled={
                 //   btnTxt === "Closed" ||
                 //   btnTxt === "Locked" ||
@@ -507,7 +507,6 @@ const EventCard = (props) => {
                   </>
                 )}
               </button>
-              </div>
             </div>
           )}
         </div>
