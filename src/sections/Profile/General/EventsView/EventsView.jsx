@@ -194,16 +194,17 @@ const Events = () => {
                         {(() => {
                           const cert = getCertificateForEvent(event.id);
                           if (cert) {
+                            const certificateLink = `/verify/certificate?id=${cert.id}`;
                             return (
-                              <a
-                                href={cert.certificateLink}
+                              <Link
+                                to={certificateLink}
                                 target="_blank"
                                 rel="noopener noreferrer"
                               >
                                 <button className={styles.viewButton}>
                                   View
                                 </button>
-                              </a>
+                              </Link>
                             );
                           } else {
                             return (
@@ -218,7 +219,6 @@ const Events = () => {
                           }
                         })()}
                       </td>
-                      
 
                       {/* Add more table cells */}
                     </tr>
