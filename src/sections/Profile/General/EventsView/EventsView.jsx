@@ -11,6 +11,8 @@ const Events = () => {
   const [events, setEvents] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [certificates, setCertificates] = useState([]);
+
   const viewPath = "/profile/Events";
   const analyticsPath = "/profile/events/Analytics";
 
@@ -64,7 +66,7 @@ const Events = () => {
         //   setEvents(sortEventsByDate(localEvents));
         // } else {
         //   const filteredEvents = localEvents.filter((event) =>
-             userEvents.includes(event._id)
+        userEvents.includes(event._id);
         //   );
         //   setEvents(sortEventsByDate(filteredEvents));
         // }
@@ -76,8 +78,36 @@ const Events = () => {
     fetchEventsData();
   }, [authCtx.user.email]);
 
+  useEffect(() => {
+    const fetchCertificates = async () => {
+      try {
+        const response = await api.post(
+          "/api/certificate/sendCertificatesAndEvents",
+          {
+            email: authCtx.user.email,
+          }
+        );
+
+        if (response.status === 200) {
+          setCertificates(response.data.certandevent); // This will be an array of { cert, event }
+        }
+      } catch (err) {
+        console.error("Error fetching certificates:", err);
+      }
+    };
+
+    fetchCertificates();
+  }, [authCtx.user.email]);
+
+  const getCertificateForEvent = (eventId) => {
+    const found = certificates.find((item) => item.event.id === eventId);
+    return found ? found.cert : null;
+  };
+
   const sortEventsByDate = (events) => {
-    return events.sort((a, b) => new Date(b.info.eventDate) - new Date(a.info.eventDate));
+    return events.sort(
+      (a, b) => new Date(b.info.eventDate) - new Date(a.info.eventDate)
+    );
   };
 
   const formatDate = (dateString) => {
@@ -118,8 +148,15 @@ const Events = () => {
                     <th className={styles.mobilewidth}>Event Name</th>
                     <th className={styles.mobilewidth}>Event Date</th>
                     <th className={styles.mobilewidth}>Details</th>
-                    {(analyticsAccessRoles.includes(authCtx.user.access) || authCtx.user.email == "srex@fedkiit.com") && (
-                      <th className={styles.mobilewidth} style={{paddingTop:"1rem"}}>Registrations</th>
+                    <th className={styles.mobilewidth}>Certificate</th>
+                    {(analyticsAccessRoles.includes(authCtx.user.access) ||
+                      authCtx.user.email == "srex@fedkiit.com") && (
+                      <th
+                        className={styles.mobilewidth}
+                        style={{ paddingTop: "1rem" }}
+                      >
+                        Registrations
+                      </th>
                     )}
                     {/* Add more headers */}
                   </tr>
@@ -128,7 +165,10 @@ const Events = () => {
                 <tbody>
                   {events.map((event) => (
                     <tr key={event._id}>
-                      <td className={styles.mobilewidth} style={{fontWeight:"500",paddingRight:"10px"}}>
+                      <td
+                        className={styles.mobilewidth}
+                        style={{ fontWeight: "500", paddingRight: "10px" }}
+                      >
                         {event.info.eventTitle}
                       </td>
                       <td style={{ fontWeight: "200" }}>
@@ -150,23 +190,36 @@ const Events = () => {
                           </button>
                         </Link>
                       </td>
-                      {(analyticsAccessRoles.includes(authCtx.user.access) || authCtx.user.email == "srex@fedkiit.com") && (
-                        <td className={styles.mobilewidthtd}>
-                          <Link to={`${analyticsPath}/${event.id}`}>
-                            <button
-                              className={styles.viewButton}
-                              style={{
-                                marginLeft: "auto",
-                                whiteSpace: "nowrap",
-                                height: "fit-content",
-                                color: "orange",
-                              }}
-                            >
-                              View
-                            </button>
-                          </Link>
-                        </td>
-                      )}
+                      <td className={styles.mobilewidthtd}>
+                        {(() => {
+                          const cert = getCertificateForEvent(event.id);
+                          if (cert) {
+                            return (
+                              <a
+                                href={cert.certificateLink}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                <button className={styles.viewButton}>
+                                  View
+                                </button>
+                              </a>
+                            );
+                          } else {
+                            return (
+                              <button
+                                className={styles.viewButton}
+                                disabled
+                                style={{ opacity: 0.5 }}
+                              >
+                                Not Issued
+                              </button>
+                            );
+                          }
+                        })()}
+                      </td>
+                      
+
                       {/* Add more table cells */}
                     </tr>
                   ))}
