@@ -19,7 +19,7 @@ const accessOrCreateEventByFormId = async (formId) => {
         });
       }
     }
-    console.log(res.data);
+    // console.log(res.data);
     return res.data;
   } catch (error) {
     console.error("Error fetching event by form ID:", error);
@@ -92,7 +92,12 @@ const sendBatchMail = async () => {
 //   // // console.log(resSendMailinBatch);
 // };
 
-const generatedAndSendCertificate = async ({ eventId, attendees, subject, body }) => {
+const generatedAndSendCertificate = async ({
+  eventId,
+  attendees,
+  subject,
+  body,
+}) => {
   try {
     const response = await api.post("/api/certificate/sendCertViaEmail", {
       eventId,
