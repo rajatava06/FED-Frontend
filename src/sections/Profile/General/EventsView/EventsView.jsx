@@ -14,8 +14,8 @@ const Events = () => {
   const [error, setError] = useState(null);
   const [certificates, setCertificates] = useState([]);
 
-  // const viewPath = "/profile/Events";
-  // const analyticsPath = "/profile/events/Analytics";
+  const viewPath = "/profile/Events";
+  const analyticsPath = "/profile/events/Analytics";
 
   const analyticsAccessRoles = [
     "PRESIDENT",
@@ -195,47 +195,6 @@ const Events = () => {
                   </tr>
                 </thead>
 
-                {/* <tbody>
-                  {events.map((event) => (
-                    <tr key={event._id}>
-                      <td
-                        className={styles.mobilewidth}
-                        style={{ fontWeight: "500", paddingRight: "10px" }}
-                      >
-                        {event.info.eventTitle}
-                      </td>
-                      <td style={{ fontWeight: "200" }}>
-                        {formatDate(event.info.eventDate)}
-                      </td>
-
-                      <td className={styles.mobilewidthtd}>
-                        {certMap[event.id] && certMap[event.id].length > 0 ? (
-                          certMap[event.id].map(([link], index) => (
-                            <Link
-                              key={index}
-                              to={link}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              <button className={styles.viewButton}>
-                                View Certificate {index + 1}
-                              </button>
-                            </Link>
-                          ))
-                        ) : (
-                          <button
-                            className={styles.viewButton}
-                            disabled
-                            style={{ opacity: 0.5 }}
-                          >
-                            Not Issued
-                          </button>
-                        )}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody> */}
-
                 <tbody>
                   {events.map((event) => (
                     <tr key={event._id}>
@@ -249,27 +208,67 @@ const Events = () => {
                         {formatDate(event.info.eventDate)}
                       </td>
 
+                      {/* View Event Details - accessible to all */}
                       <td className={styles.mobilewidthtd}>
-                        {certMap[event.id] ? (
-                          <Link
-                            to={certMap[event.id]}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            <button className={styles.viewButton}>
-                              View Certificate
-                            </button>
-                          </Link>
-                        ) : (
+                        <Link to={`${viewPath}/${event.id}`}>
                           <button
                             className={styles.viewButton}
-                            disabled
-                            style={{ opacity: 0.5 }}
+                            style={{
+                              marginLeft: "auto",
+                              whiteSpace: "nowrap",
+                              height: "fit-content",
+                              color: "orange",
+                            }}
                           >
-                            Not Issued
+                            View
                           </button>
-                        )}
+                        </Link>
                       </td>
+
+                      {/* Certificate - only for USERS */}
+                      {authCtx.user.access === "USER" && (
+                        <td className={styles.mobilewidthtd}>
+                          {certMap[event.id] ? (
+                            <Link
+                              to={certMap[event.id]}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              <button className={styles.viewButton}>
+                                View
+                              </button>
+                            </Link>
+                          ) : (
+                            <button
+                              className={styles.viewButton}
+                              disabled
+                              style={{ opacity: 0.5 }}
+                            >
+                              Not Issued
+                            </button>
+                          )}
+                        </td>
+                      )}
+
+                      {/* Analytics - only for admins and specific roles */}
+                      {(analyticsAccessRoles.includes(authCtx.user.access) ||
+                        authCtx.user.email === "srex@fedkiit.com") && (
+                        <td className={styles.mobilewidthtd}>
+                          <Link to={`${analyticsPath}/${event.id}`}>
+                            <button
+                              className={styles.viewButton}
+                              style={{
+                                marginLeft: "auto",
+                                whiteSpace: "nowrap",
+                                height: "fit-content",
+                                color: "orange",
+                              }}
+                            >
+                              View
+                            </button>
+                          </Link>
+                        </td>
+                      )}
                     </tr>
                   ))}
                 </tbody>
