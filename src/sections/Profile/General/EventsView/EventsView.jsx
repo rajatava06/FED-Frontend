@@ -86,6 +86,9 @@ const Events = () => {
           "/api/certificate/sendCertificatesAndEvents",
           {
             email: authCtx.user.email,
+          },
+          {
+            headers: { Authorization: `Bearer ${authCtx.token}` },
           }
         );
         // console.log(response);
@@ -101,8 +104,8 @@ const Events = () => {
   }, [authCtx.user.email]);
 
   const getCertificateForEvent = async (eventId) => {
-    const eid = await accessOrCreateEventByFormId(eventId);
-    // console.log(eid.id, certificates[0].cert.eventId);
+    const eid = await accessOrCreateEventByFormId(eventId, authCtx.token);
+    // console.log(eid, certificates[0].cert.eventId);
     const found = certificates.find((item) => item.cert.eventId == eid.id);
     // console.log(found);
     return found ? found.cert : null;
@@ -137,7 +140,7 @@ const Events = () => {
     const fetchAllCerts = async () => {
       const map = {};
       for (const event of events) {
-        const cert = await getCertificateForEvent(event.id);
+        const cert = await getCertificateForEvent(event.id, authCtx.token);
         if (cert) {
           const link = `/verify/certificate?id=${cert.id}`;
           // console.log(cert.id);
