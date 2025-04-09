@@ -167,7 +167,7 @@ const Navbar = () => {
                 Event
               </NavLink>
             </li>
-            <li>
+            {/* <li>
               <NavLink
                 to="/Pixel_AI_Hack"
                 className={`${styles.linkPixel_AI_Hack} ${
@@ -177,7 +177,7 @@ const Navbar = () => {
               >
                 Pixel-AI-Hack
               </NavLink>
-            </li>
+            </li> */}
             <li>
               <NavLink
                 to="/Social"

@@ -36,7 +36,7 @@ const Team = lazy(() => import("./pages/Team/Team"));
 const Alumni = lazy(() => import("./pages/Alumni/Alumni"));
 const Profile = lazy(() => import("./pages/Profile/Profile"));
 // const Omega = lazy(() => import("./pages/Omega/Omega"));
-const Pixel_AI_Hack = lazy(() => import("./pages/LiveEvents/Pixel_AI_Hack/Pixel_AI_Hack"));
+// const Pixel_AI_Hack = lazy(() => import("./pages/LiveEvents/Pixel_AI_Hack/Pixel_AI_Hack"));
 
 const Signup = lazy(() => import("./pages/Authentication/Signup/Signup"));
 const ForgotPassword = lazy(() =>
@@ -59,17 +59,17 @@ const MainLayout = () => {
   const location = useLocation();
   const isPixel_AI_HackPage = location.pathname === "/Pixel_AI_Hack";
 
-  useEffect(() => {
-    if (isPixel_AI_HackPage) {
-      document.body.style.backgroundColor = "#000026";
-    } else {
-      document.body.style.backgroundColor = "";
-    }
+  // useEffect(() => {
+  //   if (isPixel_AI_HackPage) {
+  //     document.body.style.backgroundColor = "#000026";
+  //   } else {
+  //     document.body.style.backgroundColor = "";
+  //   }
 
-    return () => {
-      document.body.style.backgroundColor = "";
-    };
-  }, [isPixel_AI_HackPage]);
+  //   return () => {
+  //     document.body.style.backgroundColor = "";
+  //   };
+  // }, [isPixel_AI_HackPage]);
 
   return (
     <div>
@@ -104,7 +104,7 @@ function App() {
             <Route path="/Alumni" element={<Alumni />} />
             <Route path="/verify/certificate" element={<VerifyCertificate />} />
             {/* <Route path="/Omega" element={<Omega />} /> */}
-            <Route path="/Pixel_AI_Hack" element={<Pixel_AI_Hack />}/>
+            {/* <Route path="/Pixel_AI_Hack" element={<Pixel_AI_Hack />}/> */}
             {/* Route After Login */}
             {authCtx.isLoggedIn && (
               <Route path="/profile" element={<Profile />}>

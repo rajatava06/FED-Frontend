@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
 import Input from "../../../../../components/Core/Input";
 import { Button } from "../../../../../components";
@@ -10,8 +10,10 @@ import {
 } from "./tools/certificateTools";
 import { Alert, MicroLoading } from "../../../../../microInteraction";
 import { Link } from "react-router-dom";
+import AuthContext from "../../../../../context/AuthContext";
 
 const CertificatesForm = () => {
+  const authCtx = useContext(AuthContext);
   const { eventId } = useParams();
   const [certificate, setCertificate] = useState(null);
   const [certificateFile, setCertificateFile] = useState(null);
@@ -146,7 +148,10 @@ const CertificatesForm = () => {
       formData.append("fields", JSON.stringify(fields));
       const response = await api.post(
         "/api/certificate/dummyCertificate",
-        formData
+        formData,
+        {
+          headers: { Authorization: `Bearer ${authCtx.token}` },
+        }
       );
       if (response.status !== 200) {
         throw new Error(`API error: ${response.statusText}`);
@@ -183,7 +188,10 @@ const CertificatesForm = () => {
 
     setSaveLoading(true);
     try {
-      const eventData = await accessOrCreateEventByFormId(eventId);
+      const eventData = await accessOrCreateEventByFormId(
+        eventId,
+        authCtx.token
+      );
       if (!eventData || !eventData.id) {
         throw new Error("Failed to retrieve or create event.");
       }
@@ -261,12 +269,12 @@ const CertificatesForm = () => {
           )}
         </div>
 
-        <div style={{ width: "30%", }}>
+        <div style={{ width: "30%" }}>
           <input
             type="file"
             onChange={handleCertificateChange}
             accept="image/*"
-            style={{color: "#FF8A00"}}
+            style={{ color: "#FF8A00" }}
           />
           <Button onClick={addField}>+ Add Field</Button>
 
@@ -291,7 +299,6 @@ const CertificatesForm = () => {
                   marginRight: "20px",
                   backgroundColor: "rgba(128, 127, 126, 0.066)",
                   marginBottom: "20px",
-                 
                 }}
               >
                 <div
@@ -330,7 +337,7 @@ const CertificatesForm = () => {
                       label="X Position (%)"
                       value={field.x}
                       onChange={(e) =>
-                      handleFieldChange(index, "x", Number(e.target.value))
+                        handleFieldChange(index, "x", Number(e.target.value))
                       }
                     />
                     <Input
@@ -392,18 +399,17 @@ const CertificatesForm = () => {
               {saveLoading ? <MicroLoading /> : "Save Certificate"}
             </Button>
             <Link to={`${SendCertificatePath}/${eventId}`}>
-    <Button
-      style={{
-        backgroundColor: "#FF8A00",
-        color: "white",
-        whiteSpace: "nowrap",
-        height: "fit-content",
-      }}
-    >
-      Next
-    </Button>
-  </Link>
-  
+              <Button
+                style={{
+                  backgroundColor: "#FF8A00",
+                  color: "white",
+                  whiteSpace: "nowrap",
+                  height: "fit-content",
+                }}
+              >
+                Next
+              </Button>
+            </Link>
           </div>
         </div>
       </div>
