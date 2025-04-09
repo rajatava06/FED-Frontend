@@ -139,11 +139,47 @@ $shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
 
 .loadingContainer, .errorContainer {
   text-align: center;
-  margin-top: 5rem;
-  color: red;
+  // margin-top: 5rem;
+  // color: red;
 
   p {
-    margin-top: 2rem;
-    font-size: 1.1rem;
+    margin-bottom: 2rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+}
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1rem;
+
+  .shareIcon {
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+}
+.actionButtons{
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+.buttonGroup {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+.shareBtn {
+  font-size: smaller;
+
+  &:hover {
+    background-color: darken($accent-color, 10%);
+    transform: scale(1.05);
   }
 }

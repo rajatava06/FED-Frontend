@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import { api } from "../../../../../services";
-import { MicroLoading } from "../../../../../microInteraction";
+import { ComponentLoading } from "../../../../../microInteraction";
 import styles from "./styles/VerifyCertificate.module.scss";
 import { CheckCircle } from "lucide-react";
+import Share from "../../../../../features/Modals/Event/ShareModal/ShareModal";
+import shareOutline from "../../../../../assets/images/shareOutline.svg";
 
 const VerifyCertificate = () => {
   const [searchParams] = useSearchParams();
@@ -12,6 +14,10 @@ const VerifyCertificate = () => {
   const [certificateData, setCertificateData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showShareModal, setShowShareModal] = useState(false);
+  
+  // Get current URL for sharing
+  const currentUrl = window.location.href;
 
   useEffect(() => {
     if (!certificateId) {
@@ -60,10 +66,18 @@ const VerifyCertificate = () => {
     }
   };
 
+  const openShareModal = () => {
+    setShowShareModal(true);
+  };
+
+  const closeShareModal = () => {
+    setShowShareModal(false);
+  };
+
   if (loading) {
     return (
       <div className={styles.loadingContainer}>
-        <MicroLoading />
+        <ComponentLoading />
         <p>Verifying certificate...</p>
       </div>
     );
@@ -111,16 +125,32 @@ const VerifyCertificate = () => {
           </table>
 
           <div className={styles.bottomRow}>
+            <div className={styles.actionButtons}>
             <div className={styles.verifiedTag}>
-              <CheckCircle />
-              Verified by FED-KIIT
+                <CheckCircle />
+                <span style={{ color: "white" }}>Verified by FEDKIIT</span>
+              </div>
+              <div className={styles.buttonGroup}>
+              
+                <button className={styles.downloadBtn} onClick={handleDownload}>
+                  Download Certificate
+                </button>
+                {/* <button className={styles.shareBtn} onClick={openShareModal}>
+                  <img style={{ width: "20px", height: "20px" }} src={shareOutline} alt="Share" />
+                  Share
+                </button> */}
+              </div>
             </div>
-            <button className={styles.downloadBtn} onClick={handleDownload}>
-              Download Certificate
-            </button>
           </div>
         </div>
       </div>
+
+      {showShareModal && (
+        <Share 
+          onClose={closeShareModal} 
+          urlpath={currentUrl} 
+        />
+      )}
     </div>
   );
 };
