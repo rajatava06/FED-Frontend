@@ -1,15 +1,16 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
 import { Button, Input } from "../../../../../components";
 import { api } from "../../../../../services";
 import * as XLSX from "xlsx";
-import {  sendBatchMail } from "./tools/certificateTools";
+import { sendBatchMail } from "./tools/certificateTools";
 import { Alert, MicroLoading } from "../../../../../microInteraction";
 import {
   getCertificatePreview,
   generatedAndSendCertificate,
   accessOrCreateEventByFormId,
 } from "../CertificatesForm/tools/certificateTools";
+import AuthContext from "../../../../../context/AuthContext.jsx";
 
 const Checkbox = ({ id, checked, onCheckedChange }) => {
   return (
@@ -24,6 +25,7 @@ const Checkbox = ({ id, checked, onCheckedChange }) => {
 };
 
 const SendCertificate = () => {
+  const authCtx = useContext(AuthContext);
   const { eventId } = useParams();
   const [loading, setLoading] = useState(false);
   const [previewLoading, setPreviewLoading] = useState(false);
@@ -44,7 +46,7 @@ const SendCertificate = () => {
     const fetchCertificatePreview = async () => {
       setPreviewLoading(true);
       try {
-        const preview = await getCertificatePreview(eventId);
+        const preview = await getCertificatePreview(eventId, authCtx.token);
         if (preview) {
           setCertificatePreview(preview);
         }
@@ -207,21 +209,26 @@ const SendCertificate = () => {
       });
       return;
     }
-  
+
     setSendingMail(true);
-  
+
     try {
-      const eventData = await accessOrCreateEventByFormId(eventId);
+      const eventData = await accessOrCreateEventByFormId(
+        eventId,
+        authCtx.token
+      );
       if (!eventData || !eventData.id || !eventData.certificates?.length) {
-        throw new Error("Event data retrieval failed or certificates not found");
+        throw new Error(
+          "Event data retrieval failed or certificates not found"
+        );
       }
       const certificateId =
         eventData.certificates[eventData.certificates.length - 1]?.id;
-  
+
       if (!certificateId) {
         throw new Error("Certificate ID not found");
       }
-  
+
       const attendees = checkedAttendees.map((attendee) => ({
         fieldValues: {
           name: attendee.name || "",
@@ -229,7 +236,7 @@ const SendCertificate = () => {
         },
         certificateId,
       }));
-  
+
       if (attendees.length === 0) {
         throw new Error("No valid attendees found");
       }
@@ -238,8 +245,9 @@ const SendCertificate = () => {
         attendees,
         subject,
         body,
+        token: authCtx.token,
       });
-  
+
       if (response?.status === 200) {
         setAlert({
           type: "success",
@@ -262,8 +270,7 @@ const SendCertificate = () => {
       setSendingMail(false);
     }
   };
-  
-  
+
   const handleTestMail = async () => {
     if (!checkedAttendees.length) {
       setAlert({
@@ -313,8 +320,16 @@ const SendCertificate = () => {
   };
 
   return (
-    <div style={{ marginLeft: "5%", marginRight: "5%" ,marginTop:"30px"}}>
-      <h1 style={{ textAlign: "center", marginBottom: "30px", marginTop: "-30px" }}>Send <span style={{ color: "#FF8A00" }}>Certificate</span></h1>
+    <div style={{ marginLeft: "5%", marginRight: "5%", marginTop: "30px" }}>
+      <h1
+        style={{
+          textAlign: "center",
+          marginBottom: "30px",
+          marginTop: "-30px",
+        }}
+      >
+        Send <span style={{ color: "#FF8A00" }}>Certificate</span>
+      </h1>
       <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
         <div style={{ display: "flex", gap: 20 }}>
           <div
@@ -327,7 +342,7 @@ const SendCertificate = () => {
               objectFit: "cover",
               position: "relative",
               overflow: "hidden",
-              maxWidth:"800px",
+              maxWidth: "800px",
             }}
           >
             {previewLoading ? (
@@ -345,7 +360,12 @@ const SendCertificate = () => {
               <img
                 src={certificatePreview}
                 alt="Certificate Preview"
-                style={{ width: "98%", borderRadius: 10, objectFit:"cotain", maxHeight:"270px" }}
+                style={{
+                  width: "98%",
+                  borderRadius: 10,
+                  objectFit: "cotain",
+                  maxHeight: "270px",
+                }}
               />
             )}
           </div>
@@ -375,7 +395,6 @@ const SendCertificate = () => {
                 marginLeft: "5px",
               }}
             >
-              
               <Button onClick={handleSelectAllUnchecked}>Select All</Button>
               <Button onClick={handleDeselectAllUnchecked}>Deselect All</Button>
             </div>
@@ -430,34 +449,33 @@ const SendCertificate = () => {
               )}
             </div>
             <div style={{ marginBottom: 20 }}>
-          <input
-            type="file"
-            accept=".xlsx,.xls,.csv"
-            onChange={handleFileUpload}
-            style={{ display: "none" }}
-            id="excel-upload"
-            onClick={(e) => {
-            e.target.value = null;
-            }}
-          />
-          <label htmlFor="excel-upload">
-            <Button
-              as="span"
-              disabled={fileUploading}
-              style={{ cursor: "pointer",marginLeft:"6px" }}
-              onClick={() => {
-                document.getElementById("excel-upload").click();
-              }}
-            >
-              {fileUploading ? <MicroLoading /> : "Upload Excel/CSV"}
-            </Button>
-          </label>
-          <span style={{ marginLeft: 9, color: "#666" }}>
-            Upload Excel/CSV file containing attendee details
-          </span>
-        </div>
+              <input
+                type="file"
+                accept=".xlsx,.xls,.csv"
+                onChange={handleFileUpload}
+                style={{ display: "none" }}
+                id="excel-upload"
+                onClick={(e) => {
+                  e.target.value = null;
+                }}
+              />
+              <label htmlFor="excel-upload">
+                <Button
+                  as="span"
+                  disabled={fileUploading}
+                  style={{ cursor: "pointer", marginLeft: "6px" }}
+                  onClick={() => {
+                    document.getElementById("excel-upload").click();
+                  }}
+                >
+                  {fileUploading ? <MicroLoading /> : "Upload Excel/CSV"}
+                </Button>
+              </label>
+              <span style={{ marginLeft: 9, color: "#666" }}>
+                Upload Excel/CSV file containing attendee details
+              </span>
+            </div>
           </div>
-          
         </div>
 
         <div

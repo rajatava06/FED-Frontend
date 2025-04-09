@@ -4,7 +4,7 @@ import AuthContext from "../../../../context/AuthContext";
 // import eventsData from "../../../../data/FormData.json";
 import { Link } from "react-router-dom";
 import { api } from "../../../../services";
-import { ComponentLoading } from "../../../../microInteraction";
+import { ComponentLoading, MicroLoading } from "../../../../microInteraction";
 import { accessOrCreateEventByFormId } from "../../Admin/Form/CertificatesForm/tools/certificateTools.js";
 
 const Events = () => {
@@ -13,6 +13,8 @@ const Events = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [certificates, setCertificates] = useState([]);
+  const [certMap, setCertMap] = useState({});
+  const [loadingCerts, setLoadingCerts] = useState(true); // New state for certificate loading
 
   const viewPath = "/profile/Events";
   const analyticsPath = "/profile/events/Analytics";
@@ -86,6 +88,9 @@ const Events = () => {
           "/api/certificate/sendCertificatesAndEvents",
           {
             email: authCtx.user.email,
+          },
+          {
+            headers: { Authorization: `Bearer ${authCtx.token}` },
           }
         );
         // console.log(response);
@@ -101,8 +106,8 @@ const Events = () => {
   }, [authCtx.user.email]);
 
   const getCertificateForEvent = async (eventId) => {
-    const eid = await accessOrCreateEventByFormId(eventId);
-    // console.log(eid.id, certificates[0].cert.eventId);
+    const eid = await accessOrCreateEventByFormId(eventId, authCtx.token);
+    // console.log(eid, certificates[0].cert.eventId);
     const found = certificates.find((item) => item.cert.eventId == eid.id);
     // console.log(found);
     return found ? found.cert : null;
@@ -121,36 +126,31 @@ const Events = () => {
       .replace(/\//g, "-");
   };
 
-  // const [cert, setCertLink] = useState([]);
-
-  // const setCertificate = async (eventId) => {
-  //   const cert = await getCertificateForEvent(eventId.id); // await needed
-  //   if (cert) {
-  //     const certificateLink = `/verify/certificate?id=${cert[0]}`;
-  //     setCertificateLink([certificateLink]); // fixed spreading
-  //   }
-  // };
-
-  const [certMap, setCertMap] = useState({});
-
   useEffect(() => {
     const fetchAllCerts = async () => {
+      setLoadingCerts(true); // Start loading
       const map = {};
-      for (const event of events) {
-        const cert = await getCertificateForEvent(event.id);
-        if (cert) {
-          const link = `/verify/certificate?id=${cert.id}`;
-          // console.log(cert.id);
-          map[event.id] = link;
+      if (events.length > 0) {
+        for (const event of events) {
+          const cert = await getCertificateForEvent(event.id, authCtx.token);
+          if (cert) {
+            const link = `/verify/certificate?id=${cert.id}`;
+            map[event.id] = link;
+          }
         }
       }
       setCertMap(map);
+      setLoadingCerts(false); // End loading
     };
 
-    fetchAllCerts();
-  }, [events]);
+    if (events.length > 0 && certificates.length > 0) {
+      fetchAllCerts();
+    } else if (events.length > 0 && !isLoading) {
+      // If events are loaded but no certificates found
+      setLoadingCerts(false);
+    }
+  }, [events, certificates]);
 
-  // console.log("Event Access",authCtx.user.access);
   return (
     <div className={styles.participatedEvents}>
       {authCtx.user.access !== "USER" ? (
@@ -191,13 +191,12 @@ const Events = () => {
                         Registrations
                       </th>
                     )}
-                    {/* Add more headers */}
                   </tr>
                 </thead>
 
                 <tbody>
                   {events.map((event) => (
-                    <tr key={event._id}>
+                    <tr key={event._id || event.id}>
                       <td
                         className={styles.mobilewidth}
                         style={{ fontWeight: "500", paddingRight: "10px" }}
@@ -228,7 +227,11 @@ const Events = () => {
                       {/* Certificate - only for USERS */}
                       {authCtx.user.access === "USER" && (
                         <td className={styles.mobilewidthtd}>
-                          {certMap[event.id] ? (
+                          {loadingCerts ? (
+                            <div className={styles.loadingContainer}>
+                              <MicroLoading />
+                            </div>
+                          ) : certMap[event.id] ? (
                             <Link
                               to={certMap[event.id]}
                               target="_blank"
