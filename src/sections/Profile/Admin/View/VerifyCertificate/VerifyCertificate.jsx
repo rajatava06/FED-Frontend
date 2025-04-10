@@ -15,7 +15,9 @@ const VerifyCertificate = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showShareModal, setShowShareModal] = useState(false);
-  
+  const [copied, setCopied] = useState(false);
+
+
   // Get current URL for sharing
   const currentUrl = window.location.href;
 
@@ -32,7 +34,11 @@ const VerifyCertificate = () => {
           id: certificateId,
         });
 
-        if (response.data && response.data.imageSrc && response.data.certificate) {
+        if (
+          response.data &&
+          response.data.imageSrc &&
+          response.data.certificate
+        ) {
           setCertificateData({
             imageSrc: response.data.imageSrc,
             certificateId: response.data.certificate.certificateId,
@@ -65,6 +71,14 @@ const VerifyCertificate = () => {
       document.body.removeChild(link);
     }
   };
+
+  const copyLink = () => {
+    navigator.clipboard.writeText(currentUrl).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000); // revert back after 2 seconds
+    });
+  };
+  
 
   const openShareModal = () => {
     setShowShareModal(true);
@@ -119,26 +133,35 @@ const VerifyCertificate = () => {
               </tr>
               <tr>
                 <th>Event Date:</th>
-                <td>{certificateData.date}</td>
+                <td>
+                  {new Date(certificateData.date).toLocaleDateString("en-US", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })}
+                </td>
               </tr>
             </tbody>
           </table>
 
           <div className={styles.bottomRow}>
             <div className={styles.actionButtons}>
-            <div className={styles.verifiedTag}>
+              <div className={styles.verifiedTag}>
                 <CheckCircle />
                 <span style={{ color: "white" }}>Verified by FEDKIIT</span>
               </div>
               <div className={styles.buttonGroup}>
-              
                 <button className={styles.downloadBtn} onClick={handleDownload}>
-                  Download Certificate
+                  Download
                 </button>
                 {/* <button className={styles.shareBtn} onClick={openShareModal}>
                   <img style={{ width: "20px", height: "20px" }} src={shareOutline} alt="Share" />
                   Share
                 </button> */}
+                <button className={styles.downloadBtn} onClick={copyLink}>
+  {copied ? "Copied..." : "Copy Link"}
+</button>
+
               </div>
             </div>
           </div>
@@ -146,10 +169,7 @@ const VerifyCertificate = () => {
       </div>
 
       {showShareModal && (
-        <Share 
-          onClose={closeShareModal} 
-          urlpath={currentUrl} 
-        />
+        <Share onClose={closeShareModal} urlpath={currentUrl} />
       )}
     </div>
   );
