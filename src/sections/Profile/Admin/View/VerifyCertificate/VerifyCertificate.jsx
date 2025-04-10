@@ -17,7 +17,6 @@ const VerifyCertificate = () => {
   const [showShareModal, setShowShareModal] = useState(false);
   const [copied, setCopied] = useState(false);
 
-
   // Get current URL for sharing
   const currentUrl = window.location.href;
 
@@ -78,7 +77,6 @@ const VerifyCertificate = () => {
       setTimeout(() => setCopied(false), 2000); // revert back after 2 seconds
     });
   };
-  
 
   const openShareModal = () => {
     setShowShareModal(true);
@@ -159,9 +157,8 @@ const VerifyCertificate = () => {
                   Share
                 </button> */}
                 <button className={styles.downloadBtn} onClick={copyLink}>
-  {copied ? "Copied..." : "Copy Link"}
-</button>
-
+                  {copied ? "Copied..." : "Copy Link"}
+                </button>
               </div>
             </div>
           </div>
