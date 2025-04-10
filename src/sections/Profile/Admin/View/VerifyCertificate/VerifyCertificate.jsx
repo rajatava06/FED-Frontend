@@ -1,20 +1,24 @@
 import { useEffect, useState } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import { api } from "../../../../../services";
-import { MicroLoading } from "../../../../../microInteraction";
+import { ComponentLoading } from "../../../../../microInteraction";
 import styles from "./styles/VerifyCertificate.module.scss";
-import { Button } from "../../../../../components";
-import { use } from "react";
-import { color } from "framer-motion";
+import { CheckCircle } from "lucide-react";
+import Share from "../../../../../features/Modals/Event/ShareModal/ShareModal";
+import shareOutline from "../../../../../assets/images/shareOutline.svg";
 
 const VerifyCertificate = () => {
   const [searchParams] = useSearchParams();
   const certificateId = searchParams.get("id");
-  const {issuedCertificateId} = useParams();
+  const { issuedCertificateId } = useParams();
   const [certificateData, setCertificateData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  
+  const [showShareModal, setShowShareModal] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  // Get current URL for sharing
+  const currentUrl = window.location.href;
 
   useEffect(() => {
     if (!certificateId) {
@@ -23,23 +27,24 @@ const VerifyCertificate = () => {
       return;
     }
 
-    console.log("Certificate ID:", certificateId);  
-   
-
     const fetchCertificate = async () => {
       try {
         const response = await api.post("/api/certificate/verifyCertificate", {
           id: certificateId,
         });
 
-        if (response.data && response.data.imageSrc && response.data.certificate) {
+        if (
+          response.data &&
+          response.data.imageSrc &&
+          response.data.certificate
+        ) {
           setCertificateData({
             imageSrc: response.data.imageSrc,
             certificateId: response.data.certificate.certificateId,
             name: response.data.certificate.fieldValues?.name || "N/A",
             email: response.data.certificate.email || "N/A",
-            event: response.data.event?.name  || "N/A",
-            date: response.data.event?.createdAt  || "N/A",
+            event: response.data.event?.name || "N/A",
+            date: response.data.event?.createdAt || "N/A",
           });
         } else {
           setError("Invalid certificate data.");
@@ -66,10 +71,25 @@ const VerifyCertificate = () => {
     }
   };
 
+  const copyLink = () => {
+    navigator.clipboard.writeText(currentUrl).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000); // revert back after 2 seconds
+    });
+  };
+
+  const openShareModal = () => {
+    setShowShareModal(true);
+  };
+
+  const closeShareModal = () => {
+    setShowShareModal(false);
+  };
+
   if (loading) {
     return (
       <div className={styles.loadingContainer}>
-        <MicroLoading />
+        <ComponentLoading />
         <p>Verifying certificate...</p>
       </div>
     );
@@ -81,49 +101,73 @@ const VerifyCertificate = () => {
 
   return (
     <div className={styles.container}>
-      <h1 className={styles.title} style={{textAlign:"center"}}>Certificate <span style={{ color: "#FF8A00" }}>Verification</span></h1>
+      <h1 className={styles.title}>
+        Certificate <span>Verification</span>
+      </h1>
+
       <div className={styles.contentWrapper}>
-        {/* Certificate Image */}
         <div className={styles.imageContainer}>
           <img src={certificateData.imageSrc} alt="Verified Certificate" />
-          
         </div>
 
-        {/* Certificate Details Panel */}
-        <div className={styles.detailsContainer} >
-          <table className={styles.detailsTable}
-          >
+        <div className={styles.detailsContainer}>
+          <table className={styles.detailsTable}>
             <tbody>
               <tr>
-                <th style={{ color: "#FF8A00" }}>Certificate ID:
-                </th>
+                <th>Certificate ID:</th>
                 <td>{certificateId}</td>
               </tr>
               <tr>
-                <th  style={{ color: "#FF8A00" }}>Name:</th>
+                <th>Name:</th>
                 <td>{certificateData.name}</td>
               </tr>
               <tr>
-                <th  style={{ color: "#FF8A00" }}>Event:</th>
+                <th>Event:</th>
                 <td>{certificateData.event}</td>
               </tr>
               <tr>
-                <th  style={{ color: "#FF8A00" }}>Email:</th>
+                <th>Email:</th>
                 <td>{certificateData.email}</td>
               </tr>
               <tr>
-                <th  style={{ color: "#FF8A00" }}>Event Date:</th>
-                <td>{certificateData.date}</td>
-              </tr>
-              <tr>
-                  <Button onClick={handleDownload} style={{backgroundColor: "#FF8A00", color: "white"}}> 
-                    Download
-                  </Button>
+                <th>Event Date:</th>
+                <td>
+                  {new Date(certificateData.date).toLocaleDateString("en-US", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })}
+                </td>
               </tr>
             </tbody>
           </table>
+
+          <div className={styles.bottomRow}>
+            <div className={styles.actionButtons}>
+              <div className={styles.verifiedTag}>
+                <CheckCircle />
+                <span style={{ color: "white" }}>Verified by FEDKIIT</span>
+              </div>
+              <div className={styles.buttonGroup}>
+                <button className={styles.downloadBtn} onClick={handleDownload}>
+                  Download
+                </button>
+                {/* <button className={styles.shareBtn} onClick={openShareModal}>
+                  <img style={{ width: "20px", height: "20px" }} src={shareOutline} alt="Share" />
+                  Share
+                </button> */}
+                <button className={styles.downloadBtn} onClick={copyLink}>
+                  {copied ? "Copied..." : "Copy Link"}
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
+
+      {showShareModal && (
+        <Share onClose={closeShareModal} urlpath={currentUrl} />
+      )}
     </div>
   );
 };
