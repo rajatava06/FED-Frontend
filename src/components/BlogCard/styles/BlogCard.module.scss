@@ -1,13 +1,17 @@
+<<<<<<< Updated upstream
 // $font-family: 'Poppins', sans-serif;
 // $primary-color: #000;
 // $secondary-color: #555;
 // $background-color: #f9f9f9;
 // $icon-color: #f39c12;
+=======
+>>>>>>> Stashed changes
 @import "../../../assets/styles/Global.scss";
 
 .card {
   display: flex;
   width: 100%;
+<<<<<<< Updated upstream
 //   border-top: 1px solid #ddd;
   border-bottom: 1px solid #ddd;
   overflow: hidden;
@@ -31,10 +35,50 @@
       height: 120px;
       border-radius: 8px;
       object-fit: cover;
+=======
+  border-top: 1px solid rgba(221, 221, 221, 0.2);
+  border-bottom: 1px solid rgba(221, 221, 221, 0.2);
+  overflow: hidden;
+  background-color: transparent;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  padding: 20px 0;
+  transition: all 0.3s ease;
+
+  &:hover {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.12);
+    transform: translateY(-4px);
+  }
+
+  .link {
+    display: flex;
+    width: 100%;
+    text-decoration: none;
+  }
+
+  .imageSection {
+    flex: 0 0 180px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 15px;
+    overflow: hidden;
+
+    img {
+      width: 140px;
+      height: 140px;
+      border-radius: 12px;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+
+      &:hover {
+        transform: scale(1.05);
+      }
+>>>>>>> Stashed changes
     }
   }
 
   .contentSection {
+<<<<<<< Updated upstream
     flex: 2;
     padding: 16px;
     display: flex;
@@ -45,47 +89,122 @@
         background: var(--primary);
         -webkit-background-clip: text;
         color: transparent;
+=======
+    flex: 1;
+    padding: 0 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
+
+    h1 {
+      background: var(--primary);
+      -webkit-background-clip: text;
+      color: transparent;
+      margin-bottom: 10px;
+>>>>>>> Stashed changes
     }
 
     .heading {
       font-size: 18px;
       font-weight: 700;
+<<<<<<< Updated upstream
       
       margin-bottom: 8px;
+=======
+      line-height: 1.4;
+      margin-bottom: 10px;
+      transition: color 0.3s ease;
+>>>>>>> Stashed changes
     }
 
     .startLine {
       font-size: 14px;
+<<<<<<< Updated upstream
       color: #ddd;
       margin-bottom: 16px;
+=======
+      color: rgba(221, 221, 221, 0.8);
+      margin-bottom: 16px;
+      line-height: 1.6;
+>>>>>>> Stashed changes
     }
 
     .interaction {
       display: flex;
       justify-content: space-between;
       align-items: center;
+<<<<<<< Updated upstream
 
       .date {
         font-size: 12px;
         color: #ddd;
+=======
+      margin-top: 10px;
+
+      .date {
+        font-size: 12px;
+        color: rgba(221, 221, 221, 0.7);
+        opacity: 0.8;
+>>>>>>> Stashed changes
       }
 
       .reactions {
         display: flex;
+<<<<<<< Updated upstream
+=======
+        align-items: center;
+>>>>>>> Stashed changes
         gap: 16px;
 
         .icon {
           display: flex;
           align-items: center;
+<<<<<<< Updated upstream
           gap: 4px;
           font-size: 14px;
           color: #fff;
 
           i {
             font-size: 16px;
+=======
+          gap: 6px;
+          font-size: 14px;
+          color: rgba(255, 255, 255, 0.9);
+          cursor: pointer;
+          transition: color 0.3s ease;
+
+          i {
+            font-size: 16px;
+            transition: transform 0.2s ease;
+          }
+
+          &:hover {
+            color: rgba(255, 255, 255, 1);
+
+            i {
+              transform: scale(1.1);
+            }
+>>>>>>> Stashed changes
           }
         }
       }
     }
   }
+<<<<<<< Updated upstream
+=======
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+
+    .imageSection {
+      flex: 0 0 auto;
+      margin-bottom: 15px;
+    }
+
+    .contentSection {
+      padding: 0 15px;
+    }
+  }
+>>>>>>> Stashed changes
 }

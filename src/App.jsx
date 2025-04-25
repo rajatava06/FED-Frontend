@@ -20,6 +20,7 @@ import {
   EventsView,
   NewForm,
   ProfileView,
+  BlogForm,
   ViewEvent,
   ViewMember,
 } from "./sections";
@@ -121,6 +122,12 @@ function App() {
                 {authCtx.user.access === "ADMIN" && (
                   <Route path="members" element={<ViewMember />} />
                 )}
+
+<Route path="BlogForm" element={<BlogForm />} />
+                {authCtx.user.access === "ADMIN" && (
+                  <Route path="members" element={<BlogForm />} />
+                )}
+
                 <Route
                   path="events/:eventId"
                   element={[<EventModal onClosePath="/profile/events" />]}

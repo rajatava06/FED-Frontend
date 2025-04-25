@@ -11,6 +11,7 @@ const Blog = () => {
   const [sortOrder, setSortOrder] = useState('latest');
   const [searchQuery, setSearchQuery] = useState('');
 
+<<<<<<< Updated upstream
   // Filter blogs by department and search query in the heading
   const filteredData = data
     .filter((blog) => 
@@ -25,6 +26,21 @@ const Blog = () => {
 
 
   // Sort blogs by date (latest or oldest)
+=======
+  // filter blogs by department
+  const filteredData = data
+    .filter((blog) =>
+      selectedDepartment ? blog.authorDepartment === selectedDepartment : true
+    )
+    .filter((blog) =>
+      blog.blogHeading.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+    .filter((blog) =>
+      blog.status === 'Approved'
+    );
+
+  // sort blogs by date
+>>>>>>> Stashed changes
   const sortedData = filteredData.sort((a, b) => {
     const dateA = new Date(a.dateOfPosting);
     const dateB = new Date(b.dateOfPosting);
@@ -33,7 +49,10 @@ const Blog = () => {
 
   return (
     <div className={styles.feed}>
+<<<<<<< Updated upstream
       {/* Left Sidebar for department filter, search, and sort */}
+=======
+>>>>>>> Stashed changes
       <LeftSidebar
         selectedDepartment={selectedDepartment}
         onSelectDepartment={setSelectedDepartment}
@@ -43,7 +62,10 @@ const Blog = () => {
         onSearchChange={setSearchQuery}
       />
 
+<<<<<<< Updated upstream
       {/* Main Content Area */}
+=======
+>>>>>>> Stashed changes
       <div className={styles.displayFeed}>
         {sortedData.length > 0 ? (
           sortedData.map((blog) => <BlogCard key={blog.id} data={blog} />)
@@ -52,15 +74,25 @@ const Blog = () => {
         )}
       </div>
 
+<<<<<<< Updated upstream
       {/* Right Sidebar */}
+=======
+>>>>>>> Stashed changes
       <div className={styles.rightSidebar}>
         <RightSidebar blogs={sortedData} />
       </div>
 
+<<<<<<< Updated upstream
       {/* ChatBot Component */}
+=======
+>>>>>>> Stashed changes
       <ChatBot />
     </div>
   );
 };
 
+<<<<<<< Updated upstream
 export default Blog;
+=======
+export default Blog;
+>>>>>>> Stashed changes
