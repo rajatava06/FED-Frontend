@@ -67,8 +67,6 @@
   height: auto;
   max-height: 6.8rem;
   overflow-y: scroll;
-  -ms-overflow-style: none; /* Internet Explorer 10+ */
-  scrollbar-width: none; /* Firefox */
 
   text-align: start;
   font-size: 0.8rem;
@@ -80,7 +78,18 @@
 }
 
 .backtxt::-webkit-scrollbar {
-  display: none; /* Safari and Chrome */
+  width: 6px;
+  transition: .2s linear;
+}
+
+.backtxt::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.backtxt::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+  cursor: pointer;
 }
 
 .backbtn {
@@ -95,6 +104,7 @@
 
 .eventname {
   font-size: 1.5rem;
+  width: 68%;
   font-weight: 600;
   text-align: start;
   background: var(
@@ -305,7 +315,10 @@ input:checked + .slider:before {
   }
 
   .eventname {
-    font-size: 1.1rem;
+    font-size: 0.95rem;
+  }
+  .eventname p{
+    font-size: 0.7rem;
   }
 
   .date {
@@ -421,7 +434,7 @@ input:checked + .slider:before {
   }
 
   .eventname {
-    font-size: 2rem;
+    font-size: 1.3rem;
   }
 }
 
@@ -435,7 +448,7 @@ input:checked + .slider:before {
   }
 
   .eventname {
-    font-size: 2rem;
+    font-size: 1.4rem;
   }
 }
 @media (min-width: 701px) and (max-width: 800px) {
@@ -446,7 +459,7 @@ input:checked + .slider:before {
   }
 
   .eventname {
-    font-size: 2rem;
+    font-size: 1.4rem;
   }
 }
 @media (min-width: 801px) and (max-width: 900px) {
@@ -457,7 +470,8 @@ input:checked + .slider:before {
   }
 
   .eventname {
-    font-size: 2rem;
+    
+    font-size: 1.4rem;
   }
 }
 
