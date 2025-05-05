@@ -20,6 +20,7 @@ import {
   EventsView,
   NewForm,
   ProfileView,
+  BlogForm,
   ViewEvent,
   ViewMember,
   CertificatesView,
@@ -131,31 +132,10 @@ function App() {
                 {authCtx.user.access === "ADMIN" && (
                   <Route path="members" element={<ViewMember />} />
                 )}
-                {/* Certificates Route */}
 
+<Route path="BlogForm" element={<BlogForm />} />
                 {authCtx.user.access === "ADMIN" && (
-                  <Route path="certificates" element={<CertificatesView />} />
-                )}
-
-                {authCtx.user.access === "ADMIN" && (
-                  <Route
-                    path="events/SendCertificate/:eventId"
-                    element={<SendCertificate />}
-                  />
-                )}
-
-                {authCtx.user.access === "ADMIN" && (
-                  <Route
-                    path="events/createCertificates/:eventId"
-                    element={<CertificatesForm />}
-                  />
-                )}
-
-                {authCtx.user.access === "ADMIN" && (
-                  <Route
-                    path="events/viewCertificates/:eventId"
-                    element={<CertificatesPreview />}
-                  />
+                  <Route path="members" element={<BlogForm />} />
                 )}
 
                 <Route

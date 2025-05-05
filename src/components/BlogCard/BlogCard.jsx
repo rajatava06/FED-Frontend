@@ -8,19 +8,28 @@ function BlogCard(props) {
   const { data } = props;
   const { id, blogHeading, blogContent, blogImage, dateOfPosting, publicReaction } = data;
 
+<<<<<<< Updated upstream
   // Function to strip HTML tags
+=======
+>>>>>>> Stashed changes
   const stripHtmlTags = (html) => {
     const tempDiv = document.createElement("div");
     tempDiv.innerHTML = html;
     return tempDiv.textContent || tempDiv.innerText || "";
   };
 
+<<<<<<< Updated upstream
   // Function to truncate text with ellipsis
+=======
+>>>>>>> Stashed changes
   const truncateText = (text, limit) => {
     return text.length > limit ? text.substring(0, limit) + "..." : text;
   };
 
+<<<<<<< Updated upstream
   // Strip HTML tags and truncate content
+=======
+>>>>>>> Stashed changes
   const plainTextContent = stripHtmlTags(blogContent);
   const truncatedContent = truncateText(plainTextContent, 150);
 

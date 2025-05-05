@@ -46,11 +46,11 @@
 
 .largeContent h3{
   animation: fadeIn 3s ease-in-out;
-  white-space: nowrap; /* Prevent wrapping */
+  white-space: nowrap; 
 }
 
 .dynamicText {
-  height: 65px; /* Set to a fixed height */
+  height: 65px; 
   display: flex;
   justify-content: left;
   align-items: center;
