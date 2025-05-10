@@ -1,72 +1,10 @@
-<<<<<<< Updated upstream
-@import "../../../../assets/styles/Global.scss";
-
-.rightSidebar {
-    padding: 1rem;
-    border-left: 1px solid rgba(255, 190, 11, 0.84);
-    margin-left: 10px;
-    height: 80vh;
-    overflow-y: scroll;
-    h3 {
-      font-size: 1.2rem;
-      margin-bottom: 1rem;
-      color: #fff;
-      padding-bottom: 0.5rem ;
-      border-bottom: 2px solid rgba(255, 190, 11, 0.84);
-    }
-    ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-    .blogItem {
-      display: flex;
-      align-items: center;
-      margin-bottom: 1rem;
-      &:last-child {
-        margin-bottom: 0;
-      }
-    }
-    .blogImage {
-      width: 50px;
-      height: 50px;
-      object-fit: cover;
-      border-radius: 5px;
-      margin-right: 0.8rem;
-    }
-    .blogInfo {
-      flex: 1;
-      .blogHeading {
-        font-size: 0.95rem;
-        font-weight: bold;
-        background: var(--primary);
-        -webkit-background-clip: text;
-        color: transparent;
-        margin: 0 0 0.3rem;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        white-space: wrap;
-      }
-      .blogAuthor {
-        font-size: 0.85rem;
-        color: #555;
-        margin: 0;
-      }
-      .blogReactions {
-        font-size: 0.8rem;
-        color: #888;
-      }
-    }
-  }
-  
-=======
 @import "../../../../assets/styles/Global.scss";  
-
+//rightsidebar
 .rightSidebar {
   padding: 1rem;
   border-left: 1px solid rgba(255, 190, 11, 0.84);
   margin-left: 10px;
-  height: 80vh;
+  height: 95vh;
   overflow-y: auto;
   background-color: #1e1e1e;
   border-radius: 8px;
@@ -74,7 +12,7 @@
   width: calc(100% - 20px);
   max-width: 350px;
   box-sizing: border-box;
-  overflow-x: hidden;
+  overflow-x: hidden; 
   
   h3 {
     font-size: 1.4rem;
@@ -97,16 +35,16 @@
     flex-direction: column;
     gap: 1rem;
   }
-  
+  //blog items
   .blogItem {
     display: flex;
     align-items: flex-start;
     padding: 0.8rem;
-    background: rgba(35, 35, 35, 0.5);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border-radius: 8px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(35, 35, 35, 0.5); 
+    backdrop-filter: blur(10px); 
+    -webkit-backdrop-filter: blur(10px); 
+    border-radius: 8px; 
+    border: 1px solid rgba(255, 255, 255, 0.1); 
     transition: all 0.3s ease;
     width: 100%;
     box-sizing: border-box;
@@ -123,7 +61,7 @@
       margin-bottom: 0;
     }
   }
-  
+  //blog details
   .blogImage {
     width: 50px;
     height: 50px;
@@ -193,8 +131,7 @@
     
     .blogInfo {
       width: 100%;
-      white-space: normal;
+      white-space: normal; 
     }
   }
 }
->>>>>>> Stashed changes

@@ -1,58 +1,59 @@
 import React, { useState } from 'react';
 import BlogCard from '../../components/BlogCard/BlogCard';
 import { ChatBot } from "../../features";
-import data from '../../data/Blog.json';
+// import data from '../../data/Blog.json';
 import styles from '../Blog/styles/Blog.module.scss';
 import LeftSidebar from '../../layouts/Blog/LeftSidebar/LeftSidebar';
 import RightSidebar from '../../layouts/Blog/RightSidebar/RightSidebar';
+import {api} from '../../services'; // Assuming you have an API module to fetch data
 
 const Blog = () => {
   const [selectedDepartment, setSelectedDepartment] = useState(null);
   const [sortOrder, setSortOrder] = useState('latest');
   const [searchQuery, setSearchQuery] = useState('');
 
-<<<<<<< Updated upstream
-  // Filter blogs by department and search query in the heading
-  const filteredData = data
-    .filter((blog) => 
-      selectedDepartment ? blog.authorDepartment === selectedDepartment : true
-    )
-    .filter((blog) => 
-      blog.blogHeading.toLowerCase().includes(searchQuery.toLowerCase())
-    )
-    .filter((blog) => 
-      blog.status === 'Approved'
-    );
+  const filteredData = data.blogs
+    .filter((blog) => {
+      // Parse author field safely
+      let authorObj;
+      try {
+        authorObj = JSON.parse(blog.author);
+      } catch (err) {
+        authorObj = { department: null, name: '' };
+      }
 
-
-  // Sort blogs by date (latest or oldest)
-=======
-  // filter blogs by department
-  const filteredData = data
+      return selectedDepartment
+        ? authorObj.department === selectedDepartment
+        : true;
+    })
     .filter((blog) =>
-      selectedDepartment ? blog.authorDepartment === selectedDepartment : true
+      blog.title.toLowerCase().includes(searchQuery.toLowerCase())
     )
-    .filter((blog) =>
-      blog.blogHeading.toLowerCase().includes(searchQuery.toLowerCase())
-    )
-    .filter((blog) =>
-      blog.status === 'Approved'
-    );
+    .filter((blog) => {
+      // Parse approval field safely
+      let approvalObj;
+      try {
+        approvalObj = JSON.parse(blog.approval);
+      } catch (err) {
+        approvalObj = { status: false };
+      }
 
-  // sort blogs by date
->>>>>>> Stashed changes
+      return approvalObj.status === true;
+    });
+
   const sortedData = filteredData.sort((a, b) => {
-    const dateA = new Date(a.dateOfPosting);
-    const dateB = new Date(b.dateOfPosting);
+    const dateA = new Date(a.date);
+    const dateB = new Date(b.date);
     return sortOrder === 'latest' ? dateB - dateA : dateA - dateB;
   });
 
+  // useEffect(() => {
+  //   // Fetch data or perform any side effects here
+  //   api.get('/api/blog/getBlog')
+  // }, []);
+
   return (
     <div className={styles.feed}>
-<<<<<<< Updated upstream
-      {/* Left Sidebar for department filter, search, and sort */}
-=======
->>>>>>> Stashed changes
       <LeftSidebar
         selectedDepartment={selectedDepartment}
         onSelectDepartment={setSelectedDepartment}
@@ -61,11 +62,6 @@ const Blog = () => {
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
       />
-
-<<<<<<< Updated upstream
-      {/* Main Content Area */}
-=======
->>>>>>> Stashed changes
       <div className={styles.displayFeed}>
         {sortedData.length > 0 ? (
           sortedData.map((blog) => <BlogCard key={blog.id} data={blog} />)
@@ -73,26 +69,10 @@ const Blog = () => {
           <p>No blogs match your search criteria.</p>
         )}
       </div>
-
-<<<<<<< Updated upstream
-      {/* Right Sidebar */}
-=======
->>>>>>> Stashed changes
-      <div className={styles.rightSidebar}>
-        <RightSidebar blogs={sortedData} />
-      </div>
-
-<<<<<<< Updated upstream
-      {/* ChatBot Component */}
-=======
->>>>>>> Stashed changes
+      <RightSidebar blogs={sortedData} />
       <ChatBot />
     </div>
   );
 };
 
-<<<<<<< Updated upstream
 export default Blog;
-=======
-export default Blog;
->>>>>>> Stashed changes

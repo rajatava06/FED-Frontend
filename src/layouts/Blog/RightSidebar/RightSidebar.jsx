@@ -3,34 +3,17 @@ import styles from "./styles/RightSidebar.module.scss";
 import { Link } from "react-router-dom";
 
 const RightSidebar = ({ blogs }) => {
-<<<<<<< Updated upstream
-  // Sort blogs by total public reactions (likes + comments)
-=======
->>>>>>> Stashed changes
+  // blogs sorting with safety checks
   const sortedBlogs = blogs
-    .map(blog => ({
-      ...blog,
-      totalReactions: blog.publicReaction.likes + blog.publicReaction.comments.length,
-    }))
+    .map((blog) => {
+      const likes = blog.publicReaction?.likes || 0;
+      const commentsCount = blog.publicReaction?.comments?.length || 0;
+      return {
+        ...blog,
+        totalReactions: likes + commentsCount,
+      };
+    })
     .sort((a, b) => b.totalReactions - a.totalReactions)
-<<<<<<< Updated upstream
-    .slice(0, 8); 
-
-  return (
-    <div className={styles.rightSidebar}>
-      <h3>Top Blogs</h3>
-      <ul>
-        {sortedBlogs.map(blog => (
-          <li key={blog.id} className={styles.blogItem}>
-            <Link to={`/Blog/${blog.id}`}>
-            <div className={styles.blogInfo}>
-              <h4 className={styles.blogHeading}>{blog.blogHeading}</h4>
-              <p className={styles.blogAuthor}>{`By ${blog.authorName}`}</p>
-              <p className={styles.blogReactions}>
-                {blog.publicReaction.likes} Likes • {blog.publicReaction.comments.length} Comments
-              </p>
-            </div>
-=======
     .slice(0, 8);
 
   return (
@@ -39,17 +22,16 @@ const RightSidebar = ({ blogs }) => {
         <h3>Top Blogs</h3>
       </div>
       <ul className={styles.blogList}>
-        {sortedBlogs.map(blog => (
+        {sortedBlogs.map((blog) => (
           <li key={blog.id} className={styles.blogItem}>
             <Link to={`/Blog/${blog.id}`} className={styles.blogLink}>
               <div className={styles.blogInfo}>
                 <h4 className={styles.blogHeading}>{blog.blogHeading}</h4>
                 <p className={styles.blogAuthor}>{`By ${blog.authorName}`}</p>
                 <p className={styles.blogReactions}>
-                  {blog.publicReaction.likes} Likes • {blog.publicReaction.comments.length} Comments
+                  {blog.publicReaction?.likes || 0} Likes • {blog.publicReaction?.comments?.length || 0} Comments
                 </p>
               </div>
->>>>>>> Stashed changes
             </Link>
           </li>
         ))}

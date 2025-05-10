@@ -1,15 +1,5 @@
 import React from 'react';
 import styles from './styles/LeftSidebar.module.scss';
-<<<<<<< Updated upstream
-
-function LeftSidebar({ 
-  selectedDepartment, 
-  onSelectDepartment, 
-  sortOrder, 
-  onSortOrderChange, 
-  searchQuery, 
-  onSearchChange 
-=======
 import Input from '../../../components/Core/Input'; 
 
 function LeftSidebar({
@@ -19,7 +9,6 @@ function LeftSidebar({
   onSortOrderChange,
   searchQuery,
   onSearchChange
->>>>>>> Stashed changes
 }) {
   const departments = [
     "All Departments",
@@ -30,78 +19,6 @@ function LeftSidebar({
     "PR And Finance",
     "Human Resource",
   ];
-<<<<<<< Updated upstream
-
-  return (
-    <div className={styles.sidebar}>
-      {/* Search Bar */}
-      <input style={
-        {
-          'padding': "8px",
-          "borderRadius": "10px",
-          "border": "1px solid rgba(255, 190, 11, 0.84)",
-          "background": "transparent",
-          "color" : "#fff"
-        }
-      }
-        type="text"
-        placeholder="Search blogs..."
-        value={searchQuery}
-        onChange={(e) => onSearchChange(e.target.value)}
-        className={styles.searchInput}
-      />
-
-      {/* Sort Options */}
-      <div className={styles.filterSection}>
-        <h3 className={styles.subtitle}>Sort By</h3>
-        <a
-          href="#"
-          className={`${styles.link} ${
-            sortOrder === 'latest' ? styles.active : ''
-          }`}
-          onClick={(e) => {
-            e.preventDefault();
-            onSortOrderChange('latest');
-          }}
-        >
-          Latest
-        </a>
-        <a
-          href="#"
-          className={`${styles.link} ${
-            sortOrder === 'oldest' ? styles.active : ''
-          }`}
-          onClick={(e) => {
-            e.preventDefault();
-            onSortOrderChange('oldest');
-          }}
-        >
-          Oldest
-        </a>
-      </div>
-
-      {/* Department Filter */}
-      <div className={styles.filterSection}>
-        <h3 className={styles.subtitle}>Departments</h3>
-        {departments.map((department) => (
-          <a
-            key={department}
-            href="#"
-            className={`${styles.link} ${
-              selectedDepartment === department ? styles.active : ''
-            }`}
-            onClick={(e) => {
-              e.preventDefault();
-              onSelectDepartment(department === "All Departments" ? null : department);
-            }}
-          >
-            {department}
-          </a>
-        ))}
-      </div>
-
-      
-=======
   
   const sortOptions = [
     { label: "Latest", value: "latest" },
@@ -110,7 +27,7 @@ function LeftSidebar({
 
   return (
     <div className={styles.leftSidebar}>
-      
+     
       <div className={styles.searchBar}>
         <h3 className={styles.subtitle}>Search</h3>
         <input
@@ -122,7 +39,7 @@ function LeftSidebar({
         />
       </div>
       
-    
+     
       <div className={styles.filterSection}>
         <h3 className={styles.subtitle}>Sort By</h3>
         <div className={styles.departmentSelect}>
@@ -138,7 +55,7 @@ function LeftSidebar({
         </div>
       </div>
           
-      
+   
       <div className={styles.filterSection}>
         <h3 className={styles.subtitle}>Departments</h3>
         <div className={styles.departmentSelect}>
@@ -155,13 +72,8 @@ function LeftSidebar({
           />
         </div>
       </div>
->>>>>>> Stashed changes
     </div>
   );
 }
 
-<<<<<<< Updated upstream
 export default LeftSidebar;
-=======
-export default LeftSidebar;
->>>>>>> Stashed changes
