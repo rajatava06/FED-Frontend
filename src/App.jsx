@@ -107,7 +107,8 @@ function App() {
             <Route path="/Social" element={<Social />} />
             <Route path="/Team" element={<Team />} />
             <Route path="/Blog" element={<Blog />} />
-            <Route path="/Blog/:id" element={<FullBlog />} />
+            {/* Disabled full blog page - redirecting to Medium instead */}
+            {/* <Route path="/Blog/:id" element={<FullBlog />} /> */}
             <Route path="/Alumni" element={<Alumni />} />
             <Route path="/verify/certificate" element={<VerifyCertificate />} />
             {/* <Route path="/Omega" element={<Omega />} /> */}
@@ -133,7 +134,11 @@ function App() {
                   <Route path="members" element={<ViewMember />} />
                 )}
 
-<Route path="BlogForm" element={<BlogForm />} />
+ {/* blog access to this mail*/ }
+                {(authCtx.user.access === "ADMIN" || 
+                  authCtx.user.email === "fedtechwork@gmail.com") && (
+                  <Route path="BlogForm" element={<BlogForm />} />
+                )}
                 {authCtx.user.access === "ADMIN" && (
                   <Route path="members" element={<BlogForm />} />
                 )}

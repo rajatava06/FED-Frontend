@@ -10,7 +10,7 @@
   box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.35);
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 2rem;
   transition: all 0.3s ease;
   width: clamp(200px, 20vw, 300px);
 
@@ -56,7 +56,7 @@
     background-clip: text;
     color: transparent;
     text-align: center;
-    margin-bottom: 0.8rem;
+    margin-bottom: 1rem;
     padding-bottom: 0.5rem;
     border-bottom: 2px solid rgba(255, 190, 11, 0.5);
     font-weight: 700;
@@ -99,7 +99,7 @@
       background: $back-glass;
       border: 2px solid rgba(244, 43, 3, 0.5);
       border-radius: 10px;
-      color: $text-color;
+      color: white;
       transition: all 0.3s ease;
 
       &:focus-within {
