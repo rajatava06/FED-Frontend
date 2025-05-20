@@ -10,6 +10,7 @@ function LeftSidebar({
   searchQuery,
   onSearchChange
 }) {
+  //departments function
   const departments = [
     "All Departments",
     "Technical",
@@ -30,6 +31,7 @@ function LeftSidebar({
      
       <div className={styles.searchBar}>
         <h3 className={styles.subtitle}>Search</h3>
+        <br></br>
         <input
           type="text"
           placeholder="Search blogs..."
@@ -55,7 +57,7 @@ function LeftSidebar({
         </div>
       </div>
           
-   
+   {/* filtering + dropdowndepartment */}
       <div className={styles.filterSection}>
         <h3 className={styles.subtitle}>Departments</h3>
         <div className={styles.departmentSelect}>
