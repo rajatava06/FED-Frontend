@@ -36,6 +36,8 @@ function BlogCard(props) {
   const date = processedData.date || processedData.blogDate || new Date().toISOString();
   const author = processedData.author || processedData.blogAuthor || {name: "Unknown", department: "N/A"};
   const authorDepartment = processedData.authorDepartment || processedData.department || '';
+  const likes = processedData.likes || 0;
+  const comments = processedData.comments || [];
   const summary = processedData.summary || processedData.metaDescription || truncateText(desc, 100);
   const blogLink = processedData.blogLink || processedData.mediumLink || 'https://medium.com/@fedkiit';
 
@@ -98,7 +100,7 @@ function BlogCard(props) {
 
   return (
     <div className={styles.card}>
-      <img className={styles.banner} src={image} alt={title} />
+      <img className={styles.banner} src={image || 'https://via.placeholder.com/300x180'} alt={title} />
 
       <div className={styles.content}>
         <div className={styles.header}>
