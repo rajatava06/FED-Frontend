@@ -36,8 +36,6 @@ function BlogCard(props) {
   const date = processedData.date || processedData.blogDate || new Date().toISOString();
   const author = processedData.author || processedData.blogAuthor || {name: "Unknown", department: "N/A"};
   const authorDepartment = processedData.authorDepartment || processedData.department || '';
-  const likes = processedData.likes || 0;
-  const comments = processedData.comments || [];
   const summary = processedData.summary || processedData.metaDescription || truncateText(desc, 100);
   const blogLink = processedData.blogLink || processedData.mediumLink || 'https://medium.com/@fedkiit';
 
@@ -100,26 +98,25 @@ function BlogCard(props) {
 
   return (
     <div className={styles.card}>
-      <img className={styles.banner} src={image || 'https://via.placeholder.com/300x180'} alt={title} />
-
+      <div className={styles.imageWrapper}>
+        <img className={styles.banner} src={image || 'https://via.placeholder.com/300x180'} alt={title} />
+      </div>
       <div className={styles.content}>
         <div className={styles.header}>
-          <h2 className={styles.title}>
-            {title}
-          </h2>
-          <p className={styles.date}>
-               {date ? new Date(date).toLocaleDateString('en-GB', {
-                 day: '2-digit',
-                 month: 'short',
-                 year: 'numeric',
-                }) : 'Invalid Date'}
-             </p>
+           <h2 className={styles.title} style={{ margin: 0 }}>
+              {title}
+            </h2>
+            <p className={styles.date} style={{ margin: 0 }}>
+              {date ? new Date(date).toLocaleDateString('en-GB', {
+                day: '2-digit',
+                month: 'short',
+                year: 'numeric',
+              }) : 'Invalid Date'}
+            </p> 
         </div>
 
         <p className={styles.author}>
           By <strong>{parsedAuthor.name}</strong>
-          {(parsedAuthor.department && parsedAuthor.department !== 'N/A') ? ` (${parsedAuthor.department})`
-            : (authorDepartment ? ` (${authorDepartment})` : '')}
         </p>
 
         <p className={styles.summary}>
