@@ -1,82 +1,70 @@
-import React, { useState, useEffect } from 'react';
-import BlogCard from '../../components/BlogCard/BlogCard';
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Search, Filter } from "lucide-react";
+import styles from "./styles/Blog.module.scss";
 import { ChatBot } from "../../features";
-import styles from '../Blog/styles/Blog.module.scss';
-import LeftSidebar from '../../layouts/Blog/LeftSidebar/LeftSidebar';
-import RightSidebar from '../../layouts/Blog/RightSidebar/RightSidebar';
-import { api } from '../../services';
-import { ComponentLoading } from '../../microInteraction';
+import { api } from "../../services";
+import { ComponentLoading } from "../../microInteraction";
+import BlogCard from "../../components/BlogCard/BlogCard";
 
 const Blog = () => {
-  const [selectedDepartment, setSelectedDepartment] = useState(null);
-  const [sortOrder, setSortOrder] = useState('latest');
-  const [searchQuery, setSearchQuery] = useState('');
+  const navigate = useNavigate();
   const [blogs, setBlogs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showFilter, setShowFilter] = useState(false);
+  const [selectedDepartment, setSelectedDepartment] = useState("All");
+  const [departments, setDepartments] = useState(["All"]);
+  const [showAllBlogs, setShowAllBlogs] = useState(false);
 
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
         setIsLoading(true);
-        console.log('Fetching blogs from backend...');
         const response = await api.get('/api/blog/getBlog');
-        console.log('Blog API raw response:', response);
-        console.log('Blog API data response:', response.data);
-        
         if (response.status === 200) {
-          
           const blogData = response.data.blogs || [];
-          console.log('Raw blog data array:', blogData);
-          console.log('Number of blogs received:', blogData.length);
-          
-         
+          let processedBlogs = [];
+
           if (typeof blogData === 'string') {
             try {
-              const parsedBlogs = JSON.parse(blogData);
-              console.log('Successfully parsed blog data string into array:', parsedBlogs);
-              setBlogs(parsedBlogs);
-            } catch (err) {
-              console.error('Error parsing blog data string:', err);
-              setBlogs([]);
+              processedBlogs = JSON.parse(blogData);
+            } catch {
+              processedBlogs = [];
             }
           } else if (Array.isArray(blogData)) {
-            console.log('Processing blog array...');
-            const processedBlogs = blogData.map((blog, index) => {
-              console.log(`Processing blog ${index}:`, blog);
-              
-              const processedBlog = {
-                id: blog.id || blog._id,
-                title: blog.title || blog.blogTitle || 'Untitled Blog',
-                desc: blog.desc || blog.metaDescription || blog.blogContent || '',
-                image: blog.image || blog.blogImage || 'https://via.placeholder.com/100',
-                date: blog.date || blog.blogDate || new Date().toISOString(),
-                author: blog.author || blog.blogAuthor || '{"name":"Unknown","department":"N/A"}',
-                blogLink: blog.blogLink || blog.mediumLink || '',
-                visibility: blog.visibility === 'private' ? 'private' : 'public',
-                approval: blog.approval === false ? false : true,
-                summary: blog.summary || blog.metaDescription || '',
-                likes: blog.likes || 0,
-                comments: blog.comments || [],
-              };
-              
-              console.log(`Processed blog ${index}:`, processedBlog);
-              return processedBlog;
-            });
-            
-            console.log('All processed blogs:', processedBlogs);
-            console.log('Number of processed blogs:', processedBlogs.length);
-            setBlogs(processedBlogs);
-          } else {
-            console.error('Blog data is neither an array nor a string:', blogData);
-            setBlogs([]);
+            processedBlogs = blogData.map((blog) => ({
+              id: blog.id || blog._id,
+              title: blog.title || blog.blogTitle || 'Untitled Blog',
+              desc: blog.desc || blog.metaDescription || blog.blogContent || '',
+              image: blog.image || blog.blogImage || 'https://via.placeholder.com/400x200',
+              date: blog.date || blog.blogDate || new Date().toISOString(),
+              author: blog.author || blog.blogAuthor || '{"name":"Unknown","department":"N/A"}',
+              blogLink: blog.blogLink || blog.mediumLink || '',
+              visibility: blog.visibility === 'private' ? 'private' : 'public',
+              approval: blog.approval === false ? false : true,
+              summary: blog.summary || blog.metaDescription || '',
+              likes: blog.likes || 0,
+              comments: blog.comments || [],
+              readTime: blog.readTime || Math.ceil(Math.random() * 15) + 3,
+            }));
           }
+
+          setBlogs(processedBlogs);
+
+          const uniqueDepts = new Set();
+          processedBlogs.forEach((blog) => {
+            try {
+              const authorObj = typeof blog.author === 'string' ? JSON.parse(blog.author) : blog.author;
+              if (authorObj.department) uniqueDepts.add(authorObj.department);
+            } catch {}
+          });
+          setDepartments(["All", ...Array.from(uniqueDepts)]);
         } else {
-          console.error('Failed to fetch blogs, status:', response.status);
           setError('Failed to fetch blogs');
         }
-      } catch (error) {
-        console.error('Error fetching blogs:', error);
+      } catch {
         setError('An error occurred while fetching blogs');
       } finally {
         setIsLoading(false);
@@ -86,119 +74,136 @@ const Blog = () => {
     fetchBlogs();
   }, []);
 
-  const filteredData = blogs
+  const filteredBlogs = blogs
     .filter((blog) => {
       let authorObj;
       try {
         authorObj = typeof blog.author === 'string' ? JSON.parse(blog.author) : blog.author;
-      } catch (err) {
+      } catch {
         authorObj = { department: null, name: '' };
       }
-
-      return selectedDepartment
-        ? authorObj.department === selectedDepartment
-        : true;
+      return selectedDepartment === "All" ? true : authorObj.department === selectedDepartment;
     })
     .filter((blog) => {
-      
       const titleMatch = blog.title?.toLowerCase().includes(searchQuery.toLowerCase());
       const descMatch = blog.desc?.toLowerCase().includes(searchQuery.toLowerCase());
-      
-      // fetch author name from blog object
       let authorName = '';
       try {
         const authorObj = typeof blog.author === 'string' ? JSON.parse(blog.author) : blog.author;
         authorName = authorObj?.name || '';
-      } catch (err) {
-        
-      }
-      
+      } catch {}
       const authorMatch = authorName.toLowerCase().includes(searchQuery.toLowerCase());
-      
       return titleMatch || descMatch || authorMatch;
     })
-    .filter((blog) => {
-      console.log('Filtering blog:', blog);
-      console.log('Blog details - Title:', blog.title, 'Visibility:', blog.visibility, 'Approval:', blog.approval);
-      
-      if (blog.visibility === 'private') {
-        console.log('Blog is private, filtering out:', blog.title);
-        return false;
-      }
+    .filter((blog) => blog.visibility !== 'private' && blog.approval !== false)
+    .sort((a, b) => new Date(b.date) - new Date(a.date));
 
-      if (blog.approval) {
-        try {
-          if (typeof blog.approval === 'object') {
-            if (blog.approval.status === false) {
-              console.log('Blog not approved (object), filtering out:', blog.title);
-              return false;
-            }
-          } 
-          else if (typeof blog.approval === 'string') {
-            try {
-              const approvalObj = JSON.parse(blog.approval);
-              if (approvalObj.status === false) {
-                console.log('Blog not approved (string), filtering out:', blog.title);
-                return false;
-              }
-            } catch (parseErr) {
-              console.log('Could not parse approval string, showing blog anyway:', blog.title);
-            }
-          }
-        } catch (err) {
-          console.log('Error handling approval for blog:', blog.title, err);
-        }
-      }
-      
-      console.log('Blog passed all filters, showing:', blog.title);
-      return true;
-    });
-    //sorted data
+  const recentBlogs = filteredBlogs.slice(0, 1);
+  const trendingBlogs = filteredBlogs.slice(1, 3);
+  const featuredBlogs = filteredBlogs.slice(3, 6);
 
-  const sortedData = filteredData.sort((a, b) => {
-    const dateA = new Date(a.date);
-    const dateB = new Date(b.date);
-    return sortOrder === 'latest' ? dateB - dateA : dateA - dateB;
-  });
+  const handleBlogClick = (blogId) => navigate(`/Blog/${blogId}`);
 
   if (isLoading) {
-    return (
-      <div className={styles.loadingContainer}>
-        <ComponentLoading />
-      </div>
-    );
+    return <div className={styles.loadingContainer}><ComponentLoading /></div>;
   }
 
   if (error) {
-    return (
-      <div className={styles.errorContainer}>
-        <p className={styles.errorMessage}>{error}</p>
-      </div>
-    );
+    return <div className={styles.errorContainer}><p className={styles.errorMessage}>{error}</p></div>;
   }
 
-  const isMobile = window.innerWidth <= 767;
-
   return (
-    <div className={styles.feed}>
-      <LeftSidebar
-        selectedDepartment={selectedDepartment}
-        onSelectDepartment={setSelectedDepartment}
-        sortOrder={sortOrder}
-        onSortOrderChange={setSortOrder}
-        searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
-      />
-      <div className={styles.displayFeed}>
-        {sortedData.length > 0 ? (
-          sortedData.map((blog) => <BlogCard key={blog.id} data={blog} />)
+    <div className={styles.pageWrapper}>
+      <div className={styles.searchWrapper}>
+        <div className={styles.searchBar}>
+          <Search size={18} className={styles.searchIcon} />
+          <input
+            type="text"
+            placeholder="Search Blogs"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className={styles.searchInput}
+          />
+          <div className={styles.filterWrapper}>
+            <button onClick={() => setShowFilter(!showFilter)} className={styles.filterButton}>
+              <Filter size={18} />
+            </button>
+            {showFilter && (
+              <ul className={styles.dropdown}>
+                {departments.map((dept, i) => (
+                  <li
+                    key={i}
+                    className={`${styles.dropdownItem} ${selectedDepartment === dept ? styles.activeItem : ""}`}
+                    onClick={() => {
+                      setSelectedDepartment(dept);
+                      setShowFilter(false);
+                    }}
+                  >
+                    {dept}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </div>
+      </div>
+
+      <div className={styles.blogContainer}>
+        {searchQuery !== '' || showAllBlogs ? (
+          <>
+            <div className={styles.featuredGrid}>
+              {filteredBlogs.map((blog) => (
+                <div key={blog.id} className={styles.featuredCard} onClick={() => handleBlogClick(blog.id)}>
+                  <BlogCard data={blog} />
+                </div>
+              ))}
+            </div>
+            <div className={styles.buttonWrapper}>
+              <button className={styles.seeAllButton} onClick={() => setShowAllBlogs(false)}>Go Back</button>
+            </div>
+          </>
         ) : (
-          <p>No blogs match your search criteria.</p>
+          <>
+            <div className={styles.topSection}>
+              <section className={styles.recentlyAdded}>
+                <h3>RECENTLY ADDED</h3>
+                {recentBlogs.length > 0 ? (
+                  <div className={styles.blogCard} onClick={() => handleBlogClick(recentBlogs[0].id)}>
+                    <BlogCard data={recentBlogs[0]} />
+                  </div>
+                ) : <p>No recent blogs available.</p>}
+              </section>
+
+              <section className={styles.trendingBlogs}>
+                <h3>TRENDING BLOGS</h3>
+                <div className={styles.trendingGrid}>
+                  {trendingBlogs.map((blog) => (
+                    <div key={blog.id} className={styles.trendingCard} onClick={() => handleBlogClick(blog.id)}>
+                      <BlogCard data={blog} />
+                    </div>
+                  ))}
+                </div>
+              </section>
+            </div>
+
+            <section className={styles.featuredBlogs}>
+              <h3>FEATURED THIS WEEK</h3>
+              <div className={styles.featuredGrid}>
+                {featuredBlogs.map((blog) => (
+                  <div key={blog.id} className={styles.featuredCard} onClick={() => handleBlogClick(blog.id)}>
+                    <BlogCard data={blog} />
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            <div className={styles.buttonWrapper}>
+              <button className={styles.seeAllButton} onClick={() => setShowAllBlogs(true)}>See All</button>
+            </div>
+          </>
         )}
       </div>
-      <div className={`${styles.rightSidebarContainer} ${isMobile ? styles.mobileRightSidebar : ''}`}>
-        <RightSidebar blogs={sortedData} />
-      </div>
+
       <ChatBot />
     </div>
   );

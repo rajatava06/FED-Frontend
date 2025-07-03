@@ -1,113 +1,84 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { Search, Filter } from "lucide-react";
 import styles from "./styles/FullBlog.module.scss";
-import RightSidebar from "../../layouts/Blog/RightSidebar/RightSidebar";
+import BlogCard from "../../components/BlogCard/BlogCard";
 import { ChatBot } from "../../features";
 import { api } from "../../services";
 import { ComponentLoading } from "../../microInteraction";
 
 const FullBlog = () => {
-  const { id } = useParams();
   const navigate = useNavigate();
-  const [headings, setHeadings] = useState([]);
-  const [blog, setBlog] = useState(null);
+  const [blogs, setBlogs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [relatedBlogs, setRelatedBlogs] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showFilter, setShowFilter] = useState(false);
+  const [selectedDepartment, setSelectedDepartment] = useState("All");
+  const [showAllBlogs, setShowAllBlogs] = useState(false);
+
+
+const [departments, setDepartments] = useState(["All"]);
+
 
   useEffect(() => {
-    const fetchBlog = async () => {
-      try {
-        setIsLoading(true);
-        const response = await api.get(`/api/blog/getBlog/${id}`);
-        console.log('Single blog API response:', response.data);
-        
-        if (response.status === 200 && response.data.blogs) {
-          let blogData = response.data.blogs;
-          
-// more edits will be there in this file after summarization
-          if (typeof blogData === 'string') {
-            try {
-              blogData = JSON.parse(blogData);
-            } catch (err) {
-              console.error('Error parsing blog data:', err);
-              setError('Error parsing blog data');
-              return;
-            }
-          }
-          
-          
-          const processedBlog = {
-            id: blogData.id || blogData._id,
-            title: blogData.title || blogData.blogTitle || 'Untitled Blog',
-            desc: blogData.desc || blogData.metaDescription || blogData.blogContent || '',
-            image: blogData.image || blogData.blogImage || 'https://via.placeholder.com/100',
-            date: blogData.date || blogData.blogDate || new Date().toISOString(),
-            author: blogData.author || blogData.blogAuthor || '{"name":"Unknown","department":"N/A"}',
-            blogLink: blogData.blogLink || blogData.mediumLink || '',
-            visibility: blogData.visibility || blogData.isPublished || false,
-            approval: blogData.approval || blogData.isFeatured || false,
-            summary: blogData.summary || blogData.metaDescription || '',
-            likes: blogData.likes || 0,
-            comments: blogData.comments || [],
-            // will innclude any other fields that might be needed
-          };
-          
-          console.log('Processed blog data:', processedBlog);
-          setBlog(processedBlog);
-        } else {
-          setError('Blog not found');
-        }
+  const fetchBlogs = async () => {
+    try {
+      setIsLoading(true);
+      const response = await api.get('/api/blog/getBlog');
+      if (response.status === 200) {
+        const blogData = response.data.blogs || [];
+        let processedBlogs = [];
 
-        // Fetch all blogs for related content
-        const allBlogsResponse = await api.get('/api/blog/getBlog');
-        if (allBlogsResponse.status === 200 && allBlogsResponse.data.blogs) {
-          // Process all blogs to ensure consistent format
-          const processedBlogs = allBlogsResponse.data.blogs.map(blog => ({
+        if (typeof blogData === 'string') {
+          try {
+            processedBlogs = JSON.parse(blogData);
+          } catch {
+            processedBlogs = [];
+          }
+        } else if (Array.isArray(blogData)) {
+          processedBlogs = blogData.map((blog) => ({
             id: blog.id || blog._id,
             title: blog.title || blog.blogTitle || 'Untitled Blog',
             desc: blog.desc || blog.metaDescription || blog.blogContent || '',
-            image: blog.image || blog.blogImage || 'https://via.placeholder.com/100',
+            image: blog.image || blog.blogImage || 'https://via.placeholder.com/400x200',
             date: blog.date || blog.blogDate || new Date().toISOString(),
             author: blog.author || blog.blogAuthor || '{"name":"Unknown","department":"N/A"}',
             blogLink: blog.blogLink || blog.mediumLink || '',
-            // Include other fields as needed
+            visibility: blog.visibility === 'private' ? 'private' : 'public',
+            approval: blog.approval === false ? false : true,
+            summary: blog.summary || blog.metaDescription || '',
+            likes: blog.likes || 0,
+            comments: blog.comments || [],
+            readTime: blog.readTime || Math.ceil(Math.random() * 15) + 3,
           }));
-          
-          // Filter out the current blog and limit to 3 related blogs
-          const filtered = processedBlogs
-            .filter(b => b.id !== id)
-            .slice(0, 3);
-            
-          console.log('Related blogs:', filtered);
-          setRelatedBlogs(filtered);
         }
-      } catch (error) {
-        console.error('Error fetching blog:', error);
-        setError('An error occurred while fetching the blog');
-      } finally {
-        setIsLoading(false);
-      }
-    };
 
-    fetchBlog();
-  }, [id]);
+        setBlogs(processedBlogs);
 
-  useEffect(() => {
-    if (blog?.blogContent || blog?.desc) {
-      try {
-        const parser = new DOMParser();
-        const content = parser.parseFromString(blog.blogContent || blog.desc, "text/html");
-        const h2Tags = Array.from(content.querySelectorAll("h2")).map((tag, index) => ({
-          id: tag.id || `heading-${index + 1}`,
-          text: tag.textContent || `Heading ${index + 1}`,
-        }));
-        setHeadings(h2Tags);
-      } catch (error) {
-        console.error('Error parsing blog content:', error);
+        // ✅ Extract departments dynamically
+        const uniqueDepts = new Set();
+        processedBlogs.forEach((blog) => {
+          try {
+            const authorObj = typeof blog.author === 'string' ? JSON.parse(blog.author) : blog.author;
+            if (authorObj.department) uniqueDepts.add(authorObj.department);
+          } catch {}
+        });
+        setDepartments(["All", ...Array.from(uniqueDepts)]);
+      } else {
+        setError('Failed to fetch blogs');
       }
+    } catch {
+      setError('An error occurred while fetching blogs');
+    } finally {
+      setIsLoading(false);
     }
-  }, [blog]);
+  };
+
+  fetchBlogs();
+}, []);
+
+
 
   if (isLoading) {
     return (
@@ -117,115 +88,115 @@ const FullBlog = () => {
     );
   }
 
-  if (error || !blog) {
+  if (error) {
     return (
-      <div className={styles.pageWrapper}>
-        <div className={styles.notFoundContainer}>
-          <p className={styles.notFound}>{error || 'Blog not found.'}</p>
-          <button 
-            className={styles.backButton}
-            onClick={() => navigate('/Blog')}
-          >
-            Back to Blogs
-          </button>
-        </div>
+      <div className={styles.errorContainer}>
+        <p className={styles.errorMessage}>{error}</p>
       </div>
     );
   }
 
-  // Parse author information
-  let authorObj = { name: 'Unknown', department: 'N/A' };
-  try {
-    if (typeof blog.author === 'string') {
-      authorObj = JSON.parse(blog.author);
-    } else if (typeof blog.author === 'object') {
-      authorObj = blog.author;
-    }
-  } catch (err) {
-    console.error('Error parsing author:', err);
-  }
-
-  const handleReadOnMedium = () => {
-    if (blog.blogLink) {
-      window.open(blog.blogLink, "_blank");
-    } else {
-      // default medium link when none provided
-      window.open(
-        "https://medium.com/@fedkiit",
-        "_blank"
-      );
-    }
-  };
-
   return (
     <div className={styles.pageWrapper}>
-      <div className={styles.fullBlogContainer}>
-        <div className={styles.contentArea}>
-          <article className={styles.fullBlog}>
-            <header className={styles.blogHeader}>
-              <div className={styles.headerContent}>
-                <figure className={styles.image}>
-                  <img src={blog.image} alt={blog.title} />
-                </figure>
+      <div className={styles.contentContainer}>
+        <div className={styles.searchWrapper}>
+  <div className={styles.searchBar}>
+    <Search size={18} className={styles.searchIcon} />
+    <input
+      type="text"
+      placeholder="Search Blogs"
+      value={searchQuery}
+      onChange={(e) => setSearchQuery(e.target.value)}
+      className={styles.searchInput}
+    />
+    <div className={styles.filterWrapper}>
+      <button onClick={() => setShowFilter(!showFilter)} className={styles.filterButton}>
+        <Filter size={18} />
+      </button>
+      {showFilter && (
+        <ul className={styles.dropdown}>
+          {departments.map((dept, i) => (
+            <li
+              key={i}
+              className={`${styles.dropdownItem} ${
+                selectedDepartment === dept ? styles.activeItem : ""
+              }`}
+              onClick={() => {
+                setSelectedDepartment(dept);
+                setShowFilter(false);
+              }}
+            >
+              {dept}
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  </div>
+</div>
 
-                <div className={styles.titleWrapper}>
-                  <h1 className={styles.heading}>{blog.title}</h1>
-                  <div
-                    className={styles.content}
-                    dangerouslySetInnerHTML={{ __html: blog.desc }}
+
+        {/* Blog Sections */}
+        <div className={styles.blogSections}>
+          {/* Recently Added & Trending */}
+          <div className={styles.topSection}>
+            {/* Recently Added */}
+            <section className={styles.recentlyAdded}>
+              <h3>RECENTLY ADDED</h3>
+              {filteredBlogs.length > 0 ? (
+                <BlogCard
+                  blog={filteredBlogs[0]}
+                  large
+                  onClick={() => navigate(`/blog/${filteredBlogs[0].id}`)}
+                />
+              ) : (
+                <p>No recent blogs available.</p>
+              )}
+            </section>
+
+            {/* Trending Blogs */}
+            <section className={styles.trendingBlogs}>
+              <h3>TRENDING BLOGS</h3>
+              <div className={styles.trendingGrid}>
+                {filteredBlogs.slice(1, 3).map((blog) => (
+                  <BlogCard
+                    key={blog.id}
+                    blog={blog}
+                    onClick={() => navigate(`/blog/${blog.id}`)}
                   />
-                  <br />
-                  <div className={styles.authorInfo}>
-                    <span className={styles.authorName}>By {authorObj.name}</span>
-                    <span className={styles.authorDept}>{authorObj.department}</span>
-                    <time className={styles.date}>
-                      Posted on: {new Date(blog.date).toDateString()}
-                    </time>
-                  </div>
-                </div>
+                ))}
               </div>
-            </header>
+            </section>
+          </div>
 
-            <footer className={styles.blogFooter}>
-              <div className={styles.reactions}>
-                <p className={styles.likes}>
-                  <span className={styles.reactionIcon}>Likes:</span>{" "}
-                  {blog.likes || 0}
-                </p>
-                <p className={styles.comments}>
-                  <span className={styles.reactionIcon}>Comments:</span>{" "}
-                  {blog.comments?.length || 0}
-                </p>
-              </div>
-
-              {blog.blogLink && (
-                <div className={styles.buttonGroup}>
-                  <button
-                    className={styles.summarizeButton}
-                    onClick={handleReadOnMedium}
-                  >
-                    Read on Medium
-                  </button>
-                </div>
-              )}
-              
-              {blog.summary && (
-                <div className={styles.summarySection}>
-                  <h3>Summary</h3>
-                  <p>{blog.summary}</p>
-                </div>
-              )}
-            </footer>
-          </article>
+          {/* Featured This Week */}
+          <section className={styles.featuredBlogs}>
+            <h3>FEATURED THIS WEEK</h3>
+            <div className={styles.featuredGrid}>
+              {filteredBlogs.slice(3, 6).map((blog) => (
+                <BlogCard
+                  key={blog.id}
+                  blog={blog}
+                  onClick={() => navigate(`/blog/${blog.id}`)}
+                />
+              ))}
+            </div>
+          </section>
         </div>
 
-        <aside className={styles.sidebarArea}>
-          <RightSidebar blogs={relatedBlogs} />
-          <div className={styles.chatBotWrapper}>
-            <ChatBot />
-          </div>
-        </aside>
+        {/* See All Blogs Button */}
+     <div className={styles.buttonWrapper}>
+  <button
+    className={styles.seeAllButton}
+    onClick={() => setShowAllBlogs(true)}
+  >
+    See All Blogs
+  </button>
+</div>
+
       </div>
+
+      <ChatBot />
     </div>
   );
 };
