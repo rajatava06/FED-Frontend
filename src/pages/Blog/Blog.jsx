@@ -102,15 +102,12 @@ const Blog = () => {
   const trendingBlogs = filteredBlogs.slice(1, 3);
   const featuredBlogs = filteredBlogs.slice(3, 6);
 
-  const handleBlogClick = (blogId) => navigate(`/Blog/${blogId}`);
-
-  if (isLoading) {
-    return <div className={styles.loadingContainer}><ComponentLoading /></div>;
-  }
-
-  if (error) {
-    return <div className={styles.errorContainer}><p className={styles.errorMessage}>{error}</p></div>;
-  }
+  const handleBlogClick = (id) => {
+    const selectedBlog = blogs.find((b) => b.id === id);
+    if (selectedBlog && selectedBlog.blogLink) {
+      window.open(selectedBlog.blogLink, '_blank');
+    }
+  };
 
   return (
     <div className={styles.pageWrapper}>
@@ -151,28 +148,49 @@ const Blog = () => {
       <div className={styles.blogContainer}>
         {searchQuery !== '' || showAllBlogs ? (
           <>
-            <div className={styles.featuredGrid}>
-              {filteredBlogs.map((blog) => (
-                <div key={blog.id} className={styles.featuredCard} onClick={() => handleBlogClick(blog.id)}>
-                  <BlogCard data={blog} />
-                </div>
-              ))}
-            </div>
+            {filteredBlogs.length > 0 ? (
+              <div className={styles.featuredGrid}>
+                {filteredBlogs.map((blog) => (
+                  <div key={blog.id} className={styles.featuredCard} onClick={() => handleBlogClick(blog.id)}>
+                    <BlogCard data={blog} />
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className={styles.noBlogsFound}>No Blog Found</div>
+            )}
             <div className={styles.buttonWrapper}>
-              <button className={styles.seeAllButton} onClick={() => setShowAllBlogs(false)}>Go Back</button>
+              <button
+                className={styles.seeAllButton}
+                onClick={() => {
+                  setShowAllBlogs(false);
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+              >
+                Go Back
+              </button>
             </div>
           </>
         ) : (
           <>
             <div className={styles.topSection}>
-              <section className={styles.recentlyAdded}>
-                <h3>RECENTLY ADDED</h3>
-                {recentBlogs.length > 0 ? (
-                  <div className={styles.blogCard} onClick={() => handleBlogClick(recentBlogs[0].id)}>
-                    <BlogCard data={recentBlogs[0]} />
-                  </div>
-                ) : <p>No recent blogs available.</p>}
-              </section>
+             
+{searchQuery === '' && !showAllBlogs && recentBlogs.length > 0 && (
+  <section className={styles.recentlyAdded}>
+    <h3>RECENTLY ADDED</h3>
+    <div
+      className={styles.blogCard}
+      onClick={() => handleBlogClick(recentBlogs[0].id)}
+    >
+      <BlogCard
+        data={recentBlogs[0]}
+        expandDescription={true}
+        isRecentCard={true}
+      />
+    </div>
+  </section>
+)}
+
 
               <section className={styles.trendingBlogs}>
                 <h3>TRENDING BLOGS</h3>
@@ -198,7 +216,15 @@ const Blog = () => {
             </section>
 
             <div className={styles.buttonWrapper}>
-              <button className={styles.seeAllButton} onClick={() => setShowAllBlogs(true)}>See All</button>
+              <button
+                className={styles.seeAllButton}
+                onClick={() => {
+                  setShowAllBlogs(true);
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+              >
+                See All
+              </button>
             </div>
           </>
         )}

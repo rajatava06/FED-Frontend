@@ -10,8 +10,28 @@
   max-width: 600px;
   margin: auto;
 
+
+  
+  &.expandedCard {
+    flex-direction: row;
+    align-items: stretch;
+    .imageWrapper {
+      flex: 1;
+    }
+    .content {
+      flex: 2;
+      padding-left: 20px;
+    }
+    .summary {
+      -webkit-line-clamp: unset;
+      overflow: visible;
+    }
+  }
+
+
   &:hover {
-    transform: scale(1.01);
+    box-shadow: 0 6px 24px rgba(#D44509, 0.15);
+    transform: translateY(-4px);
   }
 
   .banner {

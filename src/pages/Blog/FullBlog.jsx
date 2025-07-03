@@ -144,11 +144,12 @@ const [departments, setDepartments] = useState(["All"]);
             <section className={styles.recentlyAdded}>
               <h3>RECENTLY ADDED</h3>
               {filteredBlogs.length > 0 ? (
-                <BlogCard
-                  blog={filteredBlogs[0]}
-                  large
-                  onClick={() => navigate(`/blog/${filteredBlogs[0].id}`)}
-                />
+            <BlogCard
+  data={recentBlogs[0]}
+  expandDescription={searchQuery === '' && !showAllBlogs}
+  isRecentCard={searchQuery === '' && !showAllBlogs}
+/>
+
               ) : (
                 <p>No recent blogs available.</p>
               )}
@@ -184,15 +185,6 @@ const [departments, setDepartments] = useState(["All"]);
           </section>
         </div>
 
-        {/* See All Blogs Button */}
-     <div className={styles.buttonWrapper}>
-  <button
-    className={styles.seeAllButton}
-    onClick={() => setShowAllBlogs(true)}
-  >
-    See All Blogs
-  </button>
-</div>
 
       </div>
 

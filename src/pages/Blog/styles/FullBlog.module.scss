@@ -91,18 +91,18 @@ $card-radius: 16px;
 
 
 // Blog Sections Layout
-.blogSections {
-  display: flex;
-  flex-direction: column;
-  gap: 3rem;
-  width: 100%;
-}
+// .blogSections {
+//   display: flex;
+//   flex-direction: column;
+//   gap: 3rem;
+//   width: 100%;
+// }
 
 // Responsive Two-column Layout
 .topSection {
   display: flex;
   justify-content: space-between;
-  align-items: stretch; // ✨ ensures equal height
+  align-items: stretch; 
   gap: 2rem;
   margin-bottom: 2rem;
 
@@ -115,52 +115,7 @@ $card-radius: 16px;
   }
 }
 
-// Recently Added Section
-.recentlyAdded {
-  width: 100%;
 
-  h3 {
-    color: $accent-color;
-    margin-bottom: 1rem;
-    font-size: 1.2rem;
-    font-weight: 700;
-  }
-
-  .blogCard {
-    // Removed background, border-radius, box-shadow, padding, margin, and hover styles
-
-    img {
-      width: 100%;
-      height: 240px;
-      object-fit: cover;
-      border-radius: 10px;
-      margin-bottom: 0.8rem;
-      background: $dark-bg-primary;
-    }
-
-    .cardContent {
-      h4 {
-        font-size: 1.15rem;
-        font-weight: 700;
-        margin-bottom: 0.3rem;
-        color: $text-color;
-      }
-
-      .blogMeta {
-        font-size: 0.95rem;
-        color: $accent-color;
-        margin-bottom: 0.3rem;
-        font-weight: 600;
-      }
-
-      .blogDesc {
-        font-size: 1rem;
-        color: #ccc;
-        line-height: 1.4;
-      }
-    }
-  }
-}
 
 // Trending Blogs
 .trendingBlogs {
