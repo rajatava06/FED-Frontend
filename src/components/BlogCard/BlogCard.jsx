@@ -87,10 +87,12 @@ const summary = processedData.summary || processedData.metaDescription || trunca
               day: '2-digit',
               month: 'short',
               year: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit',
+              hour12: true,
             }) : 'Invalid Date'}
           </p>
         </div>
-
         <p className={styles.author}>
           By <strong>{parsedAuthor.name}</strong>
         </p>
