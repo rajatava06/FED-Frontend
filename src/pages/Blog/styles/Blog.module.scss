@@ -1,7 +1,7 @@
 // Global Colors
 $dark-bg-primary: #121212;
 $dark-bg-secondary: #1e1e1e;
-$accent-color: #ff8000;
+$accent-color: #D44509;
 $text-color: #ffffff;
 $card-radius: 16px;
 
@@ -27,8 +27,8 @@ min-height: 50vh;
 
 .searchBar {
   width: 100%;
-    max-width: 700px; // fixed max width
-  height: 50px; // Add a fixed height
+    max-width: 700px; 
+  height: 50px; 
   display: flex;
   align-items: center;
   background-color: #353434;
@@ -46,8 +46,8 @@ min-height: 50vh;
 .searchInput {
 
   flex: 1;
-  width: 100%; // Ensures full use of space inside container
-  min-width: 0; // Prevents it from growing beyond the container
+  width: 100%; 
+  min-width: 0; 
   padding: 0.5rem 0.75rem;
   background: transparent;
   border: none;
@@ -120,7 +120,7 @@ min-height: 50vh;
 .topSection {
   display: grid;
   grid-template-columns: 1.2fr 1fr;
-  gap: 2.5rem;
+  gap: 4rem;
   margin-bottom: 3rem;
   width: 100%;
 
@@ -135,7 +135,7 @@ min-height: 50vh;
 .topSection {
   display: flex;
   justify-content: space-between;
-  align-items: stretch; // ✨ ensures equal height
+  align-items: stretch; 
   gap: 2rem;
   margin-bottom: 2rem;
 }
@@ -144,12 +144,19 @@ min-height: 50vh;
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: stretch;
-
-  .blogCard {
-    flex-grow: 1; // ✨ make the card grow to fill full height
-    height: 100%;
+  gap: 1.5rem;
+  
+  
+  .img {
+   width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 0.7rem;
+    margin-bottom: 1rem;
+    background: $dark-bg-primary;
+ 
   }
+  
 }
 
 .trendingBlogs {
@@ -158,62 +165,7 @@ min-height: 50vh;
   flex-direction: column;
   gap: 1.5rem;
 }
-// Recently Added Section
-.recentlyAdded {
-  width: 100%;
 
-  h3 {
-    color: $accent-color;
-    margin-bottom: 1rem;
-    font-size: 1.2rem;
-    font-weight: 700;
-  }
-
-  .blogCard {
-    background: $dark-bg-secondary;
-    border-radius: $card-radius;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
-    padding: 1.2rem;
-    margin-bottom: 1rem;
-    transition: transform 0.2s;
-    cursor: pointer;
-
-    &:hover {
-      transform: translateY(-4px);
-    }
-
-    img {
-      width: 100%;
-      height: 240px;
-      object-fit: cover;
-      border-radius: 10px;
-      margin-bottom: 0.8rem;
-      background: $dark-bg-primary;
-    }
-
-    .cardContent {
-      h4 {
-        font-size: 1.15rem;
-        font-weight: 700;
-        margin-bottom: 0.3rem;
-        color: $text-color;
-      }
-
-      .blogMeta {
-        font-size: 0.95rem;
-        color: $accent-color;
-        margin-bottom: 0.3rem;
-        font-weight: 600;
-      }
-
-      .blogDesc {
-        font-size: 1rem;
-        color: #ccc;
-        line-height: 1.4;
-      }
-    }
-  }
-}
 .recentlyAdded,
 .trendingBlogs,
 .featuredBlogs {
@@ -226,10 +178,27 @@ min-height: 50vh;
   }
 }
 
-.blogCard,
-.trendingCard,
-.featuredCard {
-  // Removed background, border-radius, box-shadow, padding, margin, and hover styles
+.blogCard
+// .trendingCard,
+// .featuredCard 
+{
+  // background: $dark-bg-secondary;
+  // border-radius: $card-radius;
+  // box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  // padding: 1.2rem;
+  // margin-bottom: 0.5rem;
+  // transition: box-shadow 0.2s, transform 0.2s;
+  // cursor: pointer;
+
+
+  img {
+    width: 100%;
+    height: 140px;
+    object-fit: cover;
+    border-radius: 0.7rem;
+    margin-bottom: 1rem;
+    background: $dark-bg-primary;
+  }
 }
 
 .cardContent {
@@ -252,12 +221,6 @@ min-height: 50vh;
   }
 }
 
-.trendingGrid,
-.featuredGrid {
-  display: flex;
-  flex-direction: column;
-  gap: 1.2rem;
-}
 
 .featuredGrid {
   display: grid;
@@ -301,4 +264,10 @@ min-height: 50vh;
   .featuredGrid {
     grid-template-columns: 1fr;
   }
+}
+.noBlogsFound {
+  text-align: center;
+  padding: 40px;
+  font-size: 1.5rem;
+  color: #888;
 }
