@@ -14,6 +14,7 @@ import { IoMdAttach } from "react-icons/io";
 
 
 function NewBlogForm() {
+  // refs and state management
   const scrollRef = useRef(null);
   const [isVisibility, setisVisibility] = useState(false);
   const authCtx = useContext(AuthContext);
@@ -28,8 +29,7 @@ function NewBlogForm() {
   const [geminiAnimated, setGeminiAnimated] = useState(false);
   const [autoFillAnimated, setAutoFillAnimated] = useState(false);
 
-
-
+  // form data state
   const [data, setdata] = useState({
     _id: nanoid(),
     blogTitle: "",
@@ -48,6 +48,7 @@ function NewBlogForm() {
 
   const fileInputRef = useRef();
 
+  // alert effect
   useEffect(() => {
     if (alert) {
       const { type, message, position, duration } = alert;
@@ -55,35 +56,31 @@ function NewBlogForm() {
     }
   }, [alert]);
 
+  // fetch blogs on mount and set refresh interval
   useEffect(() => {
-   // blog mounting fetch
     fetchBlogs();
     
-   
     const refreshInterval = setInterval(() => {
       fetchBlogs();
     }, 30000);
     
-   
     return () => clearInterval(refreshInterval);
   }, []);
 
+  // image validation utilities
   const isValidImage = (img) => {
     if (img instanceof File) return true;
     if (typeof img === 'string') {
-      // Accept if it's a valid URL and looks like an image
       return /^https?:\/\/.+\.(jpg|jpeg|png|gif|webp|svg)$/i.test(img);
     }
     return false;
   };
 
-  // Add a utility to check if a string is a valid image URL
   const isValidImageUrl = (url) => {
-    // Accepts image URLs with extension anywhere in the path or query
     return /^https?:\/\/.+\.(jpg|jpeg|png|gif|webp|svg)(\?.*)?$/i.test(url);
   };
 
-  // Update isValidBlog to accept either a valid image URL or a File
+  // form validation
   const isValidBlog = () => {
     if (!data.blogTitle) {
       setAlert({
@@ -148,6 +145,7 @@ function NewBlogForm() {
     return true;
   };
 
+  // fetch blogs from api
   const fetchBlogs = async () => {
     try {
       setLoadingBlogs(true);
@@ -180,6 +178,7 @@ function NewBlogForm() {
     }
   };
 
+  // handle edit blog
   const handleEditBlog = (blog) => {
     console.log("Edit blog clicked with data:", blog);
     setisEditing(true);
@@ -268,6 +267,7 @@ function NewBlogForm() {
     });
   };
 
+  // handle delete blog
   const handleDeleteBlog = async (blogId) => {
     if (!confirm("Are you sure you want to delete this blog?")) return;
     
@@ -301,6 +301,7 @@ function NewBlogForm() {
     }
   };
 
+  // handle view blog
   const handleViewBlog = (blogLink) => {
     if (blogLink) {
       window.open(blogLink, '_blank');
@@ -314,11 +315,12 @@ function NewBlogForm() {
     }
   };
 
+  // save or update blog
   const onSaveBlog = async () => {
     if (isValidBlog()) {
       setIsLoading(true);
       const form = new FormData();
-      // Always append the image field if present
+      
       if (data.image instanceof File) {
         form.append("image", data.image);
       } else if (typeof data.image === "string" && data.image.startsWith("http")) {
@@ -326,16 +328,12 @@ function NewBlogForm() {
       }
     
       if (!isEditing) {
-       
         form.append('title', data.blogTitle);
         
-      
         try {
           if (typeof data.blogAuthor === 'string' && data.blogAuthor.startsWith('{')) {
-           
             form.append('author', data.blogAuthor);
           } else {
-           
             const authorObj = {
               name: data.blogAuthor,
               department: data.blogCategory || 'General'
@@ -355,8 +353,6 @@ function NewBlogForm() {
         form.append('desc', data.metaDescription);
         form.append('date', data.blogDate);
         form.append('summary', data.metaDescription || "");
-        
-        // visibility handling based on toggle
         form.append('visibility', data.isPublished ? 'public' : 'private');
         
         const approvalObj = {
@@ -375,7 +371,6 @@ function NewBlogForm() {
         let response;
         
         if (isEditing) {
-          // used put method for updating blogs
           console.log(`Updating blog with ID: ${data._id}`);
           
           if (!data._id) {
@@ -408,7 +403,6 @@ function NewBlogForm() {
           };
           form.append('approval', JSON.stringify(approvalObj));
           
-          // After deleting all fields, always append the image field if present
           if (data.image instanceof File) {
             form.append("image", data.image);
           } else if (typeof data.image === "string" && data.image.startsWith("http")) {
@@ -502,7 +496,6 @@ function NewBlogForm() {
                 }
               };
               
-              // First fetch
               await fetchWithTimestamp();
               
               setAlert({
@@ -542,11 +535,8 @@ function NewBlogForm() {
     }
   };
 
+  // gemini generate summary
   const handleGeminiGenerate = async () => {
-  // // Trigger button animation
-  // setIsAnimating(true);
-  // setTimeout(() => setIsAnimating(false), 400);
-
   if (!data.mediumLink.trim()) {
     setAlert({
       type: "error",
@@ -556,7 +546,7 @@ function NewBlogForm() {
     });
     return;
   }
-    setGeminiAnimated(true); // <-- trigger animation
+    setGeminiAnimated(true);
 
   try {
     setIsLoading(true);
@@ -596,6 +586,7 @@ function NewBlogForm() {
   }
 };
 
+  // gemini autofill
   const handleGeminiAutofill = async () => {
   if (!data.mediumLink.trim()) {
     setAlert({
@@ -607,8 +598,8 @@ function NewBlogForm() {
     return;
   }
 
-  setAutoFillAnimated(true); // Start animation
-  setTimeout(() => setAutoFillAnimated(false), 400); // Stop animation after 400ms
+  setAutoFillAnimated(true);
+  setTimeout(() => setAutoFillAnimated(false), 400);
 
   try {
     setIsLoading(true);
@@ -660,6 +651,7 @@ function NewBlogForm() {
   }
 };
 
+  // image handling functions
   const handleImageChange = (e) => {
     const file = e.target.files && e.target.files[0];
     if (file) {
@@ -853,7 +845,6 @@ function NewBlogForm() {
               />
             </div>
 
-            {/* Image preview for both uploaded files and URLs */}
             {data.image && (
               <div style={{ marginTop: "10px" }}>
                 <p style={{ margin: "5px 0", fontSize: "0.9rem", color: "#666" }}>Preview:</p>
@@ -882,7 +873,7 @@ function NewBlogForm() {
               type="date"
               style={{ width: "88%" }}
               value={data.blogDate}
-              onChange={(date) => setdata({ ...data, blogDate: e.target.value })}
+              onChange={(date) => setdata({ ...data, blogDate: date })}
             />
             <Input
               placeholder="Enter Author Name"
@@ -962,7 +953,6 @@ function NewBlogForm() {
             <div className={styles.blogsList}>
               {blogs
                 .filter((blog) => {
-                  //visibility filter
                   if (visibilityFilter !== 'all') {
                     if (blog.visibility !== visibilityFilter) {
                       return false;
