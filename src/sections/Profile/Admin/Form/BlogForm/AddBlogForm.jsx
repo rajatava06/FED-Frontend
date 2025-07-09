@@ -9,6 +9,8 @@ import { nanoid } from "nanoid";
 import { Alert, MicroLoading } from "../../../../../microInteraction";
 import { api } from "../../../../../services";
 import BlogCard from "../../../../../components/BlogCard/BlogCard";
+import geminiLogo from "../../../../../assets/images/geminiLogo.svg";
+
 
 function NewBlogForm() {
   const scrollRef = useRef(null);
@@ -21,6 +23,12 @@ function NewBlogForm() {
   const [loadingBlogs, setLoadingBlogs] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [visibilityFilter, setVisibilityFilter] = useState("all");
+  const [isAnimating, setIsAnimating] = useState(false);
+  const [geminiAnimated, setGeminiAnimated] = useState(false);
+  const [autoFillAnimated, setAutoFillAnimated] = useState(false);
+
+
+
   const [data, setdata] = useState({
     _id: nanoid(),
     blogTitle: "",
@@ -513,6 +521,125 @@ function NewBlogForm() {
     }
   };
 
+  const handleGeminiGenerate = async () => {
+  // // Trigger button animation
+  // setIsAnimating(true);
+  // setTimeout(() => setIsAnimating(false), 400);
+
+  if (!data.mediumLink.trim()) {
+    setAlert({
+      type: "error",
+      message: "Please enter a Medium link first.",
+      position: "top-right",
+      duration: 3000,
+    });
+    return;
+  }
+    setGeminiAnimated(true); // <-- trigger animation
+
+  try {
+    setIsLoading(true);
+    const response = await fetch("http://localhost:5000/api/gemini/summary", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ mediumLink: data.mediumLink }),
+    });
+
+    const result = await response.json();
+
+    if (result?.summary) {
+      setdata((prev) => ({
+        ...prev,
+        metaDescription: result.summary,
+      }));
+    } else {
+      setAlert({
+        type: "error",
+        message: "Failed to generate summary. Please try again.",
+        position: "top-right",
+        duration: 3000,
+      });
+    }
+  } catch (err) {
+    console.error(err);
+    setAlert({
+      type: "error",
+      message: "Something went wrong while calling Gemini API.",
+      position: "top-right",
+      duration: 3000,
+    });
+  } finally {
+    setIsLoading(false);
+  }
+};
+
+  const handleGeminiAutofill = async () => {
+  if (!data.mediumLink.trim()) {
+    setAlert({
+      type: "error",
+      message: "Please enter a Medium link first.",
+      position: "top-right",
+      duration: 3000,
+    });
+    return;
+  }
+
+  setAutoFillAnimated(true); // Start animation
+  setTimeout(() => setAutoFillAnimated(false), 400); // Stop animation after 400ms
+
+  try {
+    setIsLoading(true);
+
+    const response = await fetch("http://localhost:5000/api/gemini/autofill", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ mediumLink: data.mediumLink }),
+    });
+
+    const result = await response.json();
+
+    if (
+      result?.title ||
+      result?.author ||
+      result?.description ||
+      result?.thumbnail ||
+      result?.publishedDate
+    ) {
+      setdata((prev) => ({
+        ...prev,
+        blogTitle: result.title || prev.blogTitle,
+        blogAuthor: result.author || prev.blogAuthor,
+        metaDescription: result.description || prev.metaDescription,
+        image: result.thumbnail || prev.image,
+        blogDate: result.publishedDate || prev.blogDate,
+
+      }));
+    } else {
+      setAlert({
+        type: "error",
+        message: "Gemini could not extract blog data. Try again.",
+        position: "top-right",
+        duration: 3000,
+      });
+    }
+  } catch (err) {
+    console.error(err);
+    setAlert({
+      type: "error",
+      message: "Something went wrong while calling Gemini Autofill API.",
+      position: "top-right",
+      duration: 3000,
+    });
+  } finally {
+    setIsLoading(false);
+  }
+};
+
+
   return (
     <div style={{ width: "100%", marginLeft: "70px" }}>
       <div className={styles.formHeader}>
@@ -594,22 +721,56 @@ function NewBlogForm() {
       }}>
         <div style={{ display: "flex", flexDirection: "row" }}>
           <div style={{ width: "45%" }}>
+
+          <div className={styles.mediumLinkWrapper}>
+            <Input
+              placeholder="https://medium.com/@fedkiit/"
+              label="Medium Link"
+              value={data.mediumLink}
+              className={styles.formInput}
+              onChange={(e) => setdata({ ...data, mediumLink: e.target.value })}
+            />
+            <button
+              type="button"
+              className={`${styles.geminiButtonM} ${autoFillAnimated ? styles.animateMediumLink : ''}`}
+              onClick={handleGeminiAutofill}
+              title="Autofill with AI"
+            >
+              <img src={geminiLogo} alt="Gemini" />
+            </button>
+          </div>
+
             <Input
               placeholder="Enter Blog Title"
               label="Blog Title"
               value={data.blogTitle}
               className={styles.formInput}
               onChange={(e) => setdata({ ...data, blogTitle: e.target.value })}
-            />
+            />             
+
+            <div className={styles.descriptionWrapper}>
+              <Input
+                placeholder="Enter Blog Description"
+                label="Blog Description"
+                type="textArea"
+                className={styles.formInputTxtArea}
+                value={data.metaDescription}
+                onChange={(e) => setdata({ ...data, metaDescription: e.target.value })}
+              />
+
+              <button
+                type="button"
+                className={`${styles.geminiButtonD} ${geminiAnimated ? styles.animateDescription : ''}`}
+                onClick={handleGeminiGenerate}
+                title="Generate with Gemini"
+              >
+                <img src={geminiLogo} alt="Gemini" />
+              </button>
+            </div>
+
+
+
            <Input
-              placeholder="Enter Blog Description"
-              label="Blog Description"
-              type="textArea"
-              className={styles.formInputTxtArea}
-              value={data.metaDescription}
-              onChange={(e) => setdata({ ...data, metaDescription: e.target.value })}
-            />
-            <Input
               placeholder="Attach Blog Image"
               label="Blog Image"
               type="image"
@@ -622,6 +783,24 @@ function NewBlogForm() {
               onChange={(e) => setdata({ ...data, image: e.target.value })}
               className={styles.formInput}
             />
+
+            {typeof data.image === "string" && data.image.startsWith("http") && (
+              <div style={{ marginTop: "10px" }}>
+                <p style={{ margin: "5px 0", fontSize: "0.9rem", color: "#666" }}>Preview:</p>
+                <img
+                  src={data.image}
+                  alt="Blog Thumbnail Preview"
+                  style={{
+                    maxWidth: "100%",
+                    height: "auto",
+                    borderRadius: "8px",
+                    boxShadow: "0 0 5px rgba(0,0,0,0.2)",
+                    objectFit: "cover",
+                  }}
+                />
+              </div>
+            )}
+
             <Input
               placeholder="Select Publication Date"
               className={styles.formInput}
@@ -629,7 +808,7 @@ function NewBlogForm() {
               type="date"
               style={{ width: "88%" }}
               value={data.blogDate}
-              onChange={(date) => setdata({ ...data, blogDate: date })}
+              onChange={(date) => setdata({ ...data, blogDate: e.target.value })}
             />
             <Input
               placeholder="Enter Author Name"
@@ -638,15 +817,9 @@ function NewBlogForm() {
               className={styles.formInput}
               onChange={(e) => setdata({ ...data, blogAuthor: e.target.value })}
             />
-             <Input
-              placeholder="https://medium.com/@fedkiit/"
-              label="Medium Link"
-              value={data.mediumLink}
-              className={styles.formInput}
-              onChange={(e) => setdata({ ...data, mediumLink: e.target.value })}
-            />
+            
           </div>
-          <div style={{ width: "45%" }}>
+          <div style={{ width: "45%", paddingTop: "9px"}}>
             <Input
               placeholder="Select Blog Department"
               label="Blog Category"
