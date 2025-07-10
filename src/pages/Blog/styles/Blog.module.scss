@@ -183,7 +183,6 @@ $card-radius: 16px;
 .trendingBlogs {
   flex: 1.2 1 0;
   max-width: 400px;
-
   h3 {
     color: $accent-color;
     margin-bottom: 1.2rem;
@@ -206,7 +205,7 @@ $card-radius: 16px;
     min-height: 220px;
     display: flex;
     flex-direction: column;
-    margin-bottom: 2.3rem;
+    margin-bottom: 1rem;
   }
 
   .blogDesc {
