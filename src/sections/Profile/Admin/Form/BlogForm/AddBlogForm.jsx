@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, useContext } from "react";
 import { Button, Input} from "../../../../../components";
 import { IoSettingsOutline, IoSettingsSharp } from "react-icons/io5";
-import { FaEdit, FaTrash, FaEye } from "react-icons/fa";
+import { FaEdit, FaTrash, FaEye, FaPaperclip } from "react-icons/fa";
 import AuthContext from "../../../../../context/AuthContext";
 import styles from "./styles/AddBlogForm.module.scss";
 import Switch from "react-switch";
@@ -10,7 +10,7 @@ import { Alert, MicroLoading } from "../../../../../microInteraction";
 import { api } from "../../../../../services";
 import BlogCard from "../../../../../components/BlogCard/BlogCard";
 import geminiLogo from "../../../../../assets/images/geminiLogo.svg";
-import { IoMdAttach } from "react-icons/io";
+
 
 
 function NewBlogForm() {
@@ -822,7 +822,7 @@ function NewBlogForm() {
                 onClick={handleAttachClick}
                 style={{
                   position: "absolute",
-                  right: "4rem",
+                  right: "4.5rem",
                   top: "55%",
                   transform: "translateY(-50%)",
                   background: "none",
@@ -834,7 +834,7 @@ function NewBlogForm() {
                 }}
                 title="Upload Image"
               >
-                <IoMdAttach size={22} color="#FF8A00" />
+                <FaPaperclip size={18} color="#FF8A00" />
               </button>
               <input
                 type="file"
