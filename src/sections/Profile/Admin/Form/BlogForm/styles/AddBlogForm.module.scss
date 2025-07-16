@@ -363,3 +363,60 @@
     background: linear-gradient(260deg, rgba(255, 190, 11, .9) -29.7%, rgba(244, 43, 3, .9) 128.34%);
   }
 }
+
+.mediumLinkWrapper,
+.descriptionWrapper {
+  position: relative;
+  width: 100%;
+  margin-bottom: 1.4em;
+
+  input,
+  textarea {
+    width: 100%;
+    padding-right: 42px; // space for the button
+  }
+}
+
+.geminiButtonM,
+.geminiButtonD {
+  position: absolute;
+  top: 40px;
+  right: 37px;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+
+  img {
+    width: 24px;
+    height: 24px;
+    transition: transform 0.2s ease;
+  }
+
+  &:hover img {
+    transform: scale(1.1);
+  }
+}
+
+
+/* Animation remains same */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.4);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.animateDescription {
+  animation: pulse 0.4s ease-in-out;
+}
+
+.animateMediumLink {
+  animation: pulse 0.4s ease-in-out;
+}
