@@ -834,6 +834,8 @@ function NewBlogForm() {
                 { label: "Creative", value: "Creative" },
                 { label: "Marketing", value: "Marketing" },
                 { label: "Operations", value: "Operations" },
+                { label: "PR And Finance", value: "PR And Finance" },
+                { label: "Human Resource", value: "Human Resource" },
               ]}
               className={styles.formInput}
               value={data.blogCategory}
