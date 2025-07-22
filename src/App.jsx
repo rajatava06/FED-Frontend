@@ -179,7 +179,7 @@ function App() {
             />
 
             <Route
-              path="/Events/:eventId/"
+              path="/Events/:eventId/Form"
               element={[<Event />, <EventForm />]}
             />
 
