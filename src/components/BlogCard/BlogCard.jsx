@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import styles from './styles/BlogCard.module.scss';
+import { Blurhash } from "react-blurhash";
 
 function BlogCard(props) {
-  // data processing
   const { data, customButtons, expandDescription = false, hideDescription = false, onClick, cardType = 'default' } = props;
 
   let processedData = data;
@@ -18,10 +18,7 @@ function BlogCard(props) {
     processedData = {};
   }
 
-  // state
   const titleRef = useRef(null);
-
-  // blog fields
   const id = processedData.id || processedData._id;
   const title = processedData.title || processedData.blogTitle || 'Untitled Blog';
   const desc = processedData.desc || processedData.blogContent || processedData.blogSubtitle || '';
@@ -66,30 +63,19 @@ function BlogCard(props) {
     console.error('Error handling author data:', err);
   }
 
-
-  // Remove getTruncatedText and isTruncated logic
-  // In the render, replace {getTruncatedText(summary)} with {summary} and remove the Read more link logic
-
   const getTruncatedTitle = (titleText) => {
     if (!titleText) return '';
-    
-    // For default cards (Featured This Week), use character-based truncation
     if (cardType === 'default') {
       const charLimit = 20;
-      if (titleText.length <= charLimit) return titleText;
-      return titleText.slice(0, charLimit) + '...';
+      return titleText.length <= charLimit ? titleText : titleText.slice(0, charLimit) + '...';
     }
-    
-    // For other cards, use word-based truncation
+
     const words = titleText.split(' ');
-    let wordLimit = 4; // Default limit for "See All" cards
-    if (cardType === 'recent' || props.isRecentCard) {
-      wordLimit = 9; // Changed from 8 to 9 as requested
-    } else if (cardType === 'trending') {
-      wordLimit = 3;
-    }
-    if (words.length <= wordLimit) return titleText;
-    return words.slice(0, wordLimit).join(' ') + '...';
+    let wordLimit = 4;
+    if (cardType === 'recent' || props.isRecentCard) wordLimit = 9;
+    else if (cardType === 'trending') wordLimit = 3;
+
+    return words.length <= wordLimit ? titleText : words.slice(0, wordLimit).join(' ') + '...';
   };
 
   const handleReadMore = (e) => {
@@ -97,7 +83,6 @@ function BlogCard(props) {
     window.open(blogLink, '_blank');
   };
 
-  // card class
   const getCardClass = () => {
     let cardClass = styles.card;
     if (expandDescription) cardClass += ` ${styles.expandedCard}`;
@@ -108,21 +93,34 @@ function BlogCard(props) {
     return cardClass;
   };
 
+  // Blurhash logic
+  const [isImageLoaded, setIsImageLoaded] = useState(false);
 
-
-  // rendering
   return (
     <div className={getCardClass()} style={{ cursor: 'default' }}>
       <div className={styles.imageWrapper} onClick={() => window.open(blogLink, '_blank')} style={{ cursor: 'pointer' }}>
-        <img className={styles.banner} src={image} alt={title} />
+        {!isImageLoaded && (
+          <Blurhash
+            hash="LEHV6nWB2yk8pyo0adR*.7kCMdnj"
+            width="100%"
+            height="180px"
+            resolutionX={32}
+            resolutionY={32}
+            punch={1}
+            className={styles.blurhash}
+          />
+        )}
+        <img
+          className={styles.banner}
+          src={image}
+          alt={title}
+          style={{ display: isImageLoaded ? 'block' : 'none' }}
+          onLoad={() => setIsImageLoaded(true)}
+        />
       </div>
       <div className={styles.content}>
         <div className={styles.header}>
-          <h2
-            className={styles.title}
-            ref={titleRef}
-            title={title}  // Show full title on hover
-          >
+          <h2 className={styles.title} ref={titleRef} title={title}>
             {getTruncatedTitle(title)}
           </h2>
           <p className={styles.date}>
@@ -140,9 +138,7 @@ function BlogCard(props) {
         </p>
         {!hideDescription && (
           <div className={styles.summaryWrapper}>
-            <p className={styles.summary}>
-              {summary}
-            </p>
+            <p className={styles.summary}>{summary}</p>
           </div>
         )}
         {!hideDescription && (

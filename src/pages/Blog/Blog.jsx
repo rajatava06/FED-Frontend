@@ -15,7 +15,7 @@ const Blog = () => {
   const [blogs, setBlogs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [showFilter, setShowFilter] = useState(false);
   const [selectedDepartment, setSelectedDepartment] = useState("All");
   const [departments, setDepartments] = useState(["All"]);
@@ -40,18 +40,18 @@ const Blog = () => {
       />
     </svg>
   );
-  
+
   // fetch blogs
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
         setIsLoading(true);
-        const response = await api.get('/api/blog/getBlog');
+        const response = await api.get("/api/blog/getBlog");
         if (response.status === 200) {
           const blogData = response.data.blogs || [];
           let processedBlogs = [];
 
-          if (typeof blogData === 'string') {
+          if (typeof blogData === "string") {
             try {
               processedBlogs = JSON.parse(blogData);
             } catch {
@@ -60,15 +60,21 @@ const Blog = () => {
           } else if (Array.isArray(blogData)) {
             processedBlogs = blogData.map((blog) => ({
               id: blog.id || blog._id,
-              title: blog.title || blog.blogTitle || 'Untitled Blog',
-              desc: blog.desc || blog.metaDescription || blog.blogContent || '',
-              image: blog.image || blog.blogImage || 'https://via.placeholder.com/400x200',
+              title: blog.title || blog.blogTitle || "Untitled Blog",
+              desc: blog.desc || blog.metaDescription || blog.blogContent || "",
+              image:
+                blog.image ||
+                blog.blogImage ||
+                "https://via.placeholder.com/400x200",
               date: blog.date || blog.blogDate || new Date().toISOString(),
-              author: blog.author || blog.blogAuthor || '{"name":"Unknown","department":"N/A"}',
-              blogLink: blog.blogLink || blog.mediumLink || '',
-              visibility: blog.visibility === 'private' ? 'private' : 'public',
+              author:
+                blog.author ||
+                blog.blogAuthor ||
+                '{"name":"Unknown","department":"N/A"}',
+              blogLink: blog.blogLink || blog.mediumLink || "",
+              visibility: blog.visibility === "private" ? "private" : "public",
               approval: blog.approval === false ? false : true,
-              summary: blog.summary || blog.metaDescription || '',
+              summary: blog.summary || blog.metaDescription || "",
               likes: blog.likes || 0,
               comments: blog.comments || [],
               readTime: blog.readTime || Math.ceil(Math.random() * 15) + 3,
@@ -80,16 +86,19 @@ const Blog = () => {
           const uniqueDepts = new Set();
           processedBlogs.forEach((blog) => {
             try {
-              const authorObj = typeof blog.author === 'string' ? JSON.parse(blog.author) : blog.author;
+              const authorObj =
+                typeof blog.author === "string"
+                  ? JSON.parse(blog.author)
+                  : blog.author;
               if (authorObj.department) uniqueDepts.add(authorObj.department);
             } catch {}
           });
           setDepartments(["All", ...Array.from(uniqueDepts)]);
         } else {
-          setError('Failed to fetch blogs');
+          setError("Failed to fetch blogs");
         }
       } catch {
-        setError('An error occurred while fetching blogs');
+        setError("An error occurred while fetching blogs");
       } finally {
         setIsLoading(false);
       }
@@ -106,9 +115,9 @@ const Blog = () => {
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
@@ -117,24 +126,38 @@ const Blog = () => {
     .filter((blog) => {
       let authorObj;
       try {
-        authorObj = typeof blog.author === 'string' ? JSON.parse(blog.author) : blog.author;
+        authorObj =
+          typeof blog.author === "string"
+            ? JSON.parse(blog.author)
+            : blog.author;
       } catch {
-        authorObj = { department: null, name: '' };
+        authorObj = { department: null, name: "" };
       }
-      return selectedDepartment === "All" ? true : authorObj.department === selectedDepartment;
+      return selectedDepartment === "All"
+        ? true
+        : authorObj.department === selectedDepartment;
     })
     .filter((blog) => {
-      const titleMatch = blog.title?.toLowerCase().includes(searchQuery.toLowerCase());
-      const descMatch = blog.desc?.toLowerCase().includes(searchQuery.toLowerCase());
-      let authorName = '';
+      const titleMatch = blog.title
+        ?.toLowerCase()
+        .includes(searchQuery.toLowerCase());
+      const descMatch = blog.desc
+        ?.toLowerCase()
+        .includes(searchQuery.toLowerCase());
+      let authorName = "";
       try {
-        const authorObj = typeof blog.author === 'string' ? JSON.parse(blog.author) : blog.author;
-        authorName = authorObj?.name || '';
+        const authorObj =
+          typeof blog.author === "string"
+            ? JSON.parse(blog.author)
+            : blog.author;
+        authorName = authorObj?.name || "";
       } catch {}
-      const authorMatch = authorName.toLowerCase().includes(searchQuery.toLowerCase());
+      const authorMatch = authorName
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase());
       return titleMatch || descMatch || authorMatch;
     })
-    .filter((blog) => blog.visibility !== 'private' && blog.approval !== false)
+    .filter((blog) => blog.visibility !== "private" && blog.approval !== false)
     .sort((a, b) => new Date(b.date) - new Date(a.date));
 
   // blog sections
@@ -146,7 +169,7 @@ const Blog = () => {
   const handleBlogClick = (id) => {
     const selectedBlog = blogs.find((b) => b.id === id);
     if (selectedBlog && selectedBlog.blogLink) {
-      window.open(selectedBlog.blogLink, '_blank');
+      window.open(selectedBlog.blogLink, "_blank");
     }
   };
 
@@ -164,16 +187,21 @@ const Blog = () => {
             className={styles.searchInput}
           />
           <div className={styles.filterWrapper} ref={filterRef}>
-          <button onClick={() => setShowFilter(!showFilter)} className={styles.filterButton}>
-  <GradientFilterIcon />
-</button>
+            <button
+              onClick={() => setShowFilter(!showFilter)}
+              className={styles.filterButton}
+            >
+              <GradientFilterIcon />
+            </button>
 
             {showFilter && (
               <ul className={styles.dropdown}>
                 {departments.map((dept, i) => (
                   <li
                     key={i}
-                    className={`${styles.dropdownItem} ${selectedDepartment === dept ? styles.activeItem : ""}`}
+                    className={`${styles.dropdownItem} ${
+                      selectedDepartment === dept ? styles.activeItem : ""
+                    }`}
                     onClick={() => {
                       setSelectedDepartment(dept);
                       setShowFilter(false);
@@ -189,10 +217,16 @@ const Blog = () => {
       </div>
 
       <div className={styles.blogContainer}>
-        {searchQuery !== '' || showAllBlogs ? (
+        {isLoading ? (
+          <ComponentLoading />
+        ) : searchQuery !== "" || showAllBlogs ? (
           <>
             {filteredBlogs.length > 0 ? (
-              <div className={`${styles.featuredGrid} ${(searchQuery !== '' || showAllBlogs) ? styles.searchGrid : ''}`}>
+              <div
+                className={`${styles.featuredGrid} ${
+                  searchQuery !== "" || showAllBlogs ? styles.searchGrid : ""
+                }`}
+              >
                 {filteredBlogs.map((blog) => (
                   <div key={blog.id} className={styles.featuredCard}>
                     <BlogCard data={blog} cardType="default" />
@@ -207,7 +241,7 @@ const Blog = () => {
                 className={styles.seeAllButton}
                 onClick={() => {
                   setShowAllBlogs(false);
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                  window.scrollTo({ top: 0, behavior: "smooth" });
                 }}
               >
                 Go Back
@@ -230,12 +264,26 @@ const Blog = () => {
                 <div className={styles.trendingGrid}>
                   {trendingBlogs.length > 0 ? (
                     <>
-                      <div key={trendingBlogs[0].id} className={styles.trendingCard}>
-                        <BlogCard data={trendingBlogs[0]} hideDescription={true} cardType="trending" />
+                      <div
+                        key={trendingBlogs[0].id}
+                        className={styles.trendingCard}
+                      >
+                        <BlogCard
+                          data={trendingBlogs[0]}
+                          hideDescription={true}
+                          cardType="trending"
+                        />
                       </div>
                       {filteredBlogs.length > 2 && (
-                        <div key={filteredBlogs[2].id} className={styles.trendingCard}>
-                          <BlogCard data={filteredBlogs[2]} hideDescription={true} cardType="trending" />
+                        <div
+                          key={filteredBlogs[2].id}
+                          className={styles.trendingCard}
+                        >
+                          <BlogCard
+                            data={filteredBlogs[2]}
+                            hideDescription={true}
+                            cardType="trending"
+                          />
                         </div>
                       )}
                     </>
@@ -262,7 +310,7 @@ const Blog = () => {
                 className={styles.seeAllButton}
                 onClick={() => {
                   setShowAllBlogs(true);
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                  window.scrollTo({ top: 0, behavior: "smooth" });
                 }}
               >
                 See All
