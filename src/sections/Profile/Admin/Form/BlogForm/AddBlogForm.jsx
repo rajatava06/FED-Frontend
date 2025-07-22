@@ -1,21 +1,21 @@
 import { useState, useRef, useEffect, useContext } from "react";
-import { Button, Input} from "../../../../../components";
+import { Button, Input } from "../../../../../components";
 import { IoSettingsOutline, IoSettingsSharp } from "react-icons/io5";
-import { FaEdit, FaTrash, FaEye } from "react-icons/fa";
+import { FaPaperclip } from "react-icons/fa"; // Only FaPaperclip is used
 import AuthContext from "../../../../../context/AuthContext";
 import styles from "./styles/AddBlogForm.module.scss";
 import Switch from "react-switch";
 import { nanoid } from "nanoid";
-import { Alert, MicroLoading } from "../../../../../microInteraction";
+import { Alert } from "../../../../../microInteraction"; // MicroLoading is not explicitly used in JSX
 import { api } from "../../../../../services";
 import BlogCard from "../../../../../components/BlogCard/BlogCard";
 import geminiLogo from "../../../../../assets/images/geminiLogo.svg";
 
-
 function NewBlogForm() {
-  const scrollRef = useRef(null);
+  // refs and state management
+  const scrollRef = useRef(null); // This ref is declared but not used
   const [isVisibility, setisVisibility] = useState(false);
-  const authCtx = useContext(AuthContext);
+  const authCtx = useContext(AuthContext); // This context is declared but not used
   const [alert, setAlert] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isEditing, setisEditing] = useState(false);
@@ -23,12 +23,11 @@ function NewBlogForm() {
   const [loadingBlogs, setLoadingBlogs] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [visibilityFilter, setVisibilityFilter] = useState("all");
-  const [isAnimating, setIsAnimating] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(false); // This state is declared but not used for general animation
   const [geminiAnimated, setGeminiAnimated] = useState(false);
   const [autoFillAnimated, setAutoFillAnimated] = useState(false);
 
-
-
+  // form data state
   const [data, setdata] = useState({
     _id: nanoid(),
     blogTitle: "",
@@ -45,6 +44,9 @@ function NewBlogForm() {
     isCommentEnabled: true,
   });
 
+  const fileInputRef = useRef();
+
+  // alert effect
   useEffect(() => {
     if (alert) {
       const { type, message, position, duration } = alert;
@@ -52,19 +54,31 @@ function NewBlogForm() {
     }
   }, [alert]);
 
+  // fetch blogs on mount and set refresh interval
   useEffect(() => {
-   // blog mounting fetch
     fetchBlogs();
-    
-   
+
     const refreshInterval = setInterval(() => {
       fetchBlogs();
     }, 30000);
-    
-   
+
     return () => clearInterval(refreshInterval);
   }, []);
 
+  // image validation utilities (not directly used in validation logic but good to keep)
+  const isValidImage = (img) => {
+    if (img instanceof File) return true;
+    if (typeof img === 'string') {
+      return /^https?:\/\/.+\.(jpg|jpeg|png|gif|webp|svg)$/i.test(img);
+    }
+    return false;
+  };
+
+  const isValidImageUrl = (url) => {
+    return /^https?:\/\/.+\.(jpg|jpeg|png|gif|webp|svg)(\?.*)?$/i.test(url);
+  };
+
+  // form validation
   const isValidBlog = () => {
     if (!data.blogTitle) {
       setAlert({
@@ -76,10 +90,10 @@ function NewBlogForm() {
       return false;
     }
 
-    if (!data.image) {
+    if (!data.image || !(data.image instanceof File || isValidImageUrl(data.image))) {
       setAlert({
         type: "error",
-        message: "Blog featured image is required.",
+        message: "Blog featured image is required (upload or valid image link).",
         position: "bottom-right",
         duration: 3000,
       });
@@ -129,11 +143,12 @@ function NewBlogForm() {
     return true;
   };
 
+  // fetch blogs from api
   const fetchBlogs = async () => {
     try {
       setLoadingBlogs(true);
       console.log("Fetching blogs...");
-      
+
       const timestamp = new Date().getTime();
       const response = await api.get(`/api/blog/getBlog?t=${timestamp}`, {
         headers: {
@@ -143,7 +158,7 @@ function NewBlogForm() {
           'Expires': '0'
         },
       });
-      
+
       if (response.status === 200) {
         console.log("Fetched blogs:", response.data.blogs);
         setBlogs(response.data.blogs || []);
@@ -161,13 +176,14 @@ function NewBlogForm() {
     }
   };
 
+  // handle edit blog
   const handleEditBlog = (blog) => {
     console.log("Edit blog clicked with data:", blog);
     setisEditing(true);
-    
+
     let authorName = "";
     let authorDepartment = "";
-    
+
     try {
       if (typeof blog.author === 'string') {
         console.log("Author is a string:", blog.author);
@@ -192,10 +208,10 @@ function NewBlogForm() {
       console.error("Error handling author:", error);
       authorName = String(blog.author || "");
     }
-    
+
     console.log("Extracted author name:", authorName);
     console.log("Extracted author department:", authorDepartment);
-    
+
     let formattedDate = new Date().toISOString().split('T')[0];
     if (blog.date) {
       try {
@@ -204,12 +220,12 @@ function NewBlogForm() {
         console.error("Error formatting date:", e);
       }
     }
-    
+
     window.scrollTo({
       top: 0,
       behavior: "smooth"
     });
-    
+
     if (!blog.id) {
       console.error("Blog ID is missing for edit operation");
       setAlert({
@@ -220,12 +236,12 @@ function NewBlogForm() {
       });
       return;
     }
-    
+
     console.log("Blog ID for edit operation:", blog.id);
-    
+
     const formData = {
-      _id: blog.id, 
-      originalBlog: blog, 
+      _id: blog.id,
+      originalBlog: blog,
       blogTitle: blog.title || "",
       blogSubtitle: blog.subtitle || "",
       metaDescription: blog.desc || blog.summary || "",
@@ -239,19 +255,20 @@ function NewBlogForm() {
       isFeatured: blog.isFeatured || false,
       isCommentEnabled: blog.isCommentEnabled || true,
     };
-    
+
     console.log("Setting form data for edit:", formData);
     setdata(formData);
-    
+
     window.scrollTo({
       top: 0,
       behavior: "smooth"
     });
   };
 
+  // handle delete blog
   const handleDeleteBlog = async (blogId) => {
     if (!confirm("Are you sure you want to delete this blog?")) return;
-    
+
     try {
       setIsLoading(true);
       const response = await api.delete(`/api/blog/deleteBlog/${blogId}`, {
@@ -282,6 +299,7 @@ function NewBlogForm() {
     }
   };
 
+  // handle view blog
   const handleViewBlog = (blogLink) => {
     if (blogLink) {
       window.open(blogLink, '_blank');
@@ -295,140 +313,84 @@ function NewBlogForm() {
     }
   };
 
+  // save or update blog
   const onSaveBlog = async () => {
     if (isValidBlog()) {
       setIsLoading(true);
       const form = new FormData();
-    
-      if (!isEditing) {
-       
-        if (data.image && data.image instanceof File) {
-          form.append("image", data.image);
-        }
-        form.append('title', data.blogTitle);
-        
-      
-        try {
-          if (typeof data.blogAuthor === 'string' && data.blogAuthor.startsWith('{')) {
-           
-            form.append('author', data.blogAuthor);
-          } else {
-           
-            const authorObj = {
-              name: data.blogAuthor,
-              department: data.blogCategory || 'General'
-            };
-            form.append('author', JSON.stringify(authorObj));
-          }
-        } catch (e) {
-          console.error("Error handling author data:", e);
-          const authorObj = {
-            name: data.blogAuthor,
-            department: data.blogCategory || 'General'
-          };
-          form.append('author', JSON.stringify(authorObj));
-        }
-        
-        form.append('blogLink', data.mediumLink);
-        form.append('desc', data.metaDescription);
-        form.append('date', data.blogDate);
-        form.append('summary', data.metaDescription || "");
-        
-        // visibility handling based on toggle
-        form.append('visibility', data.isPublished ? 'public' : 'private');
-        
-        const approvalObj = {
-          status: true,
-          approvedBy: 'System'
-        };
-        form.append('approval', JSON.stringify(approvalObj));
+
+      if (data.image instanceof File) {
+        form.append("image", data.image);
+      } else if (typeof data.image === "string" && data.image.startsWith("http")) {
+        form.append("image", data.image);
       }
-      
+
+      // Append common fields for both create and update
+      form.append('title', data.blogTitle);
+      form.append('blogLink', data.mediumLink);
+      form.append('desc', data.metaDescription);
+      form.append('date', data.blogDate);
+      form.append('summary', data.metaDescription || "");
+      form.append('visibility', data.isPublished ? 'public' : 'private');
+      form.append('category', data.blogCategory || 'General');
+
+      // Author handling
+      try {
+        const authorObj = {
+          name: data.blogAuthor,
+          department: data.blogCategory || 'General'
+        };
+        form.append('author', JSON.stringify(authorObj));
+      } catch (e) {
+        console.error("Error handling author data:", e);
+        const authorObj = {
+          name: data.blogAuthor,
+          department: data.blogCategory || 'General'
+        };
+        form.append('author', JSON.stringify(authorObj));
+      }
+
+      const approvalObj = {
+        status: true,
+        approvedBy: 'System'
+      };
+      form.append('approval', JSON.stringify(approvalObj));
+
+
       console.log("Form data being prepared:");
       for (let [key, value] of form.entries()) {
         console.log(key, value);
       }
-      
-      if (typeof data.image === "string" && !data.image.startsWith("http")) {
-        form.delete("image");
-      }
 
       try {
         let response;
-        
+
         if (isEditing) {
-          // used put method for updating blogs
           console.log(`Updating blog with ID: ${data._id}`);
-          
+
           if (!data._id) {
             throw new Error("Missing blog ID for update operation");
           }
-          
-          const formEntries = Array.from(form.entries());
-          for (const [key] of formEntries) {
-            form.delete(key);
-          }
-          
-          form.append('title', data.blogTitle);
-          
-          const authorObj = {
-            name: data.blogAuthor,
-            department: data.blogCategory || 'General'
-          };
-          form.append('author', JSON.stringify(authorObj));
-          
-          form.append('blogLink', data.mediumLink);
-          form.append('desc', data.metaDescription);
-          form.append('date', data.blogDate);
-          form.append('summary', data.metaDescription || "");
-          form.append('visibility', data.isPublished ? 'public' : 'private');
-          form.append('category', data.blogCategory || 'General');
-          
-          const approvalObj = {
-            status: true,
-            approvedBy: 'System'
-          };
-          form.append('approval', JSON.stringify(approvalObj));
-          
-          if (data.image instanceof File) {
-            form.append("image", data.image);
-          }
-          
-          console.log("Final update form data:", Object.fromEntries(form.entries()));
+
+          console.log("Final update form data (before sending):", Object.fromEntries(form.entries()));
           console.log("Updating blog with ID:", data._id);
-          
-          try {
-            const blogId = data._id;
-            
-            if (!blogId) {
-              throw new Error("Missing blog ID for update operation");
+
+          response = await api.put(
+            `/api/blog/updateBlog/${data._id}`,
+            form,
+            {
+              headers: {
+                "Content-Type": "multipart/form-data",
+                Authorization: `Bearer ${window.localStorage.getItem("token")}`,
+              },
             }
-            
-            console.log(`Making API call to update blog with ID: ${blogId}`);
-            console.log("Form data being sent:", Object.fromEntries(form.entries()));
-            
-            response = await api.put(
-              `/api/blog/updateBlog/${blogId}`,
-              form,
-              {
-                headers: {
-                  "Content-Type": "multipart/form-data",
-                  Authorization: `Bearer ${window.localStorage.getItem("token")}`,
-                },
-              }
-            );
-            
-            console.log("Update response:", response.data);
-            
-            if (response.status !== 200) {
-              throw new Error(`Server responded with status ${response.status}: ${response.statusText}`);
-            }
-          } catch (updateError) {
-            console.error("Error updating blog:", updateError);
-            throw new Error(updateError.response?.data?.message || "Failed to update blog");
-          }
-          
+          );
+
           console.log("Update response:", response.data);
+
+          if (response.status !== 200) {
+            throw new Error(`Server responded with status ${response.status}: ${response.statusText}`);
+          }
         } else {
           response = await api.post(
             "/api/blog/createBlog",
@@ -448,19 +410,18 @@ function NewBlogForm() {
             _id: nanoid(),
             blogTitle: "",
             blogSubtitle: "",
-            blogContent: "",
+            metaDescription: "",
             image: "",
             blogDate: new Date().toISOString().split('T')[0],
             blogAuthor: "",
             mediumLink: "",
             blogCategory: "",
             blogTags: [],
-            metaDescription: "",
             isPublished: false,
             isFeatured: false,
             isCommentEnabled: true,
           });
-          
+
           setTimeout(async () => {
             try {
               const fetchWithTimestamp = async () => {
@@ -474,34 +435,28 @@ function NewBlogForm() {
                     'Expires': '0'
                   },
                 });
-                
+
                 if (response.status === 200) {
                   console.log("Freshly fetched blogs:", response.data.blogs);
                   setBlogs(response.data.blogs || []);
                 }
               };
-              
-              // First fetch
+
               await fetchWithTimestamp();
-              
+
               setAlert({
                 type: "success",
                 message: isEditing ? "Blog updated successfully" : "Blog saved successfully",
                 position: "bottom-right",
                 duration: 3000,
               });
-              
+
               if (isEditing) {
                 console.log('Dispatching blog-updated event');
                 window.dispatchEvent(new Event('blog-updated'));
               }
-              
-              setTimeout(async () => {
-                await fetchWithTimestamp();
-                if (isEditing) {
-                  window.dispatchEvent(new Event('blog-updated'));
-                }
-              }, 1500);
+
+      
             } catch (error) {
               console.error("Error refreshing blogs after update:", error);
             }
@@ -521,124 +476,140 @@ function NewBlogForm() {
     }
   };
 
+  // gemini generate summary
   const handleGeminiGenerate = async () => {
-  // // Trigger button animation
-  // setIsAnimating(true);
-  // setTimeout(() => setIsAnimating(false), 400);
-
-  if (!data.mediumLink.trim()) {
-    setAlert({
-      type: "error",
-      message: "Please enter a Medium link first.",
-      position: "top-right",
-      duration: 3000,
-    });
-    return;
-  }
-    setGeminiAnimated(true); // <-- trigger animation
-
-  try {
-    setIsLoading(true);
-    const response = await fetch("http://localhost:5000/api/gemini/summary", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ mediumLink: data.mediumLink }),
-    });
-
-    const result = await response.json();
-
-    if (result?.summary) {
-      setdata((prev) => ({
-        ...prev,
-        metaDescription: result.summary,
-      }));
-    } else {
+    if (!data.mediumLink.trim()) {
       setAlert({
         type: "error",
-        message: "Failed to generate summary. Please try again.",
+        message: "Please enter a Medium link first.",
         position: "top-right",
         duration: 3000,
       });
+      return;
     }
-  } catch (err) {
-    console.error(err);
-    setAlert({
-      type: "error",
-      message: "Something went wrong while calling Gemini API.",
-      position: "top-right",
-      duration: 3000,
-    });
-  } finally {
-    setIsLoading(false);
-  }
-};
+    setGeminiAnimated(true);
+    setTimeout(() => setGeminiAnimated(false), 800); // Reset animation after a short delay
 
+    try {
+      setIsLoading(true);
+      const response = await fetch("http://localhost:5000/api/gemini/summary", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ mediumLink: data.mediumLink }),
+      });
+
+      const result = await response.json();
+
+      if (result?.summary) {
+        setdata((prev) => ({
+          ...prev,
+          metaDescription: result.summary,
+        }));
+      } else {
+        setAlert({
+          type: "error",
+          message: "Failed to generate summary. Please try again.",
+          position: "top-right",
+          duration: 3000,
+        });
+      }
+    } catch (err) {
+      console.error(err);
+      setAlert({
+        type: "error",
+        message: "Something went wrong while calling Gemini API.",
+        position: "top-right",
+        duration: 3000,
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // gemini autofill
   const handleGeminiAutofill = async () => {
-  if (!data.mediumLink.trim()) {
-    setAlert({
-      type: "error",
-      message: "Please enter a Medium link first.",
-      position: "top-right",
-      duration: 3000,
-    });
-    return;
-  }
-
-  setAutoFillAnimated(true); // Start animation
-  setTimeout(() => setAutoFillAnimated(false), 400); // Stop animation after 400ms
-
-  try {
-    setIsLoading(true);
-
-    const response = await fetch("http://localhost:5000/api/gemini/autofill", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ mediumLink: data.mediumLink }),
-    });
-
-    const result = await response.json();
-
-    if (
-      result?.title ||
-      result?.author ||
-      result?.description ||
-      result?.thumbnail ||
-      result?.publishedDate
-    ) {
-      setdata((prev) => ({
-        ...prev,
-        blogTitle: result.title || prev.blogTitle,
-        blogAuthor: result.author || prev.blogAuthor,
-        metaDescription: result.description || prev.metaDescription,
-        image: result.thumbnail || prev.image,
-        blogDate: result.publishedDate || prev.blogDate,
-
-      }));
-    } else {
+    if (!data.mediumLink.trim()) {
       setAlert({
         type: "error",
-        message: "Gemini could not extract blog data. Try again.",
+        message: "Please enter a Medium link first.",
         position: "top-right",
         duration: 3000,
       });
+      return;
     }
-  } catch (err) {
-    console.error(err);
-    setAlert({
-      type: "error",
-      message: "Something went wrong while calling Gemini Autofill API.",
-      position: "top-right",
-      duration: 3000,
-    });
-  } finally {
-    setIsLoading(false);
-  }
-};
 
+    setAutoFillAnimated(true);
+    setTimeout(() => setAutoFillAnimated(false), 800); // Reset animation after a short delay
+
+    try {
+      setIsLoading(true);
+
+      const response = await fetch("http://localhost:5000/api/gemini/autofill", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ mediumLink: data.mediumLink }),
+      });
+
+      const result = await response.json();
+
+      if (
+        result?.title ||
+        result?.author ||
+        result?.description ||
+        result?.thumbnail ||
+        result?.publishedDate
+      ) {
+        setdata((prev) => ({
+          ...prev,
+          blogTitle: result.title || prev.blogTitle,
+          blogAuthor: result.author || prev.blogAuthor,
+          metaDescription: result.description || prev.metaDescription,
+          image: result.thumbnail || prev.image,
+          blogDate: result.publishedDate || prev.blogDate,
+
+        }));
+      } else {
+        setAlert({
+          type: "error",
+          message: "Gemini could not extract blog data. Try again.",
+          position: "top-right",
+          duration: 3000,
+        });
+      }
+    } catch (err) {
+      console.error(err);
+      setAlert({
+        type: "error",
+        message: "Something went wrong while calling Gemini Autofill API.",
+        position: "top-right",
+        duration: 3000,
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // image handling functions
+  const handleImageChange = (e) => {
+    const file = e.target.files && e.target.files[0];
+    if (file) {
+      setdata({ ...data, image: file });
+    }
+  };
+
+  const handleImageUrlChange = (e) => {
+    setdata({ ...data, image: e.target.value });
+  };
+
+  const handleAttachClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
 
   return (
     <div style={{ width: "100%", marginLeft: "70px" }}>
@@ -711,7 +682,9 @@ function NewBlogForm() {
           </div>
         </div>
       )}
-
+      <div style={{ fontSize: '0.75em', color: '#FF8A00', margin: '0 0 0.5em 0', fontWeight: 400, letterSpacing: '0.01em' }}>
+        Don't forget to change visibility to Private/Public in settings
+      </div>
       <div style={{
         height: "90vh",
         width: "90%",
@@ -722,23 +695,23 @@ function NewBlogForm() {
         <div style={{ display: "flex", flexDirection: "row" }}>
           <div style={{ width: "45%" }}>
 
-          <div className={styles.mediumLinkWrapper}>
-            <Input
-              placeholder="https://medium.com/@fedkiit/"
-              label="Medium Link"
-              value={data.mediumLink}
-              className={styles.formInput}
-              onChange={(e) => setdata({ ...data, mediumLink: e.target.value })}
-            />
-            <button
-              type="button"
-              className={`${styles.geminiButtonM} ${autoFillAnimated ? styles.animateMediumLink : ''}`}
-              onClick={handleGeminiAutofill}
-              title="Autofill with AI"
-            >
-              <img src={geminiLogo} alt="Gemini" />
-            </button>
-          </div>
+            <div className={styles.mediumLinkWrapper}>
+              <Input
+                placeholder="https://medium.com/@fedkiit/"
+                label="Medium Link"
+                value={data.mediumLink}
+                className={styles.formInput}
+                onChange={(e) => setdata({ ...data, mediumLink: e.target.value })}
+              />
+              <button
+                type="button"
+                className={`${styles.geminiButtonM} ${autoFillAnimated ? styles.animateMediumLink : ''}`}
+                onClick={handleGeminiAutofill}
+                title="Autofill with AI"
+              >
+                <img src={geminiLogo} alt="Gemini" />
+              </button>
+            </div>
 
             <Input
               placeholder="Enter Blog Title"
@@ -746,7 +719,7 @@ function NewBlogForm() {
               value={data.blogTitle}
               className={styles.formInput}
               onChange={(e) => setdata({ ...data, blogTitle: e.target.value })}
-            />             
+            />
 
             <div className={styles.descriptionWrapper}>
               <Input
@@ -769,26 +742,58 @@ function NewBlogForm() {
             </div>
 
 
+            <div style={{ position: "relative" }}>
+              <Input
+                placeholder="Attach Blog Image (URL or upload)"
+                label="Blog Image"
+                type="text" // Correct type for URL input
+                value={
+                  data.image instanceof File
+                    ? data.image.name
+                    : data.image || ""
+                }
+                containerClassName={styles.formInput}
+                onChange={handleImageUrlChange}
+                className={styles.formInput}
+                style={{ paddingRight: "2.5em" }}
+              />
+              <button
+                type="button"
+                onClick={handleAttachClick}
+                style={{
+                  position: "absolute",
+                  right: "4.5rem",
+                  top: "55%",
+                  transform: "translateY(-50%)",
+                  background: "none",
+                  border: "none",
+                  cursor: "pointer",
+                  padding: 0,
+                  display: "flex",
+                  alignItems: "center"
+                }}
+                title="Upload Image"
+              >
+                <FaPaperclip size={18} color="#FF8A00" />
+              </button>
+              <input
+                type="file"
+                accept="image/*"
+                ref={fileInputRef}
+                style={{ display: "none" }}
+                onChange={handleImageChange}
+              />
+            </div>
 
-           <Input
-              placeholder="Attach Blog Image"
-              label="Blog Image"
-              type="image"
-              value={
-                typeof data.image === "string"
-                  ? data.image
-                  : data.image?.name || ""
-              }
-              containerClassName={styles.formInput}
-              onChange={(e) => setdata({ ...data, image: e.target.value })}
-              className={styles.formInput}
-            />
-
-            {typeof data.image === "string" && data.image.startsWith("http") && (
+            {data.image && (
               <div style={{ marginTop: "10px" }}>
                 <p style={{ margin: "5px 0", fontSize: "0.9rem", color: "#666" }}>Preview:</p>
                 <img
-                  src={data.image}
+                  src={
+                    data.image instanceof File
+                      ? URL.createObjectURL(data.image)
+                      : data.image
+                  }
                   alt="Blog Thumbnail Preview"
                   style={{
                     maxWidth: "100%",
@@ -808,7 +813,7 @@ function NewBlogForm() {
               type="date"
               style={{ width: "88%" }}
               value={data.blogDate}
-              onChange={(date) => setdata({ ...data, blogDate: e.target.value })}
+              onChange={(e) => setdata({ ...data, blogDate: e.target.value })} 
             />
             <Input
               placeholder="Enter Author Name"
@@ -817,9 +822,9 @@ function NewBlogForm() {
               className={styles.formInput}
               onChange={(e) => setdata({ ...data, blogAuthor: e.target.value })}
             />
-            
+
           </div>
-          <div style={{ width: "45%", paddingTop: "9px"}}>
+          <div style={{ width: "45%", paddingTop: "9px" }}>
             <Input
               placeholder="Select Blog Department"
               label="Blog Category"
@@ -840,12 +845,12 @@ function NewBlogForm() {
         </div>
       </div>
       <Alert />
-      
+
       <div className={styles.blogListSection}>
         <h3 className={styles.headInnerText}>
           <span>Uploaded</span> Blogs
         </h3>
-        
+
         <div className={styles.filterSection}>
           <div className={styles.searchContainer}>
             <input
@@ -856,7 +861,7 @@ function NewBlogForm() {
               className={styles.searchInput}
             />
           </div>
-          
+
           <div className={styles.visibilityFilterContainer}>
             <div className={styles.filterLabel}>Filter by visibility:</div>
             <Input
@@ -874,11 +879,11 @@ function NewBlogForm() {
             />
           </div>
         </div>
-        
+
         <div className={styles.blogListContainer}>
           {loadingBlogs ? (
             <div className={styles.loadingContainer}>
-              
+              Loading blogs...
             </div>
           ) : blogs.length === 0 ? (
             <div className={styles.emptyState}>
@@ -888,18 +893,17 @@ function NewBlogForm() {
             <div className={styles.blogsList}>
               {blogs
                 .filter((blog) => {
-                  //visibility filter
                   if (visibilityFilter !== 'all') {
                     if (blog.visibility !== visibilityFilter) {
                       return false;
                     }
                   }
-                  
+
                   if (!searchQuery.trim()) return true;
-                  
+
                   const titleMatch = blog.title?.toLowerCase().includes(searchQuery.toLowerCase());
                   const descMatch = blog.desc?.toLowerCase().includes(searchQuery.toLowerCase());
-                  
+
                   let authorName = '';
                   try {
                     const authorObj = typeof blog.author === 'string' ? JSON.parse(blog.author) : blog.author;
@@ -907,24 +911,23 @@ function NewBlogForm() {
                   } catch (err) {
                     authorName = String(blog.author || '');
                   }
-                  
+
                   const visibilityMatch = blog.visibility?.toLowerCase().includes(searchQuery.toLowerCase());
-                  
+
                   const authorMatch = authorName.toLowerCase().includes(searchQuery.toLowerCase());
-                  
+
                   return titleMatch || descMatch || authorMatch || visibilityMatch;
                 })
                 .map((blog) => (
                   <div key={blog.id} className={styles.blogItem}>
-                    <div className={styles.visibilityBadge} style={{
-                    }}>
+                    <div className={styles.visibilityBadge}>
                       {blog.visibility === 'private' ? 'Private' : 'Public'}
                     </div>
-                    <BlogCard 
-                      data={blog} 
+                    <BlogCard
+                      data={blog}
                       customButtons={
                         <div className={styles.customButtonContainer}>
-                          <button 
+                          <button
                             className={styles.editButton}
                             onClick={(e) => {
                               e.stopPropagation();
@@ -933,7 +936,7 @@ function NewBlogForm() {
                           >
                             Edit
                           </button>
-                          <button 
+                          <button
                             className={styles.deleteButton}
                             onClick={(e) => {
                               e.stopPropagation();
@@ -942,6 +945,7 @@ function NewBlogForm() {
                           >
                             Delete
                           </button>
+                       
                         </div>
                       }
                     />

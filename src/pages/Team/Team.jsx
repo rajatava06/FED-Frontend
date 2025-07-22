@@ -8,6 +8,8 @@ import useWindowWidth from "../../utils/hooks/useWindowWidth";
 import MemberData from "../../data/Team.json";
 import AccessTypes from "../../data/Access.json";
 import { ComponentLoading } from "../../microInteraction";
+import { ChatBot } from "../../features";
+
 
 const Team = () => {
   useEffect(() => {
@@ -229,6 +231,7 @@ const Team = () => {
 
   return (
     <div className={styles.Team}>
+         <ChatBot />
       <h2>
         Meet Our{" "}
         <span
