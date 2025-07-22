@@ -62,6 +62,27 @@ const Sidebar = ({ activepage, handleChange }) => {
     setimagePrv(url);
   };
 
+
+  const renderBlogMenu = () => (
+    <div
+        onClick={() => handleChange("Blogs")}
+        style={{
+          background: activepage === "Blogs" ? "var(--primary)" : "transparent",
+          WebkitBackgroundClip: activepage === "Blogs" ? "text" : "initial",
+          backgroundClip: activepage === "Blogs" ? "text" : "initial",
+          color: activepage === "Blogs" ? "transparent" : "inherit",
+        }}
+      >
+        <FaRegNewspaper
+          size={17}
+          style={{
+            color: activepage === "Blogs" ? "#FF8A00" : "white",
+            marginRight: "10px",
+          }}
+        />{" "}
+        <Link to={"/profile/BlogForm"}>Blogs</Link>
+      </div>
+  )
   const renderAdminMenu = () => (
     <>
       <div
@@ -101,24 +122,7 @@ const Sidebar = ({ activepage, handleChange }) => {
         />{" "}
         <Link to={"/profile/Form"}>Form</Link>
       </div>
-      <div
-        onClick={() => handleChange("Blogs")}
-        style={{
-          background: activepage === "Blogs" ? "var(--primary)" : "transparent",
-          WebkitBackgroundClip: activepage === "Blogs" ? "text" : "initial",
-          backgroundClip: activepage === "Blogs" ? "text" : "initial",
-          color: activepage === "Blogs" ? "transparent" : "inherit",
-        }}
-      >
-        <FaRegNewspaper
-          size={17}
-          style={{
-            color: activepage === "Blogs" ? "#FF8A00" : "white",
-            marginRight: "10px",
-          }}
-        />{" "}
-        <Link to={"/profile/BlogForm"}>Blogs</Link>
-      </div>
+      
       <div
         onClick={() => handleChange("Members")}
         style={{
@@ -199,7 +203,8 @@ const Sidebar = ({ activepage, handleChange }) => {
           </div>
         </div>
         <div className={styles.menu}>
-          {designation === "Admin" && renderAdminMenu()}
+          {designation === "Admin" && renderAdminMenu() }
+          {(designation === "Admin" || authCtx.user.access === "SENIOR_EXECUTIVE_CREATIVE") && renderBlogMenu() }
           {designation !== "Admin" && (
             <div
               onClick={() => handleChange("events")}

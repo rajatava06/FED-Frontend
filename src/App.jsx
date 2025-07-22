@@ -95,7 +95,7 @@ const AuthLayout = () => (
 
 function App() {
   const authCtx = useContext(AuthContext);
-
+  console.log(authCtx.user.access);
   return (
     <div>
       <Suspense fallback={<Loading />}>
@@ -134,14 +134,15 @@ function App() {
                   <Route path="members" element={<ViewMember />} />
                 )}
 
- {/* blog access to this mail*/ }
-                {(authCtx.user.access === "ADMIN" || 
-                  authCtx.user.email === "fedtechwork@gmail.com") && (
-                  <Route path="BlogForm" element={<BlogForm />} />
-                )}
-                {authCtx.user.access === "ADMIN" && (
+                {/* blog access to this mail*/}
+
+                {(authCtx.user.access === "ADMIN" ||
+                  authCtx.user.access === "SENIOR_EXECUTIVE_CREATIVE") &&
+                  (console.log("authCtx.user.access:", authCtx.user.access),
+                  (<Route path="BlogForm" element={<BlogForm />} />))}
+                {/* {authCtx.user.access === "ADMIN" && (
                   <Route path="members" element={<BlogForm />} />
-                )}
+                )} */}
 
                 <Route
                   path="events/:eventId"
@@ -236,7 +237,6 @@ function App() {
               }
             />
           </Route>
-          
         </Routes>
       </Suspense>
     </div>
