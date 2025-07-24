@@ -137,12 +137,9 @@ function App() {
                 {/* blog access to this mail*/}
 
                 {(authCtx.user.access === "ADMIN" ||
-                  authCtx.user.access === "SENIOR_EXECUTIVE_CREATIVE") &&
-                  (console.log("authCtx.user.access:", authCtx.user.access),
-                  (<Route path="BlogForm" element={<BlogForm />} />))}
-                {/* {authCtx.user.access === "ADMIN" && (
-                  <Route path="members" element={<BlogForm />} />
-                )} */}
+                  authCtx.user.access === "SENIOR_EXECUTIVE_CREATIVE") && (
+                  <Route path="BlogForm" element={<BlogForm />} />
+                )}
 
                 <Route
                   path="events/:eventId"
