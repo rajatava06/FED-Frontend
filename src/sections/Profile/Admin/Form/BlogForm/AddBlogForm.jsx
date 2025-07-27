@@ -492,15 +492,11 @@ function NewBlogForm() {
 
     try {
       setIsLoading(true);
-      const response = await fetch("http://localhost:5000/api/gemini/summary", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ mediumLink: data.mediumLink }),
+      const response = await api.post("/api/gemini/summary", {
+         mediumLink: data.mediumLink 
       });
 
-      const result = await response.json();
+      const result = response.data;
 
       if (result?.summary) {
         setdata((prev) => ({
@@ -546,15 +542,11 @@ function NewBlogForm() {
     try {
       setIsLoading(true);
 
-      const response = await fetch("http://localhost:5000/api/gemini/autofill", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ mediumLink: data.mediumLink }),
+      const response = await api.post("/api/gemini/autofill", {
+       mediumLink: data.mediumLink
       });
 
-      const result = await response.json();
+      const result = response.data;
 
       if (
         result?.title ||
