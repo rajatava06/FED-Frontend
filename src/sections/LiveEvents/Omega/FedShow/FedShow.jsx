@@ -4,7 +4,7 @@ import { useInView } from "react-intersection-observer";
 import { motion } from "framer-motion";
 import { FaCalendarAlt, FaClock, FaMapMarkerAlt } from "react-icons/fa";
 import { parse, differenceInMilliseconds } from "date-fns";
-import fedShowImg from "../../../assets/images/fedShow.svg";
+import fedShowImg from "../../../../assets/images/fedShow.svg";
 import styles from "./styles/FedShow.module.scss";
 
 function FedShow() {
