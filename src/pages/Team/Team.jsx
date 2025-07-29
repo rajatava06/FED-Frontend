@@ -121,6 +121,37 @@ const Team = () => {
     "DEPUTY_DIRECTOR_HUMAN_RESOURCE",
   ];
 
+  // Function to extract team name from SENIOR_EXECUTIVE access codes
+  const extractTeamFromAccess = (access) => {
+    if (access.startsWith("SENIOR_EXECUTIVE_")) {
+      return access.replace("SENIOR_EXECUTIVE_", "");
+    }
+    return access;
+  };
+
+  // Function to get display role name
+  const getDisplayRole = (access) => {
+    const teamCode = extractTeamFromAccess(access);
+    let role = teamCode
+      .split("_")
+      .map(
+        (word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+      )
+      .join(" ");
+    
+    // Ensure consistent capitalization for role names
+    switch (role.toLowerCase()) {
+      case "pr and finance":
+        role = "PR And Finance";
+        break;
+      case "human resource":
+        role = "Human Resource";
+        break;
+      // Add other cases if needed for consistent capitalization
+    }
+    return role;
+  };
+
   // Separate directors from other members
   const directorsAndAbove = teamMembers
     .filter((member) => boardAccessCodes.includes(member.access))
@@ -140,39 +171,31 @@ const Team = () => {
   // Create a role map for non-director roles
   const roleMap = access.reduce((map, code) => {
     if (!boardAccessCodes.includes(code)) {
-      let role = code
-        .split("_")
-        .map(
-          (word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
-        )
-        .join(" ");
-      // Ensure consistent capitalization for role names
-      switch (role.toLowerCase()) {
-        case "pr and finance":
-          role = "PR And Finance";
-          break;
-        case "human resource":
-          role = "Human Resource";
-          break;
-        // Add other cases if needed for consistent capitalization
+      const displayRole = getDisplayRole(code);
+      const teamCode = extractTeamFromAccess(code);
+      
+      if (!map[displayRole]) {
+        map[displayRole] = [];
       }
-
-      map[role] = code;
+      map[displayRole].push(code);
     }
     return map;
   }, {});
 
   const teamByRole = Object.keys(roleMap)
     .map((role) => {
-      const members = otherMembers.filter(
-        (member) => member.access === roleMap[role]
+      const members = otherMembers.filter((member) => 
+        roleMap[role].includes(member.access)
       );
 
-      const seniorExecutives = members.filter(
-        (member) => member.extra?.designation === "Senior Executive"
+      // Sort members: Senior Executives first, then others
+      const seniorExecutives = members.filter((member) => 
+        member.access.startsWith("SENIOR_EXECUTIVE_") || 
+        member.extra?.designation === "Senior Executive"
       );
-      const otherMembersWithoutSenior = members.filter(
-        (member) => member.extra?.designation !== "Senior Executive"
+      const otherMembersWithoutSenior = members.filter((member) => 
+        !member.access.startsWith("SENIOR_EXECUTIVE_") && 
+        member.extra?.designation !== "Senior Executive"
       );
 
       return {

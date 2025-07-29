@@ -3,8 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { MdLogout } from "react-icons/md";
 import { TbUserEdit } from "react-icons/tb";
 import { SlCalender } from "react-icons/sl";
-import { SiC, SiReacthookform } from "react-icons/si";
-import { GrCertificate } from 'react-icons/gr';
+import { SiReacthookform } from "react-icons/si";
+import { FaRegNewspaper } from "react-icons/fa";
 import AuthContext from "../../../context/AuthContext";
 import styles from "./styles/Sidebar.module.scss";
 
@@ -62,6 +62,27 @@ const Sidebar = ({ activepage, handleChange }) => {
     setimagePrv(url);
   };
 
+
+  const renderBlogMenu = () => (
+    <div
+        onClick={() => handleChange("Blogs")}
+        style={{
+          background: activepage === "Blogs" ? "var(--primary)" : "transparent",
+          WebkitBackgroundClip: activepage === "Blogs" ? "text" : "initial",
+          backgroundClip: activepage === "Blogs" ? "text" : "initial",
+          color: activepage === "Blogs" ? "transparent" : "inherit",
+        }}
+      >
+        <FaRegNewspaper
+          size={17}
+          style={{
+            color: activepage === "Blogs" ? "#FF8A00" : "white",
+            marginRight: "10px",
+          }}
+        />{" "}
+        <Link to={"/profile/BlogForm"}>Blogs</Link>
+      </div>
+  )
   const renderAdminMenu = () => (
     <>
       <div
@@ -101,28 +122,7 @@ const Sidebar = ({ activepage, handleChange }) => {
         />{" "}
         <Link to={"/profile/Form"}>Form</Link>
       </div>
-
-  {/* certificate link */}
-      <div
-        onClick={() => handleChange("Certificate")}
-        style={{
-          background: activepage === "Certificate" ? "var(--primary)" : "transparent",
-          WebkitBackgroundClip: activepage === "Certificate" ? "text" : "initial",
-          backgroundClip: activepage === "Certificate" ? "text" : "initial",
-          color: activepage === "Certificate" ? "transparent" : "inherit",
-        }}
-      >
-        <GrCertificate
-          size={17}
-          style={{
-            color: activepage === "Certificate" ? "#FF8A00" : "white",
-            marginRight: "10px",
-          }}
-        />{" "}
-        <Link to={"/profile/certificates"}>Certificate</Link>
-      </div>
-
-
+      
       <div
         onClick={() => handleChange("Members")}
         style={{
@@ -203,18 +203,20 @@ const Sidebar = ({ activepage, handleChange }) => {
           </div>
         </div>
         <div className={styles.menu}>
-          {designation === "Admin" && renderAdminMenu()}
+          {designation === "Admin" && renderAdminMenu() }
+          {(designation === "Admin" || authCtx.user.access === "SENIOR_EXECUTIVE_CREATIVE") && renderBlogMenu() }
           {designation !== "Admin" && (
-  <div
-    onClick={() => handleChange("events")}
-    style={{ color: activepage === "events" ? "#FF8A00" : "white" }}
-  >
-    <NavLink to={"/profile/events"}>
-      <SlCalender size={17} style={{ marginRight: "10px" }} /> Event
-    </NavLink>
-  </div>
-)}
-
+            <div
+              onClick={() => handleChange("events")}
+              style={{ color: activepage === "events" ? "#FF8A00" : "white" }}
+            >
+              <NavLink to={"/profile/events"}>
+                <SlCalender size={17} style={{ marginRight: "10px" }} /> Event
+              </NavLink>
+              
+            </div>
+            
+          )}
           <div
             onClick={handleLogout}
             style={{ color: activepage === "Logout" ? "#FF8A00" : "white" }}
