@@ -2,10 +2,10 @@ import React, { useContext, useEffect, useState } from "react";
 import { Element } from "react-scroll";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import AuthContext from "../../../context/AuthContext";
+import AuthContext from "../../../../context/AuthContext";
 import styles from "./styles/Hero.module.scss";
 import { parse, differenceInMilliseconds } from "date-fns";
-import { Alert, MicroLoading } from "../../../microInteraction"; // Ensure this import path is correct
+import { Alert, MicroLoading } from "../../../../microInteraction"; // Ensure this import path is correct
 
 function Hero({ ongoingEvents, isRegisteredInRelatedEvents, eventName }) {
   const authCtx = useContext(AuthContext);
