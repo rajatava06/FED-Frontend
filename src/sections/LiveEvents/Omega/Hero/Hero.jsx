@@ -2,10 +2,10 @@ import React, { useContext, useEffect, useState } from "react";
 import { Element } from "react-scroll";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import AuthContext from "../../../context/AuthContext";
+import AuthContext from "../../../../context/AuthContext";
 import styles from "./styles/Hero.module.scss";
 import { parse, differenceInMilliseconds } from "date-fns";
-import { Alert, MicroLoading } from "../../../microInteraction"; // Ensure this import path is correct
+import { Alert, MicroLoading } from "../../../../microInteraction"; // Ensure this import path is correct
 
 function Hero({ ongoingEvents, isRegisteredInRelatedEvents, eventName }) {
   const authCtx = useContext(AuthContext);
@@ -185,8 +185,7 @@ function Hero({ ongoingEvents, isRegisteredInRelatedEvents, eventName }) {
 
   return (
     <div className={styles.hero}>
-      <div className={styles.circle}></div>
-      <div className={styles.circle2}></div>
+   
       <Element name="p">
         <motion.div
           initial={{ opacity: 0, y: -10, scale: 0.5 }}
@@ -205,7 +204,7 @@ function Hero({ ongoingEvents, isRegisteredInRelatedEvents, eventName }) {
           style={{ perspective: 1000 }}
         >
           <img
-            src="https://uploads-ssl.webflow.com/663d1907e337de23e83c30b2/66b237c23cd94e1878fff70a_image%20(7).png"
+            src="https://ucarecdn.com/cc53921b-b23b-40ed-b694-faab4c172988/"
             alt="Hero"
           />
         </motion.div>
