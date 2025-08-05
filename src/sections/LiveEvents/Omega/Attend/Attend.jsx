@@ -34,15 +34,14 @@ function Attend() {
         </div>
 
         <div className={style.boxmain}>
-          <Card img="https://uploads-ssl.webflow.com/663d1907e337de23e83c30b2/66b5fc073c4fe7b17fd35209_image%20(14).png"  title="Inspiration and Knowledge" />
-          <Card img="https://uploads-ssl.webflow.com/663d1907e337de23e83c30b2/66b5faa63c233fc6529719c3_image%20(10).png" title="Networking Opportunities" />
-          <Card img="https://uploads-ssl.webflow.com/663d1907e337de23e83c30b2/66b5faa776cf7e0c97524f2b_image%20(9).png" title="Hands-on Experience" />
-          <Card img="https://uploads-ssl.webflow.com/663d1907e337de23e83c30b2/66b5faa63c233fc6529719c3_image%20(10).png" title="Exposure and Recognition" />
+          <Card img="https://ucarecdn.com/b41bf74e-a40e-4864-9c45-1b0316faff8f/"  title="Inspiration and Knowledge" />
+          <Card img="https://ucarecdn.com/3d7bfff8-602f-41ee-905b-1d8a5f7071ca/" title="Networking Opportunities" />
+          <Card img="https://ucarecdn.com/287d8849-00fa-4344-aad2-80e2405e4943/" title="Hands-on Experience" />
+          <Card img="https://ucarecdn.com/873c2f03-0697-4152-82d0-fa79c1efe5d7/" title="Exposure and Recognition" />
         </div>
       </div>
 
-      <div className={style.circle1}></div>
-      <div className={style.circle2}></div>
+     
     </>
   );
 }
