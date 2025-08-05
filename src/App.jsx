@@ -41,7 +41,7 @@ const Alumni = lazy(() => import("./pages/Alumni/Alumni"));
 const Profile = lazy(() => import("./pages/Profile/Profile"));
 const Blog = lazy(() => import("./pages/Blog/Blog"));
 const Omega = lazy(() => import("./pages/LiveEvents/Omega/Omega"));
-// const Pixel_AI_Hack = lazy(() => import("./pages/LiveEvents/Pixel_AI_Hack/Pixel_AI_Hack"));
+// const omega = lazy(() => import("./pages/LiveEvents/omega/omega"));
 
 const Signup = lazy(() => import("./pages/Authentication/Signup/Signup"));
 const ForgotPassword = lazy(() =>
@@ -62,24 +62,24 @@ const OTPInput = lazy(() =>
 
 const MainLayout = () => {
   const location = useLocation();
-  const isPixel_AI_HackPage = location.pathname === "/Pixel_AI_Hack";
+  const isomegaPage = location.pathname === "/omega";
 
-  // useEffect(() => {
-  //   if (isPixel_AI_HackPage) {
-  //     document.body.style.backgroundColor = "#000026";
-  //   } else {
-  //     document.body.style.backgroundColor = "";
-  //   }
+  useEffect(() => {
+    if (isomegaPage) {
+      document.body.style.backgroundColor = "#000000";
+    } else {
+      document.body.style.backgroundColor = "";
+    }
 
-  //   return () => {
-  //     document.body.style.backgroundColor = "";
-  //   };
-  // }, [isPixel_AI_HackPage]);
+    return () => {
+      document.body.style.backgroundColor = "";
+    };
+  }, [isomegaPage]);
 
   return (
     <div>
       <Navbar />
-      <div className="page">
+      <div className={`page ${isomegaPage ? 'omega-page' : ''}`}>
         <Outlet />
       </div>
       <Footer />
@@ -112,7 +112,7 @@ function App() {
             <Route path="/Alumni" element={<Alumni />} />
             <Route path="/verify/certificate" element={<VerifyCertificate />} />
             <Route path="/Omega" element={<Omega />} />
-            {/* <Route path="/Pixel_AI_Hack" element={<Pixel_AI_Hack />}/> */}
+            {/* <Route path="/omega" element={<omega />}/> */}
             {/* Route After Login */}
             {authCtx.isLoggedIn && (
               <Route path="/profile" element={<Profile />}>
