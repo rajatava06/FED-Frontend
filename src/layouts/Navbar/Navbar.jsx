@@ -199,17 +199,17 @@ useEffect(() => {
                 Event
               </NavLink>
             </li>
-            {/* <li>
+            <li>
               <NavLink
-                to="/Pixel_AI_Hack"
+                to="/omega"
                 className={`${styles.linkPixel_AI_Hack} ${
                   activeLink === "/Pixel_AI_Hack" ? styles.activeLinkPixel_AI_Hack : ""
                 } ${activeLink === "/Pixel_AI_Hack" ? styles.Pixel_AI_HackHover : ""}`}
                 onClick={closeMobileMenu}
               >
-                Pixel-AI-Hack
+                Omega
               </NavLink>
-            </li> */}
+            </li>
             <li>
               <NavLink
                 to="/Social"
