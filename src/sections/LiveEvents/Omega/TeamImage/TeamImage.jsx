@@ -5,7 +5,7 @@ import styles from "./styles/TeamImage.module.scss"
 const TeamImage = () => {
   return (
     <div className={`${styles.teamImage}`}>
-        <img src="https://i.ibb.co/YXQ92Qh/Group-2683.png" alt="" />
+        <img src="https://i.ibb.co/Nnr7xYKs/Group-2683-1.png" alt="" />
     </div>
   )
 }

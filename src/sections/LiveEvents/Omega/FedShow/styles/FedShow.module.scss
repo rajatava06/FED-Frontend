@@ -8,29 +8,29 @@
   overflow: hidden;
   margin-top: 20px;
 }
-.fedshowcircle {
-  position: absolute;
-  top: 10rem;
-  right: -10%;
-  background: linear-gradient(#4b00c6, #0047ff, #50ff34, #00d1ff);
-  filter: blur(40px);
-  border-radius: 50%;
-  transform: rotate(60deg);
-  height: 50vh;
-  width: 20vw;
-}
+// .fedshowcircle {
+//   position: absolute;
+//   top: 10rem;
+//   right: -10%;
+//   background: linear-gradient(#4b00c6, #0047ff, #50ff34, #00d1ff);
+//   filter: blur(40px);
+//   border-radius: 50%;
+//   transform: rotate(60deg);
+//   height: 50vh;
+//   width: 20vw;
+// }
 
-.fedshowcircle2 {
-  position: absolute;
-  top: 10rem;
-  left: -10%;
-  background: linear-gradient(#4b00c6, #0047ff, #50ff34, #00d1ff);
-  filter: blur(40px);
-  border-radius: 50%;
-  transform: rotate(60deg);
-  height: 50vh;
-  width: 20vw;
-}
+// .fedshowcircle2 {
+//   position: absolute;
+//   top: 10rem;
+//   left: -10%;
+//   background: linear-gradient(#4b00c6, #0047ff, #50ff34, #00d1ff);
+//   filter: blur(40px);
+//   border-radius: 50%;
+//   transform: rotate(60deg);
+//   height: 50vh;
+//   width: 20vw;
+// }
 .heroImage {
   width: 100%;
   height: 100%;
@@ -46,7 +46,7 @@
 .subHead {
   font-size: 3rem;
   font-weight: 800;
-  color: rgb(0, 209, 255);
+  color: rgb(214, 107, 7);
 }
 
 .imageContainer {

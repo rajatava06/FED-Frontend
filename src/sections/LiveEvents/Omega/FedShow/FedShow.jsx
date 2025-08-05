@@ -103,11 +103,11 @@ function FedShow() {
             transition={{ duration: 0.6, ease: "easeOut" }}
             style={{ perspective: 1000 }}
           >
-            <img
+            {/* <img
               className={styles.imgLeft}
               src="https://uploads-ssl.webflow.com/645fbc01f38b6fb6255c240c/66c1446130125423df86f7a3_image_2024-08-18_06-15-12.png"
               alt="Hero"
-            />
+            /> */}
           </motion.div>
         </Element>
         <Element name="p">
@@ -136,30 +136,30 @@ function FedShow() {
 
           <div className={styles.info}>
             <p>
-              <FaCalendarAlt className={styles.icon} size={20} /> August 25,
-              2024
+              <FaCalendarAlt className={styles.icon} size={20} /> 10th August,
+              2025
             </p>
             <div style={{ display: "flex", alignItems: "center" }}>
               <p>
-                <FaClock className={styles.icon} /> 10:00 AM
+                <FaClock className={styles.icon} /> 3.00 PM - 6.00 PM
               </p>
               <p style={{ marginLeft: "20px" }}>
-                <FaMapMarkerAlt className={styles.icon} /> Campus - 14
+                <FaMapMarkerAlt className={styles.icon} /> Campus - 17
               </p>
             </div>
           </div>
 
-          <button
+          {/* <button
             className={styles.registerBtn}
             disabled={
-              btnTxt === "SHOW ENDED" ||
+              btnTxt === "SHOW IS LIVE" ||
               btnTxt === "SHOW IS LIVE" ||
               btnTxt === `${remainingTime}`
             }
             style={{ cursor: "not-allowed" }}
-          >
-            {remainingTime ? `${remainingTime}` : btnTxt}
-          </button>
+          > */}
+            {/* {remainingTime ? `${remainingTime}` : btnTxt}
+          </button> */}
         </Element>
         <Element name="img">
           <motion.div
@@ -174,17 +174,17 @@ function FedShow() {
             transition={{ duration: 0.6, ease: "easeOut" }}
             style={{ perspective: 1000 }}
           >
-            <img
+            {/* <img
               className={styles.imgRight}
               src="https://uploads-ssl.webflow.com/645fbc01f38b6fb6255c240c/66c144619c2cf228fd915e28_image_2024-08-18_06-15-39.png"
               alt="Hero"
-            />
+            /> */}
 
-            <img
+            {/* <img
               className={styles.mobileFedShowImg}
               src="https://uploads-ssl.webflow.com/663d1907e337de23e83c30b2/66c2330cdc17d5b6d4bb5a0d_Screenshot%202024-08-18%20231413.png"
               alt=""
-            />
+            /> */}
           </motion.div>
         </Element>
       </div>
