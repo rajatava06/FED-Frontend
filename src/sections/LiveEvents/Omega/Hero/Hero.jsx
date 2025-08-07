@@ -204,7 +204,7 @@ function Hero({ ongoingEvents, isRegisteredInRelatedEvents, eventName }) {
           style={{ perspective: 1000 }}
         >
           <img
-            src="https://cdn.prod.website-files.com/663d1907e337de23e83c30b2/6894bdcd8d5e25d7807974d1_omega5.png"
+            src="https://cdn.prod.website-files.com/6891df87cfba687a7fd80202/6891e0b089a56fcddcf969e2_omega5.png"
             alt="Hero"
           />
         </motion.div>
