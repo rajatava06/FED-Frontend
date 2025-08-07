@@ -487,63 +487,98 @@ const PreviewForm = ({
   };
 
   const renderPaymentScreen = () => {
-    const { eventType, receiverDetails, eventAmount } = formData;
+  const { eventType, receiverDetails, eventAmount } = formData;
 
-    if (eventType === "Paid" && currentSection.name === "Payment Details") {
-      return (
-        <div
+  const handleDownloadQR = () => {
+    const link = document.createElement("a");
+    const imageUrl =
+      typeof receiverDetails.media === "string"
+        ? receiverDetails.media
+        : URL.createObjectURL(receiverDetails.media);
+
+    link.href = imageUrl;
+    link.download = "qr-code.png";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const handleShareQR = async () => {
+    const imageUrl =
+      typeof receiverDetails.media === "string"
+        ? receiverDetails.media
+        : URL.createObjectURL(receiverDetails.media);
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: "Payment QR Code",
+          text: `Make the payment of ₹${eventAmount} using this QR or UPI: ${receiverDetails.upi}`,
+          url: imageUrl,
+        });
+      } catch (error) {
+        console.error("Error sharing:", error);
+      }
+    } else {
+      alert("Share not supported in this browser.");
+    }
+  };
+
+  if (eventType === "Paid" && currentSection.name === "Payment Details") {
+    return (
+      <div
+        style={{
+          margin: "8px auto",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        {receiverDetails.media && (
+          <img
+            src={
+              typeof receiverDetails.media === "string"
+                ? receiverDetails.media
+                : URL.createObjectURL(receiverDetails.media)
+            }
+            alt={"QR-Code"}
+            style={{
+              width: 200,
+              height: 200,
+              objectFit: "contain",
+            }}
+          />
+        )}
+
+        {/* ✅ Download & Share Buttons */}
+        <div style={{ display: "flex", gap: "10px", marginTop: 10 }}>
+          <Button onClick={handleDownloadQR}>Download QR</Button>
+          <Button onClick={handleShareQR}>Share QR</Button>
+        </div>
+
+        <p
           style={{
-            margin: "8px auto",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
+            fontSize: 12,
+            marginTop: 12,
+            color: "lightgray",
+            textAlign: "center",
           }}
         >
-          {receiverDetails.media && (
-            <img
-              src={
-                typeof receiverDetails.media === "string"
-                  ? receiverDetails.media
-                  : URL.createObjectURL(receiverDetails.media)
-              }
-              alt={"QR-Code"}
-              style={{
-                width: 200,
-                height: 200,
-                objectFit: "contain",
-              }}
-            />
-          )}
-          <p
-            style={{
-              fontSize: 12,
-              marginTop: 12,
-              color: "lightgray",
-            }}
-          >
-            Make the payment of{" "}
-            <strong
-              style={{
-                color: "#fff",
-              }}
-            >
-              &#8377;{eventAmount}
-            </strong>{" "}
-            using QR-Code or UPI Id{" "}
-            <strong
-              style={{
-                color: "#fff",
-              }}
-            >
-              {receiverDetails.upi}
-            </strong>
-          </p>
-        </div>
-      );
-    }
-    return null;
-  };
+          Make the payment of{" "}
+          <strong style={{ color: "#fff" }}>
+            &#8377;{eventAmount}
+          </strong>{" "}
+          using QR-Code or UPI Id{" "}
+          <strong style={{ color: "#fff" }}>{receiverDetails.upi}</strong>
+        </p>
+      </div>
+    );
+  }
+
+  return null;
+};
+
 
   return (
     <>
