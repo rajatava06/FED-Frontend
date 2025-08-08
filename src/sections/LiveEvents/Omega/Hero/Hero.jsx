@@ -184,7 +184,9 @@ function Hero({ ongoingEvents, isRegisteredInRelatedEvents, eventName }) {
   ]);
 
   return (
+    
     <div className={styles.hero}>
+
    
       <Element name="p">
         <motion.div
@@ -193,7 +195,8 @@ function Hero({ ongoingEvents, isRegisteredInRelatedEvents, eventName }) {
           transition={{ duration: 0.6, ease: "easeOut" }}
           style={{ perspective: 1000 }}
         >
-          <p className={styles.head}>FED PRESENTS</p>
+
+          <p className={styles.head}> FEDKIIT PRESENTS</p>
         </motion.div>
       </Element>
       <Element name="img">
@@ -207,7 +210,51 @@ function Hero({ ongoingEvents, isRegisteredInRelatedEvents, eventName }) {
             src="https://cdn.prod.website-files.com/6891df87cfba687a7fd80202/6891e0b089a56fcddcf969e2_omega5.png"
             alt="Hero"
           />
+              
+<div style={{ 
+  display: "flex", 
+  flexDirection: "column", 
+  alignItems: "center", 
+  textAlign: "center"
+}}>
+  
+
+  <span style={{ 
+    fontSize: "12px", 
+    fontWeight: "500", 
+    marginBottom: "4px", 
+    color: "#9d9b9bff" 
+  }}>
+    POWERED BY
+  </span>
+
+
+  <div style={{ 
+    display: "flex", 
+    alignItems: "center", 
+    gap: "6px", 
+    transform: "translateX(15px)" 
+  }}>
+    <img
+      src="https://ucarecdn.com/03301742-1171-4289-acd4-4169e4ed249b/"
+      alt="Remax Logo"
+      style={{ width: "30px", height: "30px", objectFit: "contain" }}
+    />
+   
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", lineHeight: "1.1" }}>
+      <strong style={{ fontSize: "16px", fontWeight: "bold" }}>REMAX</strong>
+      <span style={{ fontSize: "12px", fontWeight: "500" }}>TEMPLE CITY</span>
+    </div>
+  </div>
+
+</div>
+
+
+
+
+
         </motion.div>
+        
       </Element>
       <div className={styles.text}>
         <p>Empowering Entrepreneurs, Energizing the Future</p>
