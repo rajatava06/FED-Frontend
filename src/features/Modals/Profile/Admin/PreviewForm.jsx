@@ -525,7 +525,7 @@ const handleDownloadQR = async () => {
 
 const handleShareQR = () => {
   // 🔁 Replace these with your actual values
-  const upiID = "8709217658@superyes"; // e.g., rudrika123@oksbi
+  const upiID = "8709217658@ybl"; // e.g., rudrika123@oksbi
   const name = "Mr ANURAG PRASOON";       // e.g., Rudrika
   const amount = "89";            // e.g., ₹89
 
