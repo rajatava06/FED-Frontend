@@ -140,6 +140,32 @@ function App() {
                   authCtx.user.access === "SENIOR_EXECUTIVE_CREATIVE") && (
                   <Route path="BlogForm" element={<BlogForm />} />
                 )}
+                {/* Certificates Route */}
+
+                {authCtx.user.access === "ADMIN" && (
+                  <Route path="certificates" element={<CertificatesView />} />
+                )}
+
+                {authCtx.user.access === "ADMIN" && (
+                  <Route
+                    path="events/SendCertificate/:eventId"
+                    element={<SendCertificate />}
+                  />
+                )}
+
+                {authCtx.user.access === "ADMIN" && (
+                  <Route
+                    path="events/createCertificates/:eventId"
+                    element={<CertificatesForm />}
+                  />
+                )}
+
+                {authCtx.user.access === "ADMIN" && (
+                  <Route
+                    path="events/viewCertificates/:eventId"
+                    element={<CertificatesPreview />}
+                  />
+                )}
 
                 <Route
                   path="events/:eventId"
