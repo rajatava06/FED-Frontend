@@ -232,14 +232,19 @@ function Hero({ ongoingEvents, isRegisteredInRelatedEvents, eventName }) {
   <div style={{ 
     display: "flex", 
     alignItems: "center", 
+    justifyContent: "center",
     gap: "6px", 
+    flexWrap: "wrap",
     transform: "translateX(15px)" 
   }}>
     <img
       src="https://ucarecdn.com/03301742-1171-4289-acd4-4169e4ed249b/"
       alt="Remax Logo"
-      style={{ width: "30px", height: "30px", objectFit: "contain" }}
+      style={{ width: "30px", height: "30px", objectFit: "contain"}}
+      
     />
+
+    
    
     <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", lineHeight: "1.1" }}>
       <strong style={{ fontSize: "16px", fontWeight: "bold" }}>REMAX</strong>
