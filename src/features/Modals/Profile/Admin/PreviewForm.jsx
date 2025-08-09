@@ -485,115 +485,104 @@ const PreviewForm = ({
   };
 
   const renderPaymentScreen = () => {
-    const { eventType, receiverDetails, eventAmount } = formData;
+  const { eventType, receiverDetails, eventAmount } = formData;
 
-    const handleDownloadQR = async () => {
-      try {
-        let imageUrl =
-          typeof receiverDetails.media === "string"
-            ? receiverDetails.media
-            : URL.createObjectURL(receiverDetails.media);
+  const handleDownloadQR = async () => {
+    try {
+      let imageUrl =
+        typeof receiverDetails.media === "string"
+          ? receiverDetails.media
+          : URL.createObjectURL(receiverDetails.media);
 
-        let blobUrl = imageUrl;
+      let blobUrl = imageUrl;
 
-        if (typeof receiverDetails.media === "string") {
-          // Fetch image and convert to blob for remote URLs
-          const response = await fetch(imageUrl);
-          const blob = await response.blob();
-          blobUrl = URL.createObjectURL(blob);
-        }
-
-        const link = document.createElement("a");
-        link.href = blobUrl;
-        link.download = "qr-code.png";
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-
-        // Revoke object URL to free memory
-        if (typeof receiverDetails.media !== "string") {
-          URL.revokeObjectURL(blobUrl);
-        }
-      } catch (error) {
-        console.error("Error downloading QR code:", error);
-        alert("Failed to download QR code.");
-      }
-    };
-
-    const handleShareQR = () => {
-      // 🔁 Replace these with your actual values
-      const upiID = receiverDetails.upi; // e.g., rudrika123@oksbi
-      const name = "FED KIIT"; // e.g., Rudrika
-      const amount = "89"; // e.g., ₹89
-
-      // ✅ UPI deep link format
-      const upiLink = `upi://pay?pa=${encodeURIComponent(
-        upiID
-      )}&pn=${encodeURIComponent(name)}&am=${encodeURIComponent(
-        amount
-      )}&cu=INR`;
-
-      // 🔁 Optional: Mobile-only guard
-      if (!/Android|iPhone/i.test(navigator.userAgent)) {
-        alert("UPI payment redirection works only on mobile devices.");
-        return;
+      if (typeof receiverDetails.media === "string") {
+        const response = await fetch(imageUrl);
+        const blob = await response.blob();
+        blobUrl = URL.createObjectURL(blob);
       }
 
-      // 🔗 Redirect to the UPI payment app
-      window.location.href = upiLink;
-    };
+      const link = document.createElement("a");
+      link.href = blobUrl;
+      link.download = "qr-code.png";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
 
-    if (eventType === "Paid" && currentSection.name === "Payment Details") {
-      return (
-        <div
+      if (typeof receiverDetails.media !== "string") {
+        URL.revokeObjectURL(blobUrl);
+      }
+    } catch (error) {
+      console.error("Error downloading QR code:", error);
+      alert("Failed to download QR code.");
+    }
+  };
+
+  const handleCopyUPIID = () => {
+    if (receiverDetails.upi) {
+      navigator.clipboard.writeText(receiverDetails.upi)
+        .then(() => {
+          alert("UPI ID copied to clipboard!");
+        })
+        .catch(() => {
+          alert("Failed to copy UPI ID.");
+        });
+    }
+  };
+
+  if (eventType === "Paid" && currentSection.name === "Payment Details") {
+    return (
+      <div
+        style={{
+          margin: "8px auto",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        {receiverDetails.media && (
+          <img
+            src={
+              typeof receiverDetails.media === "string"
+                ? receiverDetails.media
+                : URL.createObjectURL(receiverDetails.media)
+            }
+            alt={"QR-Code"}
+            style={{
+              width: 200,
+              height: 200,
+              objectFit: "contain",
+            }}
+          />
+        )}
+
+        {/* ✅ Download & Copy Buttons */}
+        <div style={{ display: "flex", gap: "10px", marginTop: 10 }}>
+          <Button onClick={handleDownloadQR}>Download QR</Button>
+          <Button onClick={handleCopyUPIID}>Copy UPI ID</Button>
+        </div>
+
+        <p
           style={{
-            margin: "8px auto",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
+            fontSize: 12,
+            marginTop: 12,
+            color: "lightgray",
+            textAlign: "center",
           }}
         >
-          {receiverDetails.media && (
-            <img
-              src={
-                typeof receiverDetails.media === "string"
-                  ? receiverDetails.media
-                  : URL.createObjectURL(receiverDetails.media)
-              }
-              alt={"QR-Code"}
-              style={{
-                width: 200,
-                height: 200,
-                objectFit: "contain",
-              }}
-            />
-          )}
+          Make the payment of{" "}
+          <strong style={{ color: "#fff" }}>&#8377;{eventAmount}</strong>{" "}
+          using QR-Code or Pay using UPI ID:{" "}
+          <strong style={{ color: "#fff" }}>{receiverDetails.upi}</strong>
+        </p>
+      </div>
+    );
+  }
 
-          {/* ✅ Download & Share Buttons */}
-          <div style={{ display: "flex", gap: "10px", marginTop: 10 }}>
-            <Button onClick={handleDownloadQR}>Download QR</Button>
-            <Button onClick={handleShareQR}>Pay Now</Button>
-          </div>
+  return null;
+};
 
-          <p
-            style={{
-              fontSize: 12,
-              marginTop: 12,
-              color: "lightgray",
-              textAlign: "center",
-            }}
-          >
-            Make the payment of{" "}
-            <strong style={{ color: "#fff" }}>&#8377;{eventAmount}</strong>{" "}
-            using QR-Code
-          </p>
-        </div>
-      );
-    }
-
-    return null;
-  };
 
   return (
     <>
