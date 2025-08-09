@@ -64,7 +64,7 @@ function Hero({ ongoingEvents, isRegisteredInRelatedEvents, eventName }) {
           (e) => e.info.relatedEvent === "null"
         )?.id;
         if (relatedEventId) {
-          setNavigatePath(`/Events/${relatedEventId}/Form`);
+          setNavigatePath(`/Events/6890fd2b2ee5496826b3a5a9/Form`); //hardcoded path for Omega 5.0
           setShouldNavigate(true);
         }
         setTimeout(() => {
