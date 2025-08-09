@@ -574,7 +574,7 @@ const PreviewForm = ({
           Make the payment of{" "}
           <strong style={{ color: "#fff" }}>&#8377;{eventAmount}</strong>{" "}
           using QR-Code or Pay using UPI ID:{" "}
-          <strong style={{ color: "#fff" }}>{receiverDetails.upi}</strong>
+          <strong style={{ color: "#fff" }}>{receiverDetails.upi} (No Refund Policy)</strong>
         </p>
       </div>
     );
