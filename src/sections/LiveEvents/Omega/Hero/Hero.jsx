@@ -238,7 +238,7 @@ function Hero({ ongoingEvents, isRegisteredInRelatedEvents, eventName }) {
     transform: "translateX(15px)" 
   }}>
     <img
-      src="https://ucarecdn.com/03301742-1171-4289-acd4-4169e4ed249b/"
+      src="https://cdn.prod.website-files.com/6898a84f39288fa31fb19eb3/6898a87e80f51af6ea827159_e6160607db8448dd75eaa46ae28afe7c717b1adc%20(1).png"
       alt="Remax Logo"
       style={{ width: "30px", height: "30px", objectFit: "contain"}}
       
