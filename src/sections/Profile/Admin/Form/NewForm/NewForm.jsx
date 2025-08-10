@@ -722,6 +722,24 @@ function NewForm() {
                 operator: "match",
                 message: "UTR Number/Transaction ID must contain only numbers",
               },
+              {
+                _id: nanoid(),
+                name: "Terms & Conditions",
+                type: "radio",
+                value:
+                  "I acknowledge that all payments made are non-refundable once the form is submitted. For any further assistance contact fedkiit@gmail.com",
+                isRequired: true,
+                validations: [
+                  {
+                    _id: nanoid(),
+                    type: "length",
+                    value: 1,
+                    operator: "===",
+                    message:
+                      "You need to agree to the terms and conditions to proceed.",
+                  },
+                ],
+              },
             ],
           },
         ],
