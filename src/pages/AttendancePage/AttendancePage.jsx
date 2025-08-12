@@ -158,10 +158,18 @@ const AttendancePage = () => {
       <Button
         onClick={() => handleDownloadAttendance(event.id)}
         variant="secondary"
-        style={{ padding: "8px 16px", backgroundColor: "rgba(255, 138, 0, 0.9)" }}
+        style={{
+          padding: "8px 16px",
+          backgroundColor: "rgba(255, 138, 0, 0.9)",
+          display: "flex",
+          alignItems: "center",
+          gap: "6px",
+        }}
       >
         <FaDownload size={18} />
+        Attendance
       </Button>
+
     </div>
   );
 
@@ -249,7 +257,7 @@ const AttendancePage = () => {
                   showRegisterButton={false}
                   showShareButton={false}
                   additionalContent={renderOngoingActions(event)}
-                  onOpen={() => {}} // ✅ FIXED: Always pass a function
+                  onOpen={() => { }} // ✅ FIXED: Always pass a function
                   customStyles={{
                     eventname: { fontSize: "1.2rem" },
                     registerbtn: { width: "8rem", fontSize: ".721rem" },
@@ -277,7 +285,7 @@ const AttendancePage = () => {
                   showRegisterButton={false}
                   showShareButton={false}
                   additionalContent={renderPastActions(event)}
-                  onOpen={() => {}} // ✅ FIXED
+                  onOpen={() => { }} // ✅ FIXED
                   customStyles={{
                     eventname: { fontSize: "1.2rem" },
                     registerbtn: { width: "8rem", fontSize: ".721rem" },
