@@ -1,0 +1,130 @@
+.container {
+  padding: 20px;
+  
+  h2 {
+    color: var(--primary);
+    margin-bottom: 20px;
+  }
+}
+
+.eventGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  padding: 20px;
+}
+
+.eventWrapper {
+  position: relative;
+}
+
+.actionButtons {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 10px;
+  padding: 10px;
+  
+  button {
+    flex: 1;
+    padding: 8px;
+    border-radius: 4px;
+    font-size: 14px;
+    
+    &:hover {
+      transform: translateY(-2px);
+      transition: transform 0.2s ease;
+    }
+
+    &:last-child {
+      background: #FF8A00;
+      color: white;
+      border: none;
+      
+      &:hover {
+        background: rgba(255, 138, 0, 0.9);
+      }
+    }
+  }
+}
+
+.scannerModal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.scannerContent {
+  background: #1a1a1a;
+  padding: 2rem;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 500px;
+  position: relative;
+
+  .closeButton {
+    position: absolute;
+    top: -15px;
+    right: -15px;
+    background: var(--primary);
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: white;
+    font-size: 1.2rem;
+    
+    &:hover {
+      transform: scale(1.1);
+      transition: transform 0.2s ease;
+    }
+  }
+
+  .scannerTitle {
+    color: white;
+    text-align: center;
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+  }
+
+  .scannerArea {
+    border: 2px solid var(--primary);
+    border-radius: 8px;
+    overflow: hidden;
+    margin: 1rem 0;
+    
+    #qr-reader {
+      width: 100%;
+      
+      video {
+        width: 100% !important;
+        border-radius: 6px;
+      }
+      
+      button {
+        padding: 8px 16px;
+        background: var(--primary);
+        color: white;
+        border: none;
+        border-radius: 4px;
+        margin: 8px;
+        cursor: pointer;
+        
+        &:hover {
+          opacity: 0.9;
+        }
+      }
+    }
+  }
+}
