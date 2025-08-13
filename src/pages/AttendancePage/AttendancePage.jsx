@@ -18,6 +18,10 @@ const AttendancePage = () => {
   const [selectedEventId, setSelectedEventId] = useState(null);
   const [scanner, setScanner] = useState(null);
   const [isScanning, setIsScanning] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [attendedUser, setAttendedUser] = useState(null);
+  const [hasShownAlert, setHasShownAlert] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
   const authCtx = useContext(AuthContext);
 
   useEffect(() => {
@@ -27,6 +31,7 @@ const AttendancePage = () => {
         if (response.status === 200) {
           const fetchedEvents = response.data.events;
 
+          // sort events by priority, date, and title
           const sortedEvents = fetchedEvents.sort((a, b) => {
             const priorityA = parseInt(a.info.eventPriority, 10);
             const priorityB = parseInt(b.info.eventPriority, 10);
@@ -77,22 +82,25 @@ const AttendancePage = () => {
       setScanner(qrScanner);
     } catch (error) {
       console.error("Error initializing scanner:", error);
-      Alert({
-        type: "error",
-        message: "Failed to initialize QR scanner",
-        position: "top-right",
-      });
+      if (!hasShownAlert) {
+        Alert({
+          type: "error",
+          message: "Failed to initialize QR scanner",
+          position: "top-right",
+        });
+        setHasShownAlert(true);
+      }
       setShowScanner(false);
     }
   };
 
   const onScanSuccess = async (decodedText) => {
+    setIsScanning(true);
+    console.log("QR Code scanned successfully:", decodedText);
+    console.log("Selected Event ID:", selectedEventId);
+    
     try {
-      setIsScanning(true);
-      console.log("QR Code scanned successfully:", decodedText);
-      console.log("Selected Event ID:", selectedEventId);
-      
-      // The decodedText contains the JWT token from the QR code
+      // jwt token from qr code
       const response = await api.post(
         `/api/form/markAttendance`,
         {
@@ -107,15 +115,23 @@ const AttendancePage = () => {
       );
 
       if (response.status === 200) {
+        // store user details
+        setAttendedUser(response.data.user || response.data);
+        setIsSuccess(true);
+        if (scanner) {
+          scanner.clear();
+        }
+        setShowSuccessModal(true);
+        setIsScanning(false);
+        
+        // show success alert
         Alert({
           type: "success",
           message: "Attendance marked successfully!",
           position: "top-right",
         });
-        if (scanner) {
-          scanner.clear();
-        }
-        setShowScanner(false);
+        
+        return; // exit early
       }
     } catch (error) {
       console.error("Error marking attendance:", error);
@@ -133,11 +149,15 @@ const AttendancePage = () => {
         errorMessage = error.response.data.message;
       }
       
-      Alert({
-        type: "error",
-        message: errorMessage,
-        position: "top-right",
-      });
+      // show error alert
+      if (!hasShownAlert) {
+        Alert({
+          type: "error",
+          message: errorMessage,
+          position: "top-right",
+        });
+        setHasShownAlert(true);
+      }
     } finally {
       setIsScanning(false);
     }
@@ -150,7 +170,22 @@ const AttendancePage = () => {
   const handleScanQR = (eventId) => {
     setSelectedEventId(eventId);
     setShowScanner(true);
+    setHasShownAlert(false); // reset alert state
+    setIsSuccess(false); // reset success state
   };
+
+  const handleCloseSuccessModal = () => {
+    setShowSuccessModal(false);
+    setAttendedUser(null);
+    // auto open scanner for next scan
+    setTimeout(() => {
+      setShowScanner(true);
+      setHasShownAlert(false); // reset alert state
+      setIsSuccess(false); // reset success state
+    }, 100);
+  };
+
+
 
   const handleDownloadAttendance = async (eventId) => {
     try {
@@ -184,11 +219,15 @@ const AttendancePage = () => {
         errorMessage = error.response.data.message;
       }
       
-      Alert({
-        type: "error",
-        message: errorMessage,
-        position: "top-right",
-      });
+      // show error alert
+      if (!isSuccess && !hasShownAlert) {
+        Alert({
+          type: "error",
+          message: errorMessage,
+          position: "top-right",
+        });
+        setHasShownAlert(true);
+      }
       console.error("Download error:", error);
     }
   };
@@ -299,6 +338,34 @@ const AttendancePage = () => {
         </div>
       )}
 
+      {/* Success Modal */}
+      {showSuccessModal && attendedUser && (
+        <div className={styles.scannerModal}>
+          <div className={styles.scannerContent}>
+            <button
+              className={styles.closeButton}
+              onClick={handleCloseSuccessModal}
+            >
+              <IoClose />
+            </button>
+            <div className={styles.successContent}>
+              <div className={styles.successIcon}>✓</div>
+              <h3 className={styles.successTitle}>Attendance Marked Successfully!</h3>
+              
+              <div className={styles.buttonGroup}>
+                <Button 
+                  onClick={handleCloseSuccessModal} 
+                  variant="primary"
+                  style={{ padding: "10px 20px" }}
+                >
+                  OK
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Ongoing Events */}
       {ongoingEvents.length > 0 && (
         <>
@@ -314,7 +381,7 @@ const AttendancePage = () => {
                   showRegisterButton={false}
                   showShareButton={false}
                   additionalContent={renderOngoingActions(event)}
-                  onOpen={() => { }} // ✅ FIXED: Always pass a function
+                  onOpen={() => { }} // fixed
                   customStyles={{
                     eventname: { fontSize: "1.2rem" },
                     registerbtn: { width: "8rem", fontSize: ".721rem" },
@@ -342,7 +409,7 @@ const AttendancePage = () => {
                   showRegisterButton={false}
                   showShareButton={false}
                   additionalContent={renderPastActions(event)}
-                  onOpen={() => { }} // ✅ FIXED
+                  onOpen={() => { }} // fixed
                   customStyles={{
                     eventname: { fontSize: "1.2rem" },
                     registerbtn: { width: "8rem", fontSize: ".721rem" },

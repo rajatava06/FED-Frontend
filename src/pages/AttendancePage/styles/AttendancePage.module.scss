@@ -39,7 +39,6 @@
     &:last-child {
       background: #FF8A00;
       color: white;
-      border: none;
       
       &:hover {
         background: rgba(255, 138, 0, 0.9);
@@ -71,25 +70,26 @@
 
   .closeButton {
     position: absolute;
-    top: -15px;
-    right: -15px;
-    background: var(--primary);
+    top: 4px;
+    right: 6px;
     border: none;
     border-radius: 50%;
-    width: 30px;
-    height: 30px;
+    width: 34px;
+    height: 34px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     color: white;
     font-size: 1.2rem;
-    
+    background: transparent;
+  
     &:hover {
-      transform: scale(1.1);
-      transition: transform 0.2s ease;
-    }
+      color: #D14206;
+      transition: .2s linear;
+  
   }
+}
 
   .scannerTitle {
     color: white;
@@ -126,5 +126,71 @@
         }
       }
     }
+  }
+}
+
+.successContent {
+  text-align: center;
+  color: white;
+  
+  .successIcon {
+    font-size: 3rem;
+    color: #FF8A00;
+    margin-bottom: 1rem;
+  }
+  
+  .successTitle {
+    color: white;
+    margin-bottom: 1.5rem;
+    font-size: 1.3rem;
+  }
+  
+
+  
+  .buttonGroup {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 2rem;
+    
+    button {
+      min-width: 120px;
+      border-radius: 6px;
+      font-weight: 600;
+      transition: all 0.2s ease;
+      
+    
+    }
+  }
+}
+
+.scanningOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  border-radius: 8px;
+  
+  .scanningText {
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+}
+
+@keyframes fadeInScale {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
   }
 }

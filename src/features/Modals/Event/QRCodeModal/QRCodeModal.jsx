@@ -106,20 +106,6 @@ const QRCodeModal = ({ onClose, eventId, onAttendanceMarked }) => {
                 Try Again
               </button>
             </div>
-          ) : attendanceMarked ? (
-            <div className={style.successContainer}>
-              <div className={style.successIcon}>✓</div>
-              <h3>Attendance Marked Successfully!</h3>
-              <p>The attendee's presence has been recorded.</p>
-              <div className={style.buttonGroup}>
-                <button onClick={handleOK} className={style.okBtn}>
-                  OK
-                </button>
-                <button onClick={handleScanNewAttendee} className={style.scanNewBtn}>
-                  Scan New Attendee
-                </button>
-              </div>
-            </div>
           ) : qrCodeData ? (
             <div className={style.qrContent}>
               <div className={style.qrWrapper}>
