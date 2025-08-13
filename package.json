@@ -37,6 +37,8 @@
     "motion": "^11.13.1",
     "nanoid": "^5.0.7",
     "prop-types": "^15.8.1",
+    "qrcode": "^1.5.4",
+    "qrcode.react": "^4.2.0",
     "react": "^18.2.0",
     "react-avatar-editor": "^13.0.2",
     "react-blurhash": "^0.3.0",

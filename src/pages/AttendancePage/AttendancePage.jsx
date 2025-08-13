@@ -17,6 +17,7 @@ const AttendancePage = () => {
   const [showScanner, setShowScanner] = useState(false);
   const [selectedEventId, setSelectedEventId] = useState(null);
   const [scanner, setScanner] = useState(null);
+  const [isScanning, setIsScanning] = useState(false);
   const authCtx = useContext(AuthContext);
 
   useEffect(() => {
@@ -60,28 +61,43 @@ const AttendancePage = () => {
   }, []);
 
   const initializeScanner = () => {
-    const qrScanner = new Html5QrcodeScanner(
-      "qr-reader",
-      {
-        fps: 10,
-        qrbox: { width: 250, height: 250 },
-        aspectRatio: 1,
-        supportedScanTypes: [Html5QrcodeScanType.SCAN_TYPE_CAMERA] // ✅ FIXED
-      },
-      false
-    );
+    try {
+      const qrScanner = new Html5QrcodeScanner(
+        "qr-reader",
+        {
+          fps: 10,
+          qrbox: { width: 250, height: 250 },
+          aspectRatio: 1,
+          supportedScanTypes: [Html5QrcodeScanType.SCAN_TYPE_CAMERA]
+        },
+        false
+      );
 
-    qrScanner.render(onScanSuccess, onScanFailure);
-    setScanner(qrScanner);
+      qrScanner.render(onScanSuccess, onScanFailure);
+      setScanner(qrScanner);
+    } catch (error) {
+      console.error("Error initializing scanner:", error);
+      Alert({
+        type: "error",
+        message: "Failed to initialize QR scanner",
+        position: "top-right",
+      });
+      setShowScanner(false);
+    }
   };
 
   const onScanSuccess = async (decodedText) => {
     try {
+      setIsScanning(true);
+      console.log("QR Code scanned successfully:", decodedText);
+      console.log("Selected Event ID:", selectedEventId);
+      
+      // The decodedText contains the JWT token from the QR code
       const response = await api.post(
-        `/api/attendance/verify`,
+        `/api/form/markAttendance`,
         {
-          eventId: selectedEventId,
-          qrData: decodedText,
+          formId: selectedEventId,
+          token: decodedText,
         },
         {
           headers: {
@@ -102,11 +118,28 @@ const AttendancePage = () => {
         setShowScanner(false);
       }
     } catch (error) {
+      console.error("Error marking attendance:", error);
+      let errorMessage = "Failed to verify QR code";
+      
+      if (error.response?.status === 401) {
+        errorMessage = "Invalid or expired QR code";
+      } else if (error.response?.status === 400) {
+        errorMessage = error.response?.data?.message || "Invalid request";
+      } else if (error.response?.status === 404) {
+        errorMessage = "Attendance record not found";
+      } else if (error.response?.status === 403) {
+        errorMessage = "You don't have permission to mark attendance";
+      } else if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      }
+      
       Alert({
         type: "error",
-        message: error.response?.data?.message || "Failed to verify QR code",
+        message: errorMessage,
         position: "top-right",
       });
+    } finally {
+      setIsScanning(false);
     }
   };
 
@@ -121,7 +154,7 @@ const AttendancePage = () => {
 
   const handleDownloadAttendance = async (eventId) => {
     try {
-      const response = await api.get(`/api/attendance/download/${eventId}`, {
+      const response = await api.get(`/api/form/download/${eventId}`, {
         headers: { Authorization: `Bearer ${authCtx.token}` },
         responseType: "blob",
       });
@@ -141,9 +174,19 @@ const AttendancePage = () => {
         position: "top-right",
       });
     } catch (error) {
+      let errorMessage = "Failed to download attendance file";
+      
+      if (error.response?.status === 403) {
+        errorMessage = "You don't have permission to download attendance data";
+      } else if (error.response?.status === 404) {
+        errorMessage = "Attendance data not found for this event";
+      } else if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      }
+      
       Alert({
         type: "error",
-        message: "Failed to download attendance file",
+        message: errorMessage,
         position: "top-right",
       });
       console.error("Download error:", error);
@@ -191,7 +234,11 @@ const AttendancePage = () => {
     }
     return () => {
       if (scanner) {
-        scanner.clear();
+        try {
+          scanner.clear();
+        } catch (error) {
+          console.error("Error clearing scanner in cleanup:", error);
+        }
       }
     };
   }, [showScanner]);
@@ -227,15 +274,25 @@ const AttendancePage = () => {
               className={styles.closeButton}
               onClick={() => {
                 if (scanner) {
-                  scanner.clear();
+                  try {
+                    scanner.clear();
+                  } catch (error) {
+                    console.error("Error clearing scanner:", error);
+                  }
                 }
                 setShowScanner(false);
+                setScanner(null);
               }}
             >
               <IoClose />
             </button>
             <h3 className={styles.scannerTitle}>Scan QR Code</h3>
             <div className={styles.scannerArea}>
+              {isScanning && (
+                <div className={styles.scanningOverlay}>
+                  <div className={styles.scanningText}>Processing QR Code...</div>
+                </div>
+              )}
               <div id="qr-reader"></div>
             </div>
           </div>
