@@ -469,17 +469,30 @@ const EventCard = (props) => {
                 // }
               >
                 {btnTxt === "Closed" ? (
-                  <>
-                    <div style={{ fontSize: "0.9rem" }}>Closed</div>
-                    <IoIosLock
-                      alt=""
-                      style={{ marginLeft: "0px", fontSize: "1rem" }}
-                    />
-                  </>
-                ) : btnTxt === "Already Registered" ? (
-                  <>
-                    <div style={{ fontSize: "0.9rem" }}>Registered</div>
-                  </>
+  <>
+    <div style={{ fontSize: "0.9rem" }}>Closed</div>
+    <IoIosLock
+      alt=""
+      style={{ marginLeft: "0px", fontSize: "1rem" }}
+    />
+  </>
+) : btnTxt === "Already Registered" ? (
+  info.participationType === "Team" ? ( // Show Team Details only for team events
+    <>
+      <div
+        style={{ fontSize: "0.9rem", cursor: "pointer" }}
+        onClick={() => setIsTeamDetailsOpen(true)}
+      >
+        Team Details
+      </div>
+    </>
+  ) : (
+    <>
+      <div style={{ fontSize: "0.9rem" }}>Registered</div>
+    </>
+  )
+
+
                 ) : btnTxt === "Locked" ? (
                   <>
                     <div style={{ fontSize: "0.9rem" }}>Locked</div>
@@ -512,7 +525,7 @@ const EventCard = (props) => {
             </div>
           )}
           
-          {/* See Team Details Button - Only show for team events when user is registered */}
+          {/* See Team Details Button - Only show for team events when user is registered
           {type === "ongoing" && 
            info.participationType === "Team" && 
            btnTxt === "Already Registered" && 
@@ -526,7 +539,7 @@ const EventCard = (props) => {
                
               </button>
             </div>
-          )}
+          )} */}
         </div>
         <div className={style.backtxt} style={customStyles.backtxt}>
           <div style={{ display: "flex", alignItems: "center" }}>
