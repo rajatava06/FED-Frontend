@@ -5,11 +5,14 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import { Link, useNavigate } from "react-router-dom";
 import Share from "../../features/Modals/Event/ShareModal/ShareModal";
+import QRCodeModal from "../../features/Modals/Event/QRCodeModal";
 import shareOutline from "../../assets/images/shareOutline.svg";
 import { PiClockCountdownDuotone } from "react-icons/pi";
 import { IoIosLock, IoIosStats } from "react-icons/io";
 import { MdGroups } from "react-icons/md";
-import { FaUser, FaRupeeSign, FaEye } from "react-icons/fa";
+
+import { FaUser, FaRupeeSign,FaEye} from "react-icons/fa";
+import { QrCode } from "lucide-react";
 import { parse, differenceInMilliseconds, formatDistanceToNow } from "date-fns";
 import { Button } from "../Core";
 import AuthContext from "../../context/AuthContext";
@@ -41,6 +44,7 @@ const EventCard = (props) => {
   const { info } = data;
   const authCtx = useContext(AuthContext);
   const [isOpen, setOpen] = useState(false);
+  const [isQRModalOpen, setQRModalOpen] = useState(false);
   const [isHovered, setisHovered] = useState(false);
   const [remainingTime, setRemainingTime] = useState("");
   const [btnTxt, setBtnTxt] = useState("Register Now");
@@ -260,6 +264,30 @@ const EventCard = (props) => {
     setOpen(false);
   };
 
+  const handleQRCode = () => {
+    if (authCtx.isLoggedIn && authCtx.user.regForm && authCtx.user.regForm.includes(data.id)) {
+      setQRModalOpen(!isQRModalOpen);
+    } else if (!authCtx.isLoggedIn) {
+      setAlert({
+        type: "info",
+        message: "Please login to access attendance QR code.",
+        position: "bottom-right",
+        duration: 3000,
+      });
+    } else {
+      setAlert({
+        type: "info",
+        message: "You need to register for this event first to get the attendance QR code.",
+        position: "bottom-right",
+        duration: 3000,
+      });
+    }
+  };
+
+  const handleCloseQRModal = () => {
+    setQRModalOpen(false);
+  };
+
   const isValiedState = () => {
     if (
       btnTxt === "Closed" ||
@@ -382,6 +410,21 @@ const EventCard = (props) => {
                 style={customStyles.shareIcon}
                 src={shareOutline}
                 alt="Share"
+              />
+            </div>
+          )}
+          {type === "ongoing" && authCtx.isLoggedIn && authCtx.user.regForm && authCtx.user.regForm.includes(data.id) && (
+            <div
+              className={style.qrCode}
+              style={customStyles.qrCode}
+              onClick={handleQRCode}
+              title="View Attendance QR Code"
+            >
+              <QrCode
+                className={style.qrIcon}
+                style={customStyles.qrIcon}
+                size={20}
+                color="#f97507"
               />
             </div>
           )}
@@ -566,6 +609,9 @@ const EventCard = (props) => {
       </div>
       {isOpen && type === "ongoing" && (
         <Share onClose={handleShare} urlpath={url + "/" + data.id} />
+      )}
+      {isQRModalOpen && type === "ongoing" && (
+        <QRCodeModal onClose={handleCloseQRModal} eventId={data.id} />
       )}
       {enableEdit && isHovered && authCtx.user.access === "ADMIN" && (
         <div

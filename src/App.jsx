@@ -59,6 +59,7 @@ const Login = lazy(() => import("./pages/Authentication/Login/Login"));
 const OTPInput = lazy(() =>
   import("./authentication/Login/ForgotPassword/OTPInput")
 );
+const AttendancePage = lazy(() => import('./pages/AttendancePage/AttendancePage'));
 
 const MainLayout = () => {
   const location = useLocation();
@@ -184,6 +185,7 @@ function App() {
                       element={[<EventStats onClosePath="/profile/events" />]}
                     />
                   )}
+                <Route path="/profile/attendance" element={<AttendancePage />} />
               </Route>
             )}
             <Route
