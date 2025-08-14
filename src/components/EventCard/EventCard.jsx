@@ -568,21 +568,7 @@ const EventCard = (props) => {
             </div>
           )}
           
-          {/* See Team Details Button - Only show for team events when user is registered
-          {type === "ongoing" && 
-           info.participationType === "Team" && 
-           btnTxt === "Already Registered" && 
-           authCtx.isLoggedIn && (
-            <div style={{ marginTop: "10px", textAlign: "center" }}>
-              <button
-                className={style.teamDetailsBtn}
-                onClick={() => setIsTeamDetailsOpen(true)}
-              >
-                <FaEye size={14} />
-               
-              </button>
-            </div>
-          )} */}
+
         </div>
         <div className={style.backtxt} style={customStyles.backtxt}>
           <div style={{ display: "flex", alignItems: "center" }}>
