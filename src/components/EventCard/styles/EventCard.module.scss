@@ -114,6 +114,33 @@
   width: 1rem;
 }
 
+.qrCode {
+  background: rgba(15, 15, 15, 0.5);
+  backdrop-filter: blur(1.8663231134414673px);
+  border: 1px solid rgb(143, 139, 139);
+  color: #f97507;
+  position: absolute;
+  top: 3.5rem;
+  right: 1rem;
+  text-align: center;
+  border-radius: 7px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+
+}
+
+.qrIcon {
+  height: 1rem;
+  width: 1rem;
+}
+
 .price p {
   display: flex;
   align-items: center;
