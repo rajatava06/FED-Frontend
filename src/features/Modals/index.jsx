@@ -15,4 +15,3 @@ export { default as TeamDetailsModal } from './Event/TeamDetailsModal';
 export { default as PreviewForm } from './Profile/Admin/PreviewForm';
 export { default as SectionModal } from './Profile/Admin/SectionModal';
 
-
