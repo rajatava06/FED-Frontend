@@ -12,8 +12,7 @@ import styles from "./styles/Sidebar.module.scss";
 import defaultImg from "../../../assets/images/defaultImg.jpg";
 import camera from "../../../assets/images/camera.svg";
 import { EditImage } from "../../../features";
-import { Link } from "react-router-dom";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 
 const Sidebar = ({ activepage, handleChange }) => {
   const [designation, setDesignation] = useState("");
@@ -63,26 +62,57 @@ const Sidebar = ({ activepage, handleChange }) => {
     setimagePrv(url);
   };
 
-  const renderBlogMenu = () => (
-    <div
-      onClick={() => handleChange("Blogs")}
-      style={{
-        background: activepage === "Blogs" ? "var(--primary)" : "transparent",
-        WebkitBackgroundClip: activepage === "Blogs" ? "text" : "initial",
-        backgroundClip: activepage === "Blogs" ? "text" : "initial",
-        color: activepage === "Blogs" ? "transparent" : "inherit",
-      }}
-    >
-      <FaRegNewspaper
-        size={17}
+  // Modified: Now shows Attendance instead of Blogs in mobile view
+  const renderBlogMenu = () => {
+    const isMobile = window.innerWidth <= 768;
+
+    if (isMobile) {
+      return (
+        <div
+          onClick={() => handleChange("Attendance")}
+          style={{
+            background:
+              activepage === "Attendance" ? "var(--primary)" : "transparent",
+            WebkitBackgroundClip:
+              activepage === "Attendance" ? "text" : "initial",
+            backgroundClip: activepage === "Attendance" ? "text" : "initial",
+            color: activepage === "Attendance" ? "transparent" : "inherit",
+          }}
+        >
+          <LuClipboardList
+            size={17}
+            style={{
+              color: activepage === "Attendance" ? "#FF8A00" : "white",
+              marginRight: "10px",
+            }}
+          />{" "}
+          <Link to={"/profile/attendance"}>Attendance</Link>
+        </div>
+      );
+    }
+
+    return (
+      <div
+        onClick={() => handleChange("Blogs")}
         style={{
-          color: activepage === "Blogs" ? "#FF8A00" : "white",
-          marginRight: "10px",
+          background: activepage === "Blogs" ? "var(--primary)" : "transparent",
+          WebkitBackgroundClip: activepage === "Blogs" ? "text" : "initial",
+          backgroundClip: activepage === "Blogs" ? "text" : "initial",
+          color: activepage === "Blogs" ? "transparent" : "inherit",
         }}
-      />{" "}
-      <Link to={"/profile/BlogForm"}>Blogs</Link>
-    </div>
-  );
+      >
+        <FaRegNewspaper
+          size={17}
+          style={{
+            color: activepage === "Blogs" ? "#FF8A00" : "white",
+            marginRight: "10px",
+          }}
+        />{" "}
+        <Link to={"/profile/BlogForm"}>Blogs</Link>
+      </div>
+    );
+  };
+
   const renderAdminMenu = () => (
     <>
       <div
@@ -149,7 +179,8 @@ const Sidebar = ({ activepage, handleChange }) => {
         style={{
           background:
             activepage === "Attendance" ? "var(--primary)" : "transparent",
-          WebkitBackgroundClip: activepage === "Attendance" ? "text" : "initial",
+          WebkitBackgroundClip:
+            activepage === "Attendance" ? "text" : "initial",
           backgroundClip: activepage === "Attendance" ? "text" : "initial",
           color: activepage === "Attendance" ? "transparent" : "inherit",
           marginLeft: "-6px",
@@ -171,7 +202,6 @@ const Sidebar = ({ activepage, handleChange }) => {
     <>
       <div className={styles.sidebar}>
         <div className={styles.profile}>
-          {/* <NavLink to={'/profile'}> */}
           <div
             style={{ width: "auto", position: "relative", cursor: "pointer" }}
             onClick={() => handleChange("Profile")}
@@ -225,7 +255,9 @@ const Sidebar = ({ activepage, handleChange }) => {
         </div>
         <div className={styles.menu}>
           {designation === "Admin" && renderAdminMenu()}
-          {(designation === "Admin" || authCtx.user.access === "SENIOR_EXECUTIVE_CREATIVE") && renderBlogMenu()}
+          {(designation === "Admin" ||
+            authCtx.user.access === "SENIOR_EXECUTIVE_CREATIVE") &&
+            renderBlogMenu()}
           {designation !== "Admin" && (
             <div
               onClick={() => handleChange("events")}
@@ -234,9 +266,7 @@ const Sidebar = ({ activepage, handleChange }) => {
               <NavLink to={"/profile/events"}>
                 <SlCalender size={17} style={{ marginRight: "10px" }} /> Event
               </NavLink>
-
             </div>
-
           )}
           <div
             onClick={handleLogout}

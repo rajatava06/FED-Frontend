@@ -189,15 +189,15 @@ const AttendancePage = () => {
 
   const handleDownloadAttendance = async (eventId) => {
     try {
-      const response = await api.get(`/api/form/download/${eventId}`, {
+      const response = await api.get(`/api/form/export-attendance/${eventId}?format=xlsx`, {
         headers: { Authorization: `Bearer ${authCtx.token}` },
         responseType: "blob",
       });
-      const blob = new Blob([response.data], { type: "text/csv" });
+      const blob = new Blob([response.data], { type: "text/xlsx" });
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute("download", `attendance_${eventId}.csv`);
+      link.setAttribute("download", `attendance_${eventId}.xlsx`);
       document.body.appendChild(link);
       link.click();
       link.remove();
@@ -263,6 +263,7 @@ const AttendancePage = () => {
         style={{ padding: "8px 16px", backgroundColor: "rgba(255, 138, 0, 0.9)" }}
       >
         <FaDownload size={18} />
+         Attendance
       </Button>
     </div>
   );
