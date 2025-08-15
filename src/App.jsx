@@ -179,7 +179,7 @@ function App() {
                   />
                 )}
                 {authCtx.user.access === "USER" &&
-                  authCtx.user.email == "srex@fedkiit.com" && (
+                  authCtx.user.email == "attendance@fedkiit.com" && (
                     <Route
                       path="events/Analytics/:eventId"
                       element={[<EventStats onClosePath="/profile/events" />]}
