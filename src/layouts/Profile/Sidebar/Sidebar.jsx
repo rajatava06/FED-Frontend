@@ -26,7 +26,11 @@ const Sidebar = ({ activepage, handleChange }) => {
 
   useEffect(() => {
     const access = authCtx.user.access;
-    if (access === "ADMIN") {
+    const email = authCtx.user.email; // Assuming email is available in authCtx.user
+    
+    if (email === "attendance@fedkiit.com") {
+      setDesignation("Attendance Only");
+    } else if (access === "ADMIN") {
       setDesignation("Admin");
     } else if (access === "ALUMNI") {
       setDesignation("Alumni");
@@ -35,7 +39,7 @@ const Sidebar = ({ activepage, handleChange }) => {
     } else {
       setDesignation("Member");
     }
-  }, [authCtx.user.access]);
+  }, [authCtx.user.access, authCtx.user.email]);
 
   const handleLogout = () => {
     navigate("/");
@@ -61,6 +65,9 @@ const Sidebar = ({ activepage, handleChange }) => {
   const setImage = (url) => {
     setimagePrv(url);
   };
+
+  // Check if user is attendance-only
+  const isAttendanceOnly = authCtx.user.email === "attendance@fedkiit.com";
 
   // Modified: Now shows Attendance instead of Blogs in mobile view
   const renderBlogMenu = () => {
@@ -118,8 +125,7 @@ const Sidebar = ({ activepage, handleChange }) => {
       <div
         onClick={() => handleChange("Events")}
         style={{
-          background:
-            activepage === "Events" ? "var(--primary)" : "transparent",
+          background: activepage === "Events" ? "var(--primary)" : "transparent",
           WebkitBackgroundClip: activepage === "Events" ? "text" : "initial",
           backgroundClip: activepage === "Events" ? "text" : "initial",
           color: activepage === "Events" ? "transparent" : "inherit",
@@ -175,31 +181,50 @@ const Sidebar = ({ activepage, handleChange }) => {
         <Link to={"/profile/members"}> Members</Link>
       </div>
 
-      {(designation === "Admin" ||
-        authCtx.user.email === "attendance@fedkiit.com") && (
-        <div
-          onClick={() => handleChange("Attendance")}
+      <div
+        onClick={() => handleChange("Attendance")}
+        style={{
+          background:
+            activepage === "Attendance" ? "var(--primary)" : "transparent",
+          WebkitBackgroundClip:
+            activepage === "Attendance" ? "text" : "initial",
+          backgroundClip: activepage === "Attendance" ? "text" : "initial",
+          color: activepage === "Attendance" ? "transparent" : "inherit",
+          marginLeft: "-6px",
+        }}
+      >
+        <LuClipboardList
+          size={17}
           style={{
-            background:
-              activepage === "Attendance" ? "var(--primary)" : "transparent",
-            WebkitBackgroundClip:
-              activepage === "Attendance" ? "text" : "initial",
-            backgroundClip: activepage === "Attendance" ? "text" : "initial",
-            color: activepage === "Attendance" ? "transparent" : "inherit",
-            marginLeft: "-6px",
+            color: activepage === "Attendance" ? "#FF8A00" : "white",
+            marginRight: "10px",
           }}
-        >
-          <LuClipboardList
-            size={17}
-            style={{
-              color: activepage === "Attendance" ? "#FF8A00" : "white",
-              marginRight: "10px",
-            }}
-          />{" "}
-          <Link to={"/profile/attendance"}> Attendance</Link>
-        </div>
-      )}
+        />{" "}
+        <Link to={"/profile/attendance"}> Attendance</Link>
+      </div>
     </>
+  );
+
+  // Render attendance-only menu
+  const renderAttendanceOnlyMenu = () => (
+    <div
+      onClick={() => handleChange("Attendance")}
+      style={{
+        background: activepage === "Attendance" ? "var(--primary)" : "transparent",
+        WebkitBackgroundClip: activepage === "Attendance" ? "text" : "initial",
+        backgroundClip: activepage === "Attendance" ? "text" : "initial",
+        color: activepage === "Attendance" ? "transparent" : "inherit",
+      }}
+    >
+      <LuClipboardList
+        size={17}
+        style={{
+          color: activepage === "Attendance" ? "#FF8A00" : "white",
+          marginRight: "10px",
+        }}
+      />{" "}
+      <Link to={"/profile/attendance"}>Attendance</Link>
+    </div>
   );
 
   return (
@@ -227,7 +252,7 @@ const Sidebar = ({ activepage, handleChange }) => {
                 setFile={setSelectedFile}
               />
             )}
-            {authCtx.user.access !== "USER" && (
+            {authCtx.user.access !== "USER" && !isAttendanceOnly && (
               <>
                 <div
                   style={{ position: "absolute", bottom: "5px", right: "5px" }}
@@ -257,21 +282,32 @@ const Sidebar = ({ activepage, handleChange }) => {
             <p className={styles.role}>{designation}</p>
           </div>
         </div>
+        
         <div className={styles.menu}>
-          {designation === "Admin" && renderAdminMenu()}
-          {(designation === "Admin" ||
-            authCtx.user.access === "SENIOR_EXECUTIVE_CREATIVE") &&
-            renderBlogMenu()}
-          {designation !== "Admin" && (
-            <div
-              onClick={() => handleChange("events")}
-              style={{ color: activepage === "events" ? "#FF8A00" : "white" }}
-            >
-              <NavLink to={"/profile/events"}>
-                <SlCalender size={17} style={{ marginRight: "10px" }} /> Event
-              </NavLink>
-            </div>
+          {isAttendanceOnly ? (
+            // Show only Attendance menu for attendance@fedkiit.com
+            renderAttendanceOnlyMenu()
+          ) : (
+            // Original menu logic for other users
+            <>
+              {designation === "Admin" && renderAdminMenu()}
+              {(designation === "Admin" ||
+                authCtx.user.access === "SENIOR_EXECUTIVE_CREATIVE") &&
+                renderBlogMenu()}
+              {designation !== "Admin" && (
+                <div
+                  onClick={() => handleChange("events")}
+                  style={{ color: activepage === "events" ? "#FF8A00" : "white" }}
+                >
+                  <NavLink to={"/profile/events"}>
+                    <SlCalender size={17} style={{ marginRight: "10px" }} /> Event
+                  </NavLink>
+                </div>
+              )}
+            </>
           )}
+          
+          {/* Logout is always available for all users */}
           <div
             onClick={handleLogout}
             style={{ color: activepage === "Logout" ? "#FF8A00" : "white" }}
