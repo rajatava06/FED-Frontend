@@ -118,7 +118,8 @@ const Sidebar = ({ activepage, handleChange }) => {
       <div
         onClick={() => handleChange("Events")}
         style={{
-          background: activepage === "Events" ? "var(--primary)" : "transparent",
+          background:
+            activepage === "Events" ? "var(--primary)" : "transparent",
           WebkitBackgroundClip: activepage === "Events" ? "text" : "initial",
           backgroundClip: activepage === "Events" ? "text" : "initial",
           color: activepage === "Events" ? "transparent" : "inherit",
@@ -174,27 +175,30 @@ const Sidebar = ({ activepage, handleChange }) => {
         <Link to={"/profile/members"}> Members</Link>
       </div>
 
-      <div
-        onClick={() => handleChange("Attendance")}
-        style={{
-          background:
-            activepage === "Attendance" ? "var(--primary)" : "transparent",
-          WebkitBackgroundClip:
-            activepage === "Attendance" ? "text" : "initial",
-          backgroundClip: activepage === "Attendance" ? "text" : "initial",
-          color: activepage === "Attendance" ? "transparent" : "inherit",
-          marginLeft: "-6px",
-        }}
-      >
-        <LuClipboardList
-          size={17}
+      {(designation === "Admin" ||
+        authCtx.user.email === "attendance@fedkiit.com") && (
+        <div
+          onClick={() => handleChange("Attendance")}
           style={{
-            color: activepage === "Attendance" ? "#FF8A00" : "white",
-            marginRight: "10px",
+            background:
+              activepage === "Attendance" ? "var(--primary)" : "transparent",
+            WebkitBackgroundClip:
+              activepage === "Attendance" ? "text" : "initial",
+            backgroundClip: activepage === "Attendance" ? "text" : "initial",
+            color: activepage === "Attendance" ? "transparent" : "inherit",
+            marginLeft: "-6px",
           }}
-        />{" "}
-        <Link to={"/profile/attendance"}> Attendance</Link>
-      </div>
+        >
+          <LuClipboardList
+            size={17}
+            style={{
+              color: activepage === "Attendance" ? "#FF8A00" : "white",
+              marginRight: "10px",
+            }}
+          />{" "}
+          <Link to={"/profile/attendance"}> Attendance</Link>
+        </div>
+      )}
     </>
   );
 
