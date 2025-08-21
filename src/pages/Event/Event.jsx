@@ -190,7 +190,7 @@ const Event = () => {
   return (
     <>
       <ChatBot />
-      <p style={{ textAlign: "center", fontSize: "1rem", marginTop: "1rem" }}>Register Yourself for OMEGA 5.0 to Unlock All Three Events Under OMEGA</p>
+      
       {isOpen && (
         <ShareTeamData onClose={handleShare} teamData={teamCodeAndName} successMessage={successMessage} />
       )}
