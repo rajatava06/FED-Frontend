@@ -123,11 +123,11 @@ function App() {
                 {authCtx.user.access === "ADMIN" ? (
                   <Route path="events" element={<ViewEvent />} />
                 ) : (
-                  <>
-                    <Route path="events" element={<EventsView />} />
-                    <Route path="certificates" element={<CertificatesView />} />
-                  </>
+                  <Route path="events" element={<EventsView />} />
                 )}
+                
+                <Route path="certificates" element={<CertificatesView />} />
+                
                 <Route path="Form" element={<NewForm />} />
 
                 {authCtx.user.access === "ADMIN" && (
@@ -139,11 +139,6 @@ function App() {
                 {(authCtx.user.access === "ADMIN" ||
                   authCtx.user.access === "SENIOR_EXECUTIVE_CREATIVE") && (
                   <Route path="BlogForm" element={<BlogForm />} />
-                )}
-                {/* Certificates Route */}
-
-                {authCtx.user.access === "ADMIN" && (
-                  <Route path="certificates" element={<CertificatesView />} />
                 )}
 
                 {authCtx.user.access === "ADMIN" && (
@@ -184,7 +179,7 @@ function App() {
                       element={[<EventStats onClosePath="/profile/events" />]}
                     />
                   )}
-                <Route path="/profile/attendance" element={<AttendancePage />} />
+                <Route path="attendance" element={<AttendancePage />} />
               </Route>
             )}
             <Route

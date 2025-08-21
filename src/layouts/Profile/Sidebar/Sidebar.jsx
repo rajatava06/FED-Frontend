@@ -4,7 +4,7 @@ import { MdLogout } from "react-icons/md";
 import { TbUserEdit } from "react-icons/tb";
 import { SlCalender } from "react-icons/sl";
 import { SiReacthookform } from "react-icons/si";
-import { FaRegNewspaper } from "react-icons/fa";
+import { FaRegNewspaper, FaCertificate } from "react-icons/fa";
 import { LuClipboardList } from "react-icons/lu";
 import AuthContext from "../../../context/AuthContext";
 import styles from "./styles/Sidebar.module.scss";
@@ -227,6 +227,27 @@ const Sidebar = ({ activepage, handleChange }) => {
     </div>
   );
 
+  const renderCertificateMenu = () => (
+    <div
+      onClick={() => handleChange("Certificates")}
+      style={{
+        background: activepage === "Certificates" ? "var(--primary)" : "transparent",
+        WebkitBackgroundClip: activepage === "Certificates" ? "text" : "initial",
+        backgroundClip: activepage === "Certificates" ? "text" : "initial",
+        color: activepage === "Certificates" ? "transparent" : "inherit",
+      }}
+    >
+      <FaCertificate
+        size={17}
+        style={{
+          color: activepage === "Certificates" ? "#FF8A00" : "white",
+          marginRight: "10px",
+        }}
+      />{" "}
+      <Link to={"/profile/certificates"}>Certificates</Link>
+    </div>
+  );
+
   return (
     <>
       <div className={styles.sidebar}>
@@ -304,6 +325,7 @@ const Sidebar = ({ activepage, handleChange }) => {
                   </NavLink>
                 </div>
               )}
+              {renderCertificateMenu()}
             </>
           )}
           
