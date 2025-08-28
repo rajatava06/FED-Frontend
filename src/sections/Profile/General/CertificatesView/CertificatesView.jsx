@@ -16,6 +16,7 @@ const Events = () => {
   const analyticsPath = "/profile/events/Analytics";
   const createCertificatesPath = "/profile/events/createCertificates";
   const viewCertificatesPath = "/profile/events/viewCertificates";
+  
 
   const analyticsAccessRoles = [
     "PRESIDENT",

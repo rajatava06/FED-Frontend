@@ -50,7 +50,7 @@ $shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
   align-items: center;
 
   img {
-    max-width: 100%;
+    max-width: 95%;
     border-radius: $border-radius;
     box-shadow: $shadow;
     border: 2px solid $accent-color;
@@ -59,6 +59,13 @@ $shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
     &:hover {
       transform: scale(1.02);
     }
+    @media(max-width: 390px) {
+      padding: 0.1rem;
+      width: 85%;
+
+    
+  }
+
   }
 }
 
@@ -69,17 +76,31 @@ $shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
   padding: 2rem;
   border-radius: $border-radius;
   box-shadow: $shadow;
-  display: flex;
+  display:inline-flexbox;
+  width:100%;  
   flex-direction: column;
   justify-content: space-between;
+
+  @media(max-width: 480px) {
+      padding: 1.0rem;
+      margin-top: 2rem;
+    
+  }
+    @media(max-width: 390px) {
+      padding: 0rem;
+      width:95%;
+      margin-left: 9px;
+      margin-top: 2rem;
+    
+  }
 }
 
 .detailsTable {
   width: 100%;
-  // margin-bottom: 2rem;
+  margin-bottom: 2rem;
 
   th, td {
-    padding: 0.75rem;
+    padding: 0.95rem;
     text-align: left;
   }
 
@@ -108,6 +129,10 @@ $shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
     font-weight: 600;
     font-size: 1rem;
 
+    @media(max-width: 390px) {
+      padding: 0.1rem;
+      margin-left: 2px;
+  }
     svg {
       font-size: 1.25rem;
     }
@@ -116,7 +141,7 @@ $shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
   .downloadBtn {
     background-color: $accent-color;
     color: white;
-    padding: 0.7rem 1.3rem;
+    padding: 0.5rem 1.2rem;
     font-size: 1rem;
     font-weight: 600;
     border: none;
@@ -132,9 +157,10 @@ $shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
 
   @media (max-width: 480px) {
     flex-direction: column;
-    align-items: flex-start;
+    align-items:center;
     gap: 1rem;
   }
+
 }
 
 .loadingContainer, .errorContainer {
