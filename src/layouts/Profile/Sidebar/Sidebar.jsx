@@ -325,7 +325,7 @@ const Sidebar = ({ activepage, handleChange }) => {
                   </NavLink>
                 </div>
               )}
-              {renderCertificateMenu()}
+              {authCtx.user.access !== "USER" && renderCertificateMenu()}
             </>
           )}
           
