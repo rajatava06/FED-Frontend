@@ -275,6 +275,40 @@ const Team = () => {
           Creative group, the Technical group, and the Operations group.
         </p>
       </div>
+    <div className={styles.FICwrapper}>
+  
+  <div className={styles.FICsection}>
+    <div className={styles.image}>
+      <img 
+        src="https://cdn.prod.website-files.com/663d1907e337de23e83c30b2/692c37f9ff87b3d30a302905_IMG-20251129-WA0016.jpg" 
+        alt="picture of FIC"
+      />
+    </div>
+    <div className={styles.textBlock}>
+      <p className={styles.name}>DR. VISHAL PRADHAN</p>
+      <p className={styles.role}>FACULTY IN CHARGE</p>
+
+      {/* <div className={styles.intro}>
+        <p>
+          Dr. Vishal Pradhan is an exceptional academician and researcher at KIIT,
+          known for his clarity of thought, deep subject expertise, and commitment
+          to student success. His ability to connect advanced concepts with real-world
+          applications makes him a truly inspiring educator.
+        </p>
+      </div> */}
+
+      <div className={styles.vision}>
+        <p>
+          "As FIC of FED, my vision is to ignite curiosity, nurture confidence,
+          and inspire students to rise beyond limits—so they walk into KIIT as
+          learners and grow into innovators who shape the world." --- Dr. Vishal Pradhan
+        </p>
+      </div>
+
+    </div>
+  </div>
+</div>
+
       <div className={styles.circle}></div>
       {/* <div className={styles.circle2}></div> */}
 
