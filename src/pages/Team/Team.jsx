@@ -5,11 +5,8 @@ import styles from "./styles/Team.module.scss";
 import { TeamCard } from "../../components";
 import { FaRegArrowAltCircleRight } from "react-icons/fa";
 import useWindowWidth from "../../utils/hooks/useWindowWidth";
-import MemberData from "../../data/Team.json";
-import AccessTypes from "../../data/Access.json";
 import { ComponentLoading } from "../../microInteraction";
 import { ChatBot } from "../../features";
-
 
 const Team = () => {
   useEffect(() => {
@@ -31,33 +28,24 @@ const Team = () => {
           const validMembers = response.data.data.filter(
             (member) => member.name !== null
           );
+
           const sortedMembers = validMembers.sort((a, b) => {
-            if (b.year !== a.year) {
-              return b.year - a.year;
-            }
+            if (b.year !== a.year) return b.year - a.year;
             return a.name.localeCompare(b.name);
           });
+
           setTeamMembers(sortedMembers);
         } else {
-          console.error("Error fetching team members:", response.data.message);
           setError({
             message:
               "Sorry for the inconvenience, we are having issues fetching our Team Members",
           });
         }
       } catch (error) {
-        console.error("Error fetching team members:", error);
         setError({
           message:
             "Sorry for the inconvenience, we are having issues fetching our Team Members",
         });
-        // const testMembers = MemberData.sort((a, b) => {
-        //   if (b.year !== a.year) {
-        //     return b.year - a.year;
-        //   }
-        //   return a.name.localeCompare(b.name);
-        // });
-        // setTeamMembers(testMembers);
       } finally {
         setIsLoading(false);
       }
@@ -78,24 +66,12 @@ const Team = () => {
             message:
               "Sorry for the inconvenience, we are having issues fetching our Team Members",
           });
-          console.error("Error fetching Access Types:", response.data.message);
-          // const testAccess = AccessTypes.data;
-          // const filteredAccess = testAccess.filter(
-          //   (accessType) => !["ADMIN", "USER", "ALUMNI"].includes(accessType)
-          // );
-          // setAccess(filteredAccess);
         }
       } catch (error) {
         setError({
           message:
             "Sorry for the inconvenience, we are having issues fetching our Team Members",
         });
-        console.error("Error fetching Access Types:", error);
-        // const testAccess = AccessTypes.data;
-        // const filteredAccess = testAccess.filter(
-        //   (accessType) => !["ADMIN", "USER", "ALUMNI"].includes(accessType)
-        // );
-        // setAccess(filteredAccess);
       }
     };
 
@@ -103,7 +79,7 @@ const Team = () => {
     fetchTeamMembers();
   }, []);
 
-  // Define the director access codes in the desired order
+
   const boardAccessCodes = [
     "PRESIDENT",
     "VICEPRESIDENT",
@@ -121,7 +97,6 @@ const Team = () => {
     "DEPUTY_DIRECTOR_HUMAN_RESOURCE",
   ];
 
-  // Function to extract team name from SENIOR_EXECUTIVE access codes
   const extractTeamFromAccess = (access) => {
     if (access.startsWith("SENIOR_EXECUTIVE_")) {
       return access.replace("SENIOR_EXECUTIVE_", "");
@@ -129,7 +104,6 @@ const Team = () => {
     return access;
   };
 
-  // Function to get display role name
   const getDisplayRole = (access) => {
     const teamCode = extractTeamFromAccess(access);
     let role = teamCode
@@ -138,8 +112,7 @@ const Team = () => {
         (word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
       )
       .join(" ");
-    
-    // Ensure consistent capitalization for role names
+
     switch (role.toLowerCase()) {
       case "pr and finance":
         role = "PR And Finance";
@@ -147,33 +120,26 @@ const Team = () => {
       case "human resource":
         role = "Human Resource";
         break;
-      // Add other cases if needed for consistent capitalization
     }
     return role;
   };
 
-  // Separate directors from other members
   const directorsAndAbove = teamMembers
     .filter((member) => boardAccessCodes.includes(member.access))
-    .sort((a, b) => {
-      const aIndex = boardAccessCodes.indexOf(a.access);
-      const bIndex = boardAccessCodes.indexOf(b.access);
-
-      return aIndex - bIndex; // Sort by access code order
-
-      // return a.name.localeCompare(b.name); // Sort alphabetically within the same role
-    });
+    .sort(
+      (a, b) =>
+        boardAccessCodes.indexOf(a.access) - boardAccessCodes.indexOf(b.access)
+    );
 
   const otherMembers = teamMembers.filter(
     (member) => !boardAccessCodes.includes(member.access)
   );
 
-  // Create a role map for non-director roles
   const roleMap = access.reduce((map, code) => {
     if (!boardAccessCodes.includes(code)) {
       const displayRole = getDisplayRole(code);
       const teamCode = extractTeamFromAccess(code);
-      
+
       if (!map[displayRole]) {
         map[displayRole] = [];
       }
@@ -184,26 +150,20 @@ const Team = () => {
 
   const teamByRole = Object.keys(roleMap)
     .map((role) => {
-      const members = otherMembers.filter((member) => 
+      const members = otherMembers.filter((member) =>
         roleMap[role].includes(member.access)
       );
 
-      // Sort members: Senior Executives first, then others
-      const seniorExecutives = members.filter((member) => 
-        member.access.startsWith("SENIOR_EXECUTIVE_") || 
-        member.extra?.designation === "Senior Executive"
+      const seniorExecutives = members.filter((member) =>
+        member.access.startsWith("SENIOR_EXECUTIVE_")
       );
-      const otherMembersWithoutSenior = members.filter((member) => 
-        !member.access.startsWith("SENIOR_EXECUTIVE_") && 
-        member.extra?.designation !== "Senior Executive"
+      const others = members.filter(
+        (member) => !member.access.startsWith("SENIOR_EXECUTIVE_")
       );
 
-      return {
-        role,
-        members: [...seniorExecutives, ...otherMembersWithoutSenior],
-      };
+      return { role, members: [...seniorExecutives, ...others] };
     })
-    .filter((roleGroup) => roleGroup.members.length > 0)
+    .filter((group) => group.members.length > 0)
     .sort((a, b) => {
       const order = [
         "Technical",
@@ -216,35 +176,27 @@ const Team = () => {
       return order.indexOf(a.role) - order.indexOf(b.role);
     });
 
-  const TeamSection = ({ title, members, isDirector }) => {
+  const TeamSection = ({ title, members }) => {
     const membersPerRow = windowWidth < 500 ? 2 : 4;
-    const remainderMembersCount = members.length % membersPerRow;
-    const lastRowMembers =
-      remainderMembersCount > 0 ? members.slice(-remainderMembersCount) : [];
-    const otherMembers =
-      remainderMembersCount > 0
-        ? members.slice(0, -remainderMembersCount)
-        : members;
+    const remainder = members.length % membersPerRow;
+
+    const lastRow = remainder ? members.slice(-remainder) : [];
+    const mainRows = remainder ? members.slice(0, -remainder) : members;
+
     return (
-      <div
-        className={`${styles.teamSection} ${
-          isDirector ? styles.directorSection : ""
-        }`}
-      >
+      <div className={styles.teamSection}>
         {title && <h3>{title}</h3>}
-        <div
-          className={`${styles.teamGrid} ${
-            isDirector ? styles.directorGrid : ""
-          }`}
-        >
-          {otherMembers.map((member, idx) => (
-            <TeamCard key={idx} className="teamMember" member={member} />
+
+        <div className={styles.teamGrid}>
+          {mainRows.map((m, idx) => (
+            <TeamCard key={idx} member={m} />
           ))}
         </div>
-        {lastRowMembers.length > 0 && (
+
+        {lastRow.length > 0 && (
           <div className={styles.lastRowCentered}>
-            {lastRowMembers.map((member, idx) => (
-              <TeamCard key={idx} className="teamMember" member={member} />
+            {lastRow.map((m, idx) => (
+              <TeamCard key={idx} member={m} />
             ))}
           </div>
         )}
@@ -254,7 +206,8 @@ const Team = () => {
 
   return (
     <div className={styles.Team}>
-         <ChatBot />
+      <ChatBot />
+
       <h2>
         Meet Our{" "}
         <span
@@ -267,68 +220,72 @@ const Team = () => {
           Team
         </span>
       </h2>
+
       <div className={styles.para}>
         <p>
           We are a tight-knit community of passionate people devoted to bringing
-          about vibrant and awe-inspiring changes in the field of
-          Entrepreneurship. The pillars of our crew are the Marketing group, the
-          Creative group, the Technical group, and the Operations group.
+          vibrant and awe-inspiring changes in the field of Entrepreneurship.
         </p>
       </div>
-    <div className={styles.FICwrapper}>
-  
-  <div className={styles.FICsection}>
-    <div className={styles.image}>
-      <img 
-        src="https://cdn.prod.website-files.com/663d1907e337de23e83c30b2/692c37f9ff87b3d30a302905_IMG-20251129-WA0016.jpg" 
-        alt="picture of FIC"
-      />
-    </div>
-    <div className={styles.textBlock}>
-      <p className={styles.name}>DR. VISHAL PRADHAN</p>
-      <p className={styles.role}>FACULTY IN CHARGE</p>
-
-      {/* <div className={styles.intro}>
-        <p>
-          Dr. Vishal Pradhan is an exceptional academician and researcher at KIIT,
-          known for his clarity of thought, deep subject expertise, and commitment
-          to student success. His ability to connect advanced concepts with real-world
-          applications makes him a truly inspiring educator.
-        </p>
-      </div> */}
-
-      <div className={styles.vision}>
-        <p>
-          "As FIC of FED, my vision is to ignite curiosity, nurture confidence,
-          and inspire students to rise beyond limits—so they walk into KIIT as
-          learners and grow into innovators who shape the world." --- Dr. Vishal Pradhan
-        </p>
-      </div>
-
-    </div>
-  </div>
-</div>
 
       <div className={styles.circle}></div>
-      {/* <div className={styles.circle2}></div> */}
 
       {isLoading ? (
         <ComponentLoading
           customStyles={{
             width: "100%",
             height: "100%",
-            display: "flex",
             marginTop: "5rem",
             marginBottom: "10rem",
-            justifyContent: "center",
-            alignItems: "center",
           }}
         />
       ) : (
         <>
+
+          <div className={styles.FICwrapper}>
+            <div className={styles.FICsection}>
+              <div className={styles.image}>
+                <img
+                  src="https://cdn.prod.website-files.com/663d1907e337de23e83c30b2/692c37f9ff87b3d30a302905_IMG-20251129-WA0016.jpg"
+                  alt="FIC"
+                />
+              </div>
+
+              <div className={styles.textBlock}>
+                <p className={styles.name}>DR. VISHAL PRADHAN</p>
+                <p className={styles.role}>FACULTY IN CHARGE</p>
+
+                <div className={styles.vision}>
+                  <p>
+                    "As FIC of FED, my vision is to ignite curiosity, nurture
+                    confidence, and inspire students to rise beyond limits—so
+                    they walk into KIIT as learners and grow into innovators who
+                    shape the world."
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
           {error && <div className={styles.error}>{error.message}</div>}
 
-          <TeamSection members={directorsAndAbove} isDirector={true} />
+          <TeamSection
+  title={
+    <span>
+      <span style={{ color: "#fff" }}>Board Of </span>
+      <strong
+        style={{
+          background: "var(--primary)",
+          WebkitBackgroundClip: "text",
+          color: "transparent",
+        }}
+      >
+        Directors
+      </strong>
+    </span>
+  }
+  members={directorsAndAbove}
+/>
 
           <div className={styles.alumniBut}>
             <div className={styles.ulhover}>
@@ -338,30 +295,27 @@ const Team = () => {
               <FaRegArrowAltCircleRight />
             </div>
           </div>
-          {teamByRole.map(
-            (section, index) =>
-              section.members.length > 0 && (
-                <TeamSection
-                  key={index}
-                  title={
-                    <span>
-                      <span style={{ color: "#fff" }}>Team </span>
-                      <strong
-                        style={{
-                          background: "var(--primary)",
-                          WebkitBackgroundClip: "text",
-                          color: "transparent",
-                        }}
-                      >
-                        {section.role}
-                      </strong>
-                    </span>
-                  }
-                  members={section.members}
-                  isDirector={false}
-                />
-              )
-          )}
+
+          {teamByRole.map((group, i) => (
+            <TeamSection
+              key={i}
+              title={
+                <span>
+                  <span style={{ color: "#fff" }}>Team </span>
+                  <strong
+                    style={{
+                      background: "var(--primary)",
+                      WebkitBackgroundClip: "text",
+                      color: "transparent",
+                    }}
+                  >
+                    {group.role}
+                  </strong>
+                </span>
+              }
+              members={group.members}
+            />
+          ))}
         </>
       )}
     </div>
