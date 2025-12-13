@@ -5,17 +5,21 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import { Link, useNavigate } from "react-router-dom";
 import Share from "../../features/Modals/Event/ShareModal/ShareModal";
+import QRCodeModal from "../../features/Modals/Event/QRCodeModal";
 import shareOutline from "../../assets/images/shareOutline.svg";
 import { PiClockCountdownDuotone } from "react-icons/pi";
 import { IoIosLock, IoIosStats } from "react-icons/io";
 import { MdGroups } from "react-icons/md";
-import { FaUser, FaRupeeSign } from "react-icons/fa";
+
+import { FaUser, FaRupeeSign,FaEye} from "react-icons/fa";
+import { QrCode } from "lucide-react";
 import { parse, differenceInMilliseconds, formatDistanceToNow } from "date-fns";
 import { Button } from "../Core";
 import AuthContext from "../../context/AuthContext";
 import EventCardSkeleton from "../../layouts/Skeleton/EventCard/EventCardSkeleton";
 import { Blurhash } from "react-blurhash";
 import { Alert, MicroLoading } from "../../microInteraction";
+import { TeamDetailsModal } from "../../features/Modals";
 // import useUnixTimestamp from "../../utils/hooks/useUnixTimeStamp";
 
 const EventCard = (props) => {
@@ -40,6 +44,7 @@ const EventCard = (props) => {
   const { info } = data;
   const authCtx = useContext(AuthContext);
   const [isOpen, setOpen] = useState(false);
+  const [isQRModalOpen, setQRModalOpen] = useState(false);
   const [isHovered, setisHovered] = useState(false);
   const [remainingTime, setRemainingTime] = useState("");
   const [btnTxt, setBtnTxt] = useState("Register Now");
@@ -51,6 +56,7 @@ const EventCard = (props) => {
   const [navigatePath, setNavigatePath] = useState("/");
   const [isLocked, setIsLocked] = useState(false);
   const [alert, setAlert] = useState(null);
+  const [isTeamDetailsOpen, setIsTeamDetailsOpen] = useState(false);
 
   useEffect(() => {
     if (shouldNavigate) {
@@ -258,6 +264,30 @@ const EventCard = (props) => {
     setOpen(false);
   };
 
+  const handleQRCode = () => {
+    if (authCtx.isLoggedIn && authCtx.user.regForm && authCtx.user.regForm.includes(data.id)) {
+      setQRModalOpen(!isQRModalOpen);
+    } else if (!authCtx.isLoggedIn) {
+      setAlert({
+        type: "info",
+        message: "Please login to access attendance QR code.",
+        position: "bottom-right",
+        duration: 3000,
+      });
+    } else {
+      setAlert({
+        type: "info",
+        message: "You need to register for this event first to get the attendance QR code.",
+        position: "bottom-right",
+        duration: 3000,
+      });
+    }
+  };
+
+  const handleCloseQRModal = () => {
+    setQRModalOpen(false);
+  };
+
   const isValiedState = () => {
     if (
       btnTxt === "Closed" ||
@@ -383,6 +413,21 @@ const EventCard = (props) => {
               />
             </div>
           )}
+          {type === "ongoing" && authCtx.isLoggedIn && authCtx.user.regForm && authCtx.user.regForm.includes(data.id) && (
+            <div
+              className={style.qrCode}
+              style={customStyles.qrCode}
+              onClick={handleQRCode}
+              title="View Attendance QR Code"
+            >
+              <QrCode
+                className={style.qrIcon}
+                style={customStyles.qrIcon}
+                size={20}
+                color="#f97507"
+              />
+            </div>
+          )}
         </div>
         <div className={style.backbtn} style={customStyles.backbtn}>
           <div className={style.eventname} style={customStyles.eventname}>
@@ -467,17 +512,30 @@ const EventCard = (props) => {
                 // }
               >
                 {btnTxt === "Closed" ? (
-                  <>
-                    <div style={{ fontSize: "0.9rem" }}>Closed</div>
-                    <IoIosLock
-                      alt=""
-                      style={{ marginLeft: "0px", fontSize: "1rem" }}
-                    />
-                  </>
-                ) : btnTxt === "Already Registered" ? (
-                  <>
-                    <div style={{ fontSize: "0.9rem" }}>Registered</div>
-                  </>
+  <>
+    <div style={{ fontSize: "0.9rem" }}>Closed</div>
+    <IoIosLock
+      alt=""
+      style={{ marginLeft: "0px", fontSize: "1rem" }}
+    />
+  </>
+) : btnTxt === "Already Registered" ? (
+  info.participationType === "Team" ? ( // Show Team Details only for team events
+    <>
+      <div
+        style={{ fontSize: "0.9rem", cursor: "pointer" }}
+        onClick={() => setIsTeamDetailsOpen(true)}
+      >
+        Team Details
+      </div>
+    </>
+  ) : (
+    <>
+      <div style={{ fontSize: "0.9rem" }}>Registered</div>
+    </>
+  )
+
+
                 ) : btnTxt === "Locked" ? (
                   <>
                     <div style={{ fontSize: "0.9rem" }}>Locked</div>
@@ -509,6 +567,8 @@ const EventCard = (props) => {
               </button>
             </div>
           )}
+          
+
         </div>
         <div className={style.backtxt} style={customStyles.backtxt}>
           <div style={{ display: "flex", alignItems: "center" }}>
@@ -535,6 +595,9 @@ const EventCard = (props) => {
       </div>
       {isOpen && type === "ongoing" && (
         <Share onClose={handleShare} urlpath={url + "/" + data.id} />
+      )}
+      {isQRModalOpen && type === "ongoing" && (
+        <QRCodeModal onClose={handleCloseQRModal} eventId={data.id} />
       )}
       {enableEdit && isHovered && authCtx.user.access === "ADMIN" && (
         <div
@@ -578,6 +641,15 @@ const EventCard = (props) => {
           />
         </div>
       )}
+      
+      {/* Team Details Modal */}
+      <TeamDetailsModal
+        isOpen={isTeamDetailsOpen}
+        onClose={() => setIsTeamDetailsOpen(false)}
+        formId={data.id}
+        eventTitle={info.eventTitle}
+      />
+      
       <Alert />
     </div>
   );

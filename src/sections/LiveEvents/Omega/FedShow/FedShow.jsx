@@ -6,6 +6,8 @@ import { FaCalendarAlt, FaClock, FaMapMarkerAlt } from "react-icons/fa";
 import { parse, differenceInMilliseconds } from "date-fns";
 import fedShowImg from "../../../../assets/images/fedShow.svg";
 import styles from "./styles/FedShow.module.scss";
+import speakersData from "../../../../data/liveEvents/omega/Speakers.json";
+
 
 function FedShow() {
   const [remainingTime, setRemainingTime] = useState("");
@@ -142,9 +144,29 @@ function FedShow() {
             {remainingTime ? `${remainingTime}` : btnTxt}
           </button>
         </Element>
+       
         
       </div>
+      
+                 <h2 className={styles.heading}>
+        <span className={styles.our}>OUR</span> <span className={styles.speakers}>SPEAKERS</span>
+      </h2>
+       <div className={styles.speakersContainer}>
+
+      {speakersData.map((speaker, index) => (
+        <div key={index} className={styles.speakerCard}>
+          <img
+            src={speaker.image}
+            alt={speaker.name}
+            className={styles.speakerImage}
+          />
+          <h3 className={styles.speakerName}>{speaker.name}</h3>
+          <p className={styles.speakerDesignation}>{speaker.designation}</p>
+        </div>
+      ))}
     </div>
+    </div>
+    
   );
 }
 

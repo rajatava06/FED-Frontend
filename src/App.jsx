@@ -40,8 +40,8 @@ const Team = lazy(() => import("./pages/Team/Team"));
 const Alumni = lazy(() => import("./pages/Alumni/Alumni"));
 const Profile = lazy(() => import("./pages/Profile/Profile"));
 const Blog = lazy(() => import("./pages/Blog/Blog"));
-const Omega = lazy(() => import("./pages/LiveEvents/Omega/Omega"));
-// const omega = lazy(() => import("./pages/LiveEvents/omega/omega"));
+// const Omega = lazy(() => import("./pages/LiveEvents/Omega/Omega"));
+
 
 const Signup = lazy(() => import("./pages/Authentication/Signup/Signup"));
 const ForgotPassword = lazy(() =>
@@ -59,6 +59,7 @@ const Login = lazy(() => import("./pages/Authentication/Login/Login"));
 const OTPInput = lazy(() =>
   import("./authentication/Login/ForgotPassword/OTPInput")
 );
+const AttendancePage = lazy(() => import('./pages/AttendancePage/AttendancePage'));
 
 const MainLayout = () => {
   const location = useLocation();
@@ -111,8 +112,7 @@ function App() {
             {/* <Route path="/Blog/:id" element={<FullBlog />} /> */}
             <Route path="/Alumni" element={<Alumni />} />
             <Route path="/verify/certificate" element={<VerifyCertificate />} />
-            <Route path="/Omega" element={<Omega />} />
-            {/* <Route path="/omega" element={<omega />}/> */}
+            {/* <Route path="/Omega" element={<Omega />} /> */}
             {/* Route After Login */}
             {authCtx.isLoggedIn && (
               <Route path="/profile" element={<Profile />}>
@@ -140,6 +140,32 @@ function App() {
                   authCtx.user.access === "SENIOR_EXECUTIVE_CREATIVE") && (
                   <Route path="BlogForm" element={<BlogForm />} />
                 )}
+                {/* Certificates Route */}
+
+                {authCtx.user.access === "ADMIN" && (
+                  <Route path="certificates" element={<CertificatesView />} />
+                )}
+
+                {authCtx.user.access === "ADMIN" && (
+                  <Route
+                    path="events/SendCertificate/:eventId"
+                    element={<SendCertificate />}
+                  />
+                )}
+
+                {authCtx.user.access === "ADMIN" && (
+                  <Route
+                    path="events/createCertificates/:eventId"
+                    element={<CertificatesForm />}
+                  />
+                )}
+
+                {authCtx.user.access === "ADMIN" && (
+                  <Route
+                    path="events/viewCertificates/:eventId"
+                    element={<CertificatesPreview />}
+                  />
+                )}
 
                 <Route
                   path="events/:eventId"
@@ -152,12 +178,13 @@ function App() {
                   />
                 )}
                 {authCtx.user.access === "USER" &&
-                  authCtx.user.email == "srex@fedkiit.com" && (
+                  authCtx.user.email == "attendance@fedkiit.com" && (
                     <Route
                       path="events/Analytics/:eventId"
                       element={[<EventStats onClosePath="/profile/events" />]}
                     />
                   )}
+                <Route path="/profile/attendance" element={<AttendancePage />} />
               </Route>
             )}
             <Route

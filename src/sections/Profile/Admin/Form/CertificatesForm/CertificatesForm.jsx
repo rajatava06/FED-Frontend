@@ -203,7 +203,11 @@ const CertificatesForm = () => {
 
       const response = await api.post(
         "/api/certificate/addCertificateTemplate",
-        formData
+        
+        formData, 
+        {
+          headers: { Authorization: `Bearer ${authCtx.token}` },
+        }
       );
 
       if (response.status !== 200) {
