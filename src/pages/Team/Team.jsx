@@ -272,7 +272,7 @@ const Team = () => {
           <TeamSection
   title={
     <span>
-      <span style={{ color: "#fff" }}>Team </span>
+      <span style={{ color: "#fff" }}>Board Of </span>
       <strong
         style={{
           background: "var(--primary)",
@@ -280,7 +280,7 @@ const Team = () => {
           color: "transparent",
         }}
       >
-        BOD
+        Directors
       </strong>
     </span>
   }
