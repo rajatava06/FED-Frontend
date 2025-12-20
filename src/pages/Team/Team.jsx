@@ -8,7 +8,6 @@ import useWindowWidth from "../../utils/hooks/useWindowWidth";
 import MemberData from "../../data/Team.json";
 import AccessTypes from "../../data/Access.json";
 import { ComponentLoading } from "../../microInteraction";
-import { ChatBot } from "../../features";
 
 
 const Team = () => {
@@ -138,7 +137,7 @@ const Team = () => {
         (word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
       )
       .join(" ");
-    
+
     // Ensure consistent capitalization for role names
     switch (role.toLowerCase()) {
       case "pr and finance":
@@ -173,7 +172,7 @@ const Team = () => {
     if (!boardAccessCodes.includes(code)) {
       const displayRole = getDisplayRole(code);
       const teamCode = extractTeamFromAccess(code);
-      
+
       if (!map[displayRole]) {
         map[displayRole] = [];
       }
@@ -184,17 +183,17 @@ const Team = () => {
 
   const teamByRole = Object.keys(roleMap)
     .map((role) => {
-      const members = otherMembers.filter((member) => 
+      const members = otherMembers.filter((member) =>
         roleMap[role].includes(member.access)
       );
 
       // Sort members: Senior Executives first, then others
-      const seniorExecutives = members.filter((member) => 
-        member.access.startsWith("SENIOR_EXECUTIVE_") || 
+      const seniorExecutives = members.filter((member) =>
+        member.access.startsWith("SENIOR_EXECUTIVE_") ||
         member.extra?.designation === "Senior Executive"
       );
-      const otherMembersWithoutSenior = members.filter((member) => 
-        !member.access.startsWith("SENIOR_EXECUTIVE_") && 
+      const otherMembersWithoutSenior = members.filter((member) =>
+        !member.access.startsWith("SENIOR_EXECUTIVE_") &&
         member.extra?.designation !== "Senior Executive"
       );
 
@@ -227,15 +226,13 @@ const Team = () => {
         : members;
     return (
       <div
-        className={`${styles.teamSection} ${
-          isDirector ? styles.directorSection : ""
-        }`}
+        className={`${styles.teamSection} ${isDirector ? styles.directorSection : ""
+          }`}
       >
         {title && <h3>{title}</h3>}
         <div
-          className={`${styles.teamGrid} ${
-            isDirector ? styles.directorGrid : ""
-          }`}
+          className={`${styles.teamGrid} ${isDirector ? styles.directorGrid : ""
+            }`}
         >
           {otherMembers.map((member, idx) => (
             <TeamCard key={idx} className="teamMember" member={member} />
@@ -254,7 +251,6 @@ const Team = () => {
 
   return (
     <div className={styles.Team}>
-         <ChatBot />
       <h2>
         Meet Our{" "}
         <span
