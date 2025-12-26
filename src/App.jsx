@@ -18,7 +18,8 @@ import AuthContext from "./context/AuthContext";
 import EventStats from "./features/Modals/Event/EventStats/EventStats";
 
 // Chatbot
-import Chatbot from "./components/Chatbot";
+import Chatbot from "./components/Chatbot/Chatbot";
+
 import {
   EventsView,
   NewForm,
@@ -100,6 +101,7 @@ const AuthLayout = () => (
 function App() {
   const authCtx = useContext(AuthContext);
   console.log(authCtx.user.access);
+
   return (
     <div>
       {/* Global Chatbot Component */}

@@ -208,18 +208,18 @@ $border-radius-medium: 16px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px $spacing-lg; // Reduced vertical padding
+    padding: 6px $spacing-sm;
     background: linear-gradient(135deg, rgba(28, 28, 28, 0.95) 0%, rgba(20, 20, 20, 0.95) 100%);
     border-radius: 24px 24px 0 0;
     border-bottom: 1px solid $border-subtle;
-    min-height: 60px; // Reduced from 80px
+    min-height: 42px;
     backdrop-filter: blur(12px);
 }
 
 .headerContent {
     display: flex;
     align-items: center;
-    gap: $spacing-md;
+    gap: $spacing-sm;
 }
 
 .avatarContainer {
@@ -227,8 +227,8 @@ $border-radius-medium: 16px;
 }
 
 .avatar {
-    height: 48px;
-    width: 48px;
+    height: 42px;
+    width: 42px;
     border-radius: 50%;
 }
 
@@ -252,7 +252,8 @@ $border-radius-medium: 16px;
 
 .title {
     color: $light-text;
-    font-size: 1.2rem;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 1.25rem;
     font-weight: 600;
     margin: 0;
     letter-spacing: 0.3px;
@@ -263,7 +264,7 @@ $border-radius-medium: 16px;
     align-items: center;
     gap: 4px;
     color: rgba(255, 255, 255, 0.6);
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     margin: 0;
 }
 

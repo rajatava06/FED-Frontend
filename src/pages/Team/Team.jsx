@@ -6,7 +6,6 @@ import { TeamCard } from "../../components";
 import { FaRegArrowAltCircleRight } from "react-icons/fa";
 import useWindowWidth from "../../utils/hooks/useWindowWidth";
 import { ComponentLoading } from "../../microInteraction";
-import { ChatBot } from "../../features";
 
 const Team = () => {
   useEffect(() => {
@@ -112,7 +111,7 @@ const Team = () => {
         (word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
       )
       .join(" ");
-    
+
     // Ensure consistent capitalization for role names
     switch (role.toLowerCase()) {
       case "pr and finance":
@@ -207,7 +206,6 @@ const Team = () => {
 
   return (
     <div className={styles.Team}>
-      <ChatBot />
 
       <h2>
         Meet Our{" "}
@@ -271,22 +269,22 @@ const Team = () => {
           {error && <div className={styles.error}>{error.message}</div>}
 
           <TeamSection
-  title={
-    <span>
-      <span style={{ color: "#fff" }}>Board Of </span>
-      <strong
-        style={{
-          background: "var(--primary)",
-          WebkitBackgroundClip: "text",
-          color: "transparent",
-        }}
-      >
-        Directors
-      </strong>
-    </span>
-  }
-  members={directorsAndAbove}
-/>
+            title={
+              <span>
+                <span style={{ color: "#fff" }}>Board Of </span>
+                <strong
+                  style={{
+                    background: "var(--primary)",
+                    WebkitBackgroundClip: "text",
+                    color: "transparent",
+                  }}
+                >
+                  Directors
+                </strong>
+              </span>
+            }
+            members={directorsAndAbove}
+          />
 
           <div className={styles.alumniBut}>
             <div className={styles.ulhover}>
